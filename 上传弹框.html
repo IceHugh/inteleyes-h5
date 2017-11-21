@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"> 
+	<title>Bootstrap 实例 - 模态框（Modal）插件方法</title>
+	<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
+	<style type="text/css">
+		.page_msg{
+			width:100%;
+			position: relative;
+			text-align:center;
+		}
+		.page_msg span:nth-child(2){
+			position: absolute;
+			right:15px;
+			top:0;
+		}
+		table{
+			margin-bottom:0 !important;
+		}
+	</style> 
+</head>
+<body>
+
+<h2>模态框（Modal）插件方法</h2>
+<!-- 按钮触发模态框 -->
+<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+	开始演示模态框
+</button>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" 
+						aria-hidden="true">×
+				</button>
+				<h4 class="modal-title" id="myModalLabel">
+					检测出待上传DICOM文件
+				</h4>
+			</div>
+			<div class="modal-body">
+				<table class="table table-hover">
+					
+					<thead>
+						<tr>
+							<th>文件名称</th>
+							<th>类型</th>
+							<th>时间</th>
+							<th>大小</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>Tanmay</td>
+							<td>Bangalore</td>
+							<td>560001</td>
+							<td>23.2k</td>
+						</tr>
+						<tr>
+							<td>Sachin</td>
+							<td>Mumbai</td>
+							<td>400003</td>
+							<td>23.2k</td>
+						</tr>
+						<tr>
+							<td>Uma</td>
+							<td>Pune</td>
+							<td>411027</td>
+							<td>23.2k</td>
+						</tr>
+						<tr>
+							<td>Tanmay</td>
+							<td>Bangalore</td>
+							<td>560001</td>
+							<td>23.2k</td>
+						</tr>
+						<tr>
+							<td>Sachin</td>
+							<td>Mumbai</td>
+							<td>400003</td>
+							<td>23.2k</td>
+						</tr>
+						<tr>
+							<td>Uma</td>
+							<td>Pune</td>
+							<td>411027</td>
+							<td>23.2k</td>
+						</tr>
+					</tbody>
+				</table>
+
+			</div>
+			<div class="page_msg"><span>待上传文件大小超过XXXM，请分次上传</span><span>203个    共440M</span></div>
+			
+
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" 
+						data-dismiss="modal">关闭
+				</button>
+				<button type="button" class="btn btn-primary">
+					提交更改
+				</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<script>
+$(function () { $('#myModal').modal({
+	keyboard: true
+})});
+</script>
+
+</body>
+</html>	

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>慧眼-平安影像</title>
+		<link media="all" type="text/css" rel="stylesheet" href="bootstrap3.1.1/css/bootstrap.min.css">
+		<link media="all" type="text/css" rel="stylesheet" href="css/font-awesome.min.css">
+		<link media="all" type="text/css" rel="stylesheet" href="css/style.css">
+        <link href="css/fileinput.css" media="all" rel="stylesheet" type="text/css" />
+        <script src="js/jquery-2.0.3.min.js"></script>
+        <script src="js/fileinput.js" type="text/javascript"></script>
+        <script src="js/fileinput_locale_de.js" type="text/javascript"></script>
+        <script src="js/bootstrap.min.js" type="text/javascript"></script>
+		<style type="text/css">
+		
+		</style>
+	</head>
+	
+	<body>
+	<div class="page">
+		<div class="navbar navbar-default navbar-fixed-top mainhead-navbox" role="navigation">
+			<div class="container">
+				<div class="navbar-header">
+					<div class='navbar-brand'>
+						<div class="praise">
+							<span id="praise"><img src="img/common/qxzan.png" id="praise-img" />
+							    <span>平安影像</span><span style="padding-left:10px;">智能影像体验平台</span>
+                           </span>
+						</div>
+					</div>
+				</div>
+				<div class="navbar-collapse collapse mainhead-collapse">
+					<ul class="nav mainhead-nav">
+						
+						<li>早上好，李医生</li>
+						<li class="spacer"></li>
+						<li>安全退出</li>
+					</ul>				
+				</div>
+			</div>
+		</div>
+		
+		<div class='mainhead clearfix bg-white padding-b20'>
+			<div class="container">
+				<div class='clearfix center logbox'>
+					<img src="img/common/logo1.png" width="100" height="60" alt="logo">
+				</div>
+				<div class='row sloganbox'>
+					<div class='col-xs-8 col-xs-offset-2 center'>
+						<p class="sloganboxcontent1">上传DICOM文件</p>
+						<p class="sloganboxcontent2">目前仅支持肺部结合智能分析，请上传胸部CT影像文件<br/>支持小于XXXM的文件上传，建议一个文件夹放置一个影响序列</p>
+						<a href='#' class='btn btn-hero btn-lg radius-2 margin-t10 no-decoration btn-file' style="background:#00C79F;">
+							<i class="icon-folder-close-alt"></i>&nbsp;选择DICOM文件夹
+							<input type="file" id="file01" style="display:none;">
+						</a>
+						<a href='#' class='btn btn-lg radius-2 margin-t10 no-decoration btn-file'  style="border:1px solid #0db392;color:#fff;">
+							<i class="icon-file-alt"></i>&nbsp;选择DICOM文件
+							<input type="file" id="file02"/>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		
+		<!-- <div class="container" >
+			<div class="mainfoot center">
+				<p>
+				   版权所有&nbsp;©&nbsp;中国平安科技&nbsp;(深圳)&nbsp;有限公司未经许可不得复制、转载或摘编&nbsp;违者必究
+				</p>
+			</div>
+		</div> -->
+	   <div class="mainfoot center">
+	    	<p>
+				版权所有&nbsp;©&nbsp;中国平安科技&nbsp;(深圳)&nbsp;有限公司未经许可不得复制、转载或摘编&nbsp;违者必究
+			</p>
+		</div>	
+
+	</div>	
+	</body>
+<!-- 	<script type="text/javascript">
+	$(function () {
+        initFileInput("file01");
+        initFileInput("file02");
+    })
+
+    function initFileInput(ctrlName) {
+        var control = $('#' + ctrlName);
+        control.fileinput({
+            language: 'zh', //设置语言
+            uploadUrl: "upload/insert", //上传的地址
+            allowedFileExtensions: ['dcm'],//接收的文件后缀
+            //uploadExtraData:{"id": 1, "fileName":'123.mp3'},
+            uploadAsync: true, //默认异步上传
+            showUpload: true, //是否显示上传按钮
+            showRemove : true, //显示移除按钮
+            showPreview : true, //是否显示预览
+            showCaption: false,//是否显示标题
+            browseClass: "btn btn-primary", //按钮样式
+            //dropZoneEnabled: true,//是否显示拖拽区域
+            //minImageWidth: 50, //图片的最小宽度
+            //minImageHeight: 50,//图片的最小高度
+            //maxImageWidth: 1000,//图片的最大宽度
+            //maxImageHeight: 1000,//图片的最大高度
+            //maxFileSize: 0,//单位为kb，如果为0表示不限制文件大小
+            //minFileCount: 0,
+            //maxFileCount: 10, //表示允许同时上传的最大文件个数
+            enctype: 'multipart/form-data',
+            validateInitialCount:true,
+            previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
+            msgFilesTooMany: "选择上传的文件数量({n}) 超过允许的最大数值{m}！",
+
+        }).on('filepreupload', function(event, data, previewId, index) {     //上传中
+            var form = data.form, files = data.files, extra = data.extra,
+            response = data.response, reader = data.reader;
+            console.log('文件正在上传');
+        }).on("fileuploaded", function (event, data, previewId, index) {    //一个文件上传成功
+            console.log('文件上传成功！'+data.id);
+
+        }).on('fileerror', function(event, data, msg) {  //一个文件上传失败
+            console.log('文件上传失败！'+data.id);
+
+
+        })
+    }
+
+	</script> -->
+</html>
