@@ -7,12 +7,10 @@
 </head>
 <body>
 <form id="form1" enctype="multipart/form-data" method="post" action="http://10.25.82.163:8084/uploadFile">
-  <input type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected();" multiple="multiple"/>
+  <input type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected();" multiple/>
   <input type="button" onclick="uploadFile();" value="Upload"  multiple="multiple"/>
   <div id="ctheader"></div>
 </form>
-</body>
-</html>
 <script>
 function fileSelected(){
   var files = document.getElementById('fileToUpload').files;
@@ -53,13 +51,19 @@ function uploadFile() {
         (function(file) {reader.onload = function(e){
             var res = e.target.result;
             console.log(res);
-            formData.append("files",new Blob([res],{type:'application/octet-stream'}),file.name);
+            formData.append("data",new Blob([res],{type:'application/octet-stream'}),file.name);
         // debugger;
             var cres = crc32.table(res);
             console.log(cres);
             fileSign[file.name] = cres;
             if (j === files.length -1) {
-              formData.append('fileInfo',new Blob([JSON.stringify(fileSign)],{type:'application/json'},'fileInfo'));
+              var fileinfo = {
+                insititutionId: "00001",
+                channelId: "00002",
+                serialUID: "0000001.0001",
+                fileSign: fileSign
+              }
+              formData.append('fileinfo',new Blob([JSON.stringify(fileinfo)],{type:'application/json'},'fileinfo'));
               sendData(formData);
             }
             j++;
@@ -79,21 +83,21 @@ function uploadFile() {
 
           // }else
            if (xhr.readyState == 4 && xhr.status == 200) {
-            var c = document.getElementById("form1").innerHTML=xhr.responseText;
-            console.log(c);
+            // var c = document.getElementById("form1").innerHTML=xhr.responseText;
+            // console.log(c);
               console.log(xhr.responseText);
-              var data = xhr.responseText;
-              data = JSON.parse(xhr.responseText) 
-              if (data.code == 100) {
-                  //insertPhotoList(data.userPhotos); 这里传过来的是一个List<model>，做页面逻辑处理的
-              } else if (data.code == 101) {
-                  aler('上传图片不符合要求');
-              } else if (data.code == 102) {
-                  var update_vip_url = 'update_vip_url';
-                  alert('您目前是普通会员，图片文件不可超过5M|升级会员可上传更大文件立即升级会员');
-              } else if (data.code == 103) {
-                  alert('您目前是VIP会员，图片文件不可超过50M');
-              }
+              // var data = xhr.responseText;
+              // data = JSON.parse(xhr.responseText) 
+              // if (data.code == 100) {
+              //     //insertPhotoList(data.userPhotos); 这里传过来的是一个List<model>，做页面逻辑处理的
+              // } else if (data.code == 101) {
+              //     aler('上传图片不符合要求');
+              // } else if (data.code == 102) {
+              //     var update_vip_url = 'update_vip_url';
+              //     alert('您目前是普通会员，图片文件不可超过5M|升级会员可上传更大文件立即升级会员');
+              // } else if (data.code == 103) {
+              //     alert('您目前是VIP会员，图片文件不可超过50M');
+              // }
 
           }
       };
@@ -107,3 +111,5 @@ function uploadFile() {
     }
 }
 </script>
+</body>
+</html>
