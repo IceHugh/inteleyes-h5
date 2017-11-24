@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+ <meta charset="UTF-8">
+ <title></title>
+<script type="text/javascript" src="crc32.js"></script>
+</head>
+<body>
+<form id="form1" enctype="multipart/form-data" method="post" action="http://10.25.82.163:8084/uploadFile">
+  <input type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected();" multiple="multiple"/>
+  <input type="button" onclick="uploadFile();" value="Upload"  multiple="multiple"/>
+  <div id="ctheader"></div>
+</form>
+</body>
+</html>
+<script>
+function fileSelected(){
+  var files = document.getElementById('fileToUpload').files;
+  for(var i=0; i<files.length; i++){
+    var file = files[i];
+    var data = new Date().toLocaleString(); 
+    var fileSize = 0;
+    if (file.size > 1024 * 1024){
+      fileSize = (Math.round(file.size * 100 / (1024 * 1024)) / 100).toString() + 'MB';}
+    else{
+      fileSize = (Math.round(file.size * 100 / 1024) / 100).toString() + 'KB';}
+
+    var div = document.createElement("div")
+    div.innerHTML = "名字："+ file.name +
+    " , 文件类型："+ file.type +" , 文件大小:"+ file.size +" , 时间:"+ data+"<br/>"
+    document.body.appendChild( div);
+    console.log(div);
+  }
+}
+function uploadFile() {
+    //定义表单变量    
+    var files = document.getElementById('fileToUpload').files;
+    //新建一个FormData对象    
+    var formData = new FormData();
+
+    // formData.append("userPhotos","dhdhh")
+
+    
+    // debugger
+    var fileSign = {};
+    // Array.from(files).forEach(function(file) { formData.append("file[name]", file);});
+    // // 追加文件数据    
+    for (var i = 0,j = 0; i < files.length; i++) {
+      // debugger
+      var file = files[i]
+        var reader = new FileReader();
+        reader.readAsDataURL(file);
+        (function(file) {reader.onload = function(e){
+            var res = e.target.result;
+            console.log(res);
+            formData.append("files",new Blob([res],{type:'application/octet-stream'}),file.name);
+        // debugger;
+            var cres = crc32.table(res);
+            console.log(cres);
+            fileSign[file.name] = cres;
+            if (j === files.length -1) {
+              formData.append('fileInfo',new Blob([JSON.stringify(fileSign)],{type:'application/json'},'fileInfo'));
+              sendData(formData);
+            }
+            j++;
+        }})(file);
+    }
+    function sendData(formData) {
+      var xhr = new XMLHttpRequest();
+      //post方式    
+      xhr.open("POST", "http://10.25.82.163:8084/uploadFile");
+      // xhr.setRequestHeader("","");
+      //发送请求    
+      xhr.send(formData);
+      //success回调    
+      xhr.onreadystatechange = function() {
+          if(xhr.readyState == 2){
+             document.getElementById("ctheader").innerHTML=xhr.getResponseHeader();
+
+          }else if (xhr.readyState == 4 && xhr.status == 200) {
+            var c = document.getElementById("form1").innerHTML=xhr.responseText;
+            console.log(c);
+              console.log(xhr.responseText);
+              var data = xhr.responseText;
+              data = JSON.parse(xhr.responseText) 
+              if (data.code == 100) {
+                  //insertPhotoList(data.userPhotos); 这里传过来的是一个List<model>，做页面逻辑处理的
+              } else if (data.code == 101) {
+                  aler('上传图片不符合要求');
+              } else if (data.code == 102) {
+                  var update_vip_url = 'update_vip_url';
+                  alert('您目前是普通会员，图片文件不可超过5M|升级会员可上传更大文件立即升级会员');
+              } else if (data.code == 103) {
+                  alert('您目前是VIP会员，图片文件不可超过50M');
+              }
+
+          }
+      };
+      xhr.onerror=function(){
+        alert("这是个错误");
+      }
+      //设置超时时间    
+      xhr.timeout = 100000;
+      xhr.ontimeout = function(event) {}
+
+    }
+}
+</script>
