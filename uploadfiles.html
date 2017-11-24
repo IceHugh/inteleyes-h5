@@ -74,10 +74,11 @@ function uploadFile() {
       xhr.send(formData);
       //success回调    
       xhr.onreadystatechange = function() {
-          if(xhr.readyState == 2){
-             document.getElementById("ctheader").innerHTML=xhr.getResponseHeader();
+          // if(xhr.readyState == 2){
+          //    document.getElementById("ctheader").innerHTML=xhr.getResponseHeader();
 
-          }else if (xhr.readyState == 4 && xhr.status == 200) {
+          // }else
+           if (xhr.readyState == 4 && xhr.status == 200) {
             var c = document.getElementById("form1").innerHTML=xhr.responseText;
             console.log(c);
               console.log(xhr.responseText);
