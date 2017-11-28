@@ -71,68 +71,32 @@
 
       //新建一个FormData对象    
       var formData = new FormData();
-
-      // formData.append("userPhotos","dhdhh")
-
-
-      // debugger
-      var fileInfo = {
-        institutionId: "00001",
-        channelId: "00002",
-        serialUID: "0000001.0001",
-        fileSign: {}
-      };
-      // Array.from(files).forEach(function(file) { formData.append("file[name]", file);});
-      // // 追加文件数据    
-      for (var i = 0, j = 0, k = 0; i < files.length; i++) {
+      var fileSign = {};
+      for (var i = 0, j = 0; i < files.length; i++) {
         // debugger
-        var file = files[i];
+        var file = files[i]
+        var reader = new FileReader();
+        reader.readAsArrayBuffer(file);
         (function (file) {
-          var reader1 = new FileReader();
-          var reader2 = new FileReader();
-          reader1.readAsArrayBuffer(file);
-          reader2.readAsDataURL(file);
-          reader1.addEventListener('load', crc32File);
-          reader2.addEventListener('load', base64File);
-          function crc32File(e) {
-            var res = crc32encode(e.target.result);
+          reader.onload = function (e) {
+            var res = getBinary(e.target.result);
             // debugger;
             var cres = crc32.table(res);
-            console.log('j',j);
-            fileInfo.fileSign[file.name] = cres;
+            console.log(cres);
+            fileSign[file.name] = cres;
+            res = new Base64().encode(res);
+            formData.append("data", new Blob([res], { type: 'application/octet-stream' }), file.name);
             if (j === files.length - 1) {
-              formData.append('fileinfo', new Blob([JSON.stringify(fileInfo)], { type: 'application/json' }, 'fileinfo'));
-              console.log(fileInfo);
-            }
-            if (j + k === 2 * files.length - 1) {
-              console.log(formData);
+              var fileinfo = {
+                institutionId: "00001",
+                channelId: "00002",
+                serialUID: "0000001.0001",
+                fileSign: fileSign
+              }
+              formData.append('fileinfo', new Blob([JSON.stringify(fileinfo)], { type: 'application/json' }, 'fileinfo'));
               sendData(formData);
             }
             j++;
-          }
-          function base64File(e) {
-            console.log('k',k);
-            var res = e.target.result;
-            formData.append("data", new Blob([res], { type: 'application/octet-stream' }), file.name);
-
-            if (j + k === 2 * files.length - 1) {
-              console.log(formData);
-              sendData(formData);
-            }
-            k++;
-          }
-          function crc32encode(res) {
-            var binary = "";
-            var bytes = new Uint8Array(res);
-
-            var length = bytes.byteLength;
-
-            for (var i = 0; i < length; i++) {
-
-              binary += String.fromCharCode(bytes[i]);
-
-            }
-            return binary;
           }
         })(file);
       }
@@ -141,39 +105,88 @@
         var xhr = new XMLHttpRequest();
         xhr.open("POST", "http://10.25.82.163:8084/uploadFile");
         xhr.send(formData);
-        xhr.addEventListener('readystatechange',function handleResponse(e) {
+        xhr.addEventListener('readystatechange', function handleResponse(e) {
           if (xhr.readyState == 4 && xhr.status == 200) {
             document.getElementById("results").innerHTML = xhr.responseText;
           }
         });
         var upload = xhr.upload;
-        upload.addEventListener('progress',function(e){
+        upload.addEventListener('progress', function (e) {
           // progress.max = e.total;
           // progress.value=e.loaded;
-          if(e.lengthComputable){ progress.value=Math.round(100*e.loaded/e.total) + "%" }
+          if (e.lengthComputable) { progress.value = Math.round(100 * e.loaded / e.total) + "%" }
         });
-        upload.addEventListener('load',function(e){
+        upload.addEventListener('load', function (e) {
           progress.max = 1;
-          progress.value=1;
+          progress.value = 1;
         });
         // xhr.send(JSON.stringify(formData));
       }
-      // 1
-      
-      // 2
-      function handleError(e) { };
-      // 3
-      function handleLoad(e) { };
-      // 4
-      function handleLoadStart(e) { console.log("请求开始触发") };
-      function handleLoadEnd(e) { console.log("请求结束触发") };
-      // 5
-      function handleTimeOut(e) { };
-      // 6
-      function handleProgress(e) {
-        // if(e.lengthComputable){progress.innerHTML=Math.round(100*e.loaded/e,total) + "%"}
-      };
-      function handleAbort(e) { };
+    }
+    function getBinary(res) {
+      var binary = "";
+      var bytes = new Uint8Array(res);
+
+      var length = bytes.byteLength;
+
+      for (var i = 0; i < length; i++) {
+
+        binary += String.fromCharCode(bytes[i]);
+
+      }
+      return binary;
+    }
+    function Base64() {
+
+      // private property
+      _keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+
+      // public method for encoding
+      this.encode = function (input) {
+        var output = "";
+        var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+        var i = 0;
+        input = _utf8_encode(input);
+        while (i < input.length) {
+          chr1 = input.charCodeAt(i++);
+          chr2 = input.charCodeAt(i++);
+          chr3 = input.charCodeAt(i++);
+          enc1 = chr1 >> 2;
+          enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+          enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+          enc4 = chr3 & 63;
+          if (isNaN(chr2)) {
+            enc3 = enc4 = 64;
+          } else if (isNaN(chr3)) {
+            enc4 = 64;
+          }
+          output = output +
+            _keyStr.charAt(enc1) + _keyStr.charAt(enc2) +
+            _keyStr.charAt(enc3) + _keyStr.charAt(enc4);
+        }
+        return output;
+      }
+ 
+    // private method for UTF-8 encoding
+    _utf8_encode = function (string) {
+        string = string.replace(/\r\n/g,"\n");
+        var utftext = "";
+        for (var n = 0; n < string.length; n++) {
+            var c = string.charCodeAt(n);
+            if (c < 128) {
+                utftext += String.fromCharCode(c);
+            } else if((c > 127) && (c < 2048)) {
+                utftext += String.fromCharCode((c >> 6) | 192);
+                utftext += String.fromCharCode((c & 63) | 128);
+            } else {
+                utftext += String.fromCharCode((c >> 12) | 224);
+                utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+                utftext += String.fromCharCode((c & 63) | 128);
+            }
+ 
+        }
+        return utftext;
+    }
     }
   </script>
 </body>
