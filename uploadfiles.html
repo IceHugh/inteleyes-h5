@@ -49,7 +49,8 @@ function uploadFile() {
         var reader = new FileReader();
         reader.readAsDataURL(file);
         (function(file) {reader.onload = function(e){
-            var res = e.target.result;
+            var base = new Base64();
+            var res =base.decode( e.target.result);
             console.log(res);
             formData.append("data",new Blob([res],{type:'application/octet-stream'}),file.name);
         // debugger;
