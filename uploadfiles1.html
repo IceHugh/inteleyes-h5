@@ -1,163 +1,181 @@
 <!DOCTYPE html>
 <html>
+
 <head lang="en">
- <meta charset="UTF-8">
- <title></title>
-<script type="text/javascript" src="crc32.js"></script>
-<script type="text/javascript" src="js/online.js"></script>
+  <meta charset="UTF-8">
+  <title></title>
+  <script type="text/javascript" src="crc32.js"></script>
+  <script type="text/javascript" src="js/online.js"></script>
 
 </head>
+
 <body>
-<form id="form1" enctype="multipart/form-data" method="post" action="http://10.25.82.163:8084/uploadFile">
-  <input type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected();" multiple/>
-  
-  <div id="ctheader" style="border:1px solid #000; display:none;">
-    <input type="button" onclick="uploadFile();" value="Upload"  multiple="multiple"/>
-  </div>
-  <!-- 加载进度条 -->
-  <progress id="prog" value="0"></progress>
-  <!-- 总数量 -->
-  <div id="results">0 items</div>
+  <form id="form1" enctype="multipart/form-data" method="post" action="http://10.25.82.163:8084/uploadFile">
+    <input type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected();" multiple/>
+
+    <div id="ctheader" style="border:1px solid #000; display:none;">
+      <input type="button" onclick="uploadFile();" value="Upload" multiple="multiple" />
+    </div>
+    <!-- 加载进度条 -->
+    <progress id="prog" value="0"></progress>
+    <!-- 总数量 -->
+    <div id="results">0 items</div>
 
 
 
-</form>
-<script>
+  </form>
+  <script>
+
+    var ctheader = document.getElementById("ctheader");
+    // 弹窗插件
+    function fileSelected() {
+      var files = document.getElementById('fileToUpload').files;
+      var ctheader = document.getElementById('ctheader');
+      for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        // if(file.type !=="file") continue;
+        var data = new Date().toLocaleString();
+        var fileSize = 0;
+        if (file.size > 1024 * 1024) {
+          fileSize = (Math.round(file.size * 100 / (1024 * 1024)) / 100).toString() + 'MB';
+        }
+        else {
+          fileSize = (Math.round(file.size * 100 / 1024) / 100).toString() + 'KB';
+        }
+
+        var div = document.createElement("div")
+        // div.innerHTML = "名字："+ file.name +
+        // " , 文件类型："+ file.type +" , 文件大小:"+ file.size +" , 时间:"+ data+"<br/>"
+        // ctheader.appendChild( div);
+
+        var newElem = document.createElement("table");
+        newElem.setAttribute("border", "1");
+
+        addRow(newElem, file.name, file.type, file.size, data);
+        ctheader.appendChild(newElem);
+        ctheader.style.display = "block";
+      }
+      sAlert(ctheader.innerHTML);
+    }
+
+    // 获取文件信息
+    function addRow(elem, name, filetype, fileSize, dataTime) {
+      elem.innerHTML += "<tr><td>" + name + "</td><td>" + filetype + "</td><td>" + fileSize + "KB</td><td>" + dataTime + "</td></tr>"
+    }
 
 
+    function uploadFile() {
+      //定义表单变量    
+      var files = document.getElementById('fileToUpload').files;
+      var progress = document.getElementById('prog');
+
+      //新建一个FormData对象    
+      var formData = new FormData();
+
+      // formData.append("userPhotos","dhdhh")
 
 
-var ctheader=document.getElementById("ctheader");
-// 弹窗插件
-function fileSelected(){
-  var files = document.getElementById('fileToUpload').files;
-  var ctheader = document.getElementById('ctheader');
-  for(var i=0; i<files.length; i++){
-    var file = files[i];
-    // if(file.type !=="file") continue;
-    var data = new Date().toLocaleString(); 
-    var fileSize = 0;
-    if (file.size > 1024 * 1024){
-      fileSize = (Math.round(file.size * 100 / (1024 * 1024)) / 100).toString() + 'MB';}
-    else{
-      fileSize = (Math.round(file.size * 100 / 1024) / 100).toString() + 'KB';}
-
-    var div = document.createElement("div")
-    // div.innerHTML = "名字："+ file.name +
-    // " , 文件类型："+ file.type +" , 文件大小:"+ file.size +" , 时间:"+ data+"<br/>"
-    // ctheader.appendChild( div);
-
-     var newElem = document.createElement("table");
-    newElem.setAttribute("border","1");
-   
-    addRow(newElem,file.name,file.type,file.size,data);
-    ctheader.appendChild(newElem);
-    ctheader.style.display="block";
-  }
-     sAlert(ctheader.innerHTML);
-}
-
-// 获取文件信息
-function addRow(elem,name,filetype,fileSize,dataTime){
-      elem.innerHTML+="<tr><td>" +name+"</td><td>"+filetype+"</td><td>"+fileSize+"KB</td><td>"+dataTime+"</td></tr>"
-}
-
-
-function uploadFile() {
-    //定义表单变量    
-    var files = document.getElementById('fileToUpload').files;
-    var progress = document.getElementById('prog');
-
-    //新建一个FormData对象    
-    var formData = new FormData();
-
-    // formData.append("userPhotos","dhdhh")
-
-    
-    // debugger
-    var fileSign = {};
-    // Array.from(files).forEach(function(file) { formData.append("file[name]", file);});
-    // // 追加文件数据    
-    for (var i = 0,j = 0; i < files.length; i++) {
       // debugger
-      var file = files[i]
-        var reader = new FileReader();
-        reader.readAsDataURL(file);
-        (function(file) {reader.onload = function(e){
-            var res = e.target.result;
-            console.log(res);
-            formData.append("data",new Blob([res],{type:'application/octet-stream'}),file.name);
-        // debugger;
+      var fileInfo = {
+        insititutionId: "00001",
+        channelId: "00002",
+        serialUID: "0000001.0001",
+        fileSign: {}
+      };
+      // Array.from(files).forEach(function(file) { formData.append("file[name]", file);});
+      // // 追加文件数据    
+      for (var i = 0, j = 0, k = 0; i < files.length; i++) {
+        // debugger
+        var file = files[i];
+        (function (file) {
+          var reader1 = new FileReader();
+          var reader2 = new FileReader();
+          reader1.readAsArrayBuffer(file);
+          reader2.readAsDataURL(file);
+          reader1.addEventListener('load', crc32File);
+          reader2.addEventListener('load', base64File);
+          function crc32File(e) {
+            var res = crc32encode(e.target.result);
+            // debugger;
             var cres = crc32.table(res);
-            console.log(cres);
-            fileSign[file.name] = cres;
-            if (j === files.length -1) {
-              var fileinfo = {
-                insititutionId: "00001",
-                channelId: "00002",
-                serialUID: "0000001.0001",
-                fileSign: fileSign
-              }
-              formData.append('fileinfo',new Blob([JSON.stringify(fileinfo)],{type:'application/json'},'fileinfo'));
+            console.log('j',j);
+            fileInfo.fileSign[file.name] = cres;
+            if (j === files.length - 1) {
+              formData.append('fileinfo', new Blob([JSON.stringify(fileInfo)], { type: 'application/json' }, 'fileinfo'));
+              console.log(fileInfo);
+            }
+            if (j + k === 2 * files.length - 1) {
+              console.log(formData);
               sendData(formData);
             }
             j++;
-        }})(file);
-    }
+          }
+          function base64File(e) {
+            console.log('k',k);
+            var res = e.target.result;
+            formData.append("data", new Blob([res], { type: 'application/octet-stream' }), file.name);
 
-              var xhr = new XMLHttpRequest();
-       function sendData(formData) {
- 
-          var upload = xhr.upload;
-          upload.onprogress=function(e){
-            // progress.max = e.total;
-            // progress.value=e.loaded;
-            if(e.lengthComputable){progress.innerHTML=Math.round(100*e.loaded/e.total) + "%"}
+            if (j + k === 2 * files.length - 1) {
+              console.log(formData);
+              sendData(formData);
+            }
+            k++;
           }
-          upload.onload=function(e){
-            progress.max = 1;
-            progress.value=1;
+          function crc32encode(res) {
+            var binary = "";
+            var bytes = new Uint8Array(res);
+
+            var length = bytes.byteLength;
+
+            for (var i = 0; i < length; i++) {
+
+              binary += String.fromCharCode(bytes[i]);
+
+            }
+            return binary;
           }
-          //1请求生命周期的不同阶段
-          xhr.onreadystatechange=handleResponse;  
-          //2 请求出错误
-          xhr.onerrror=handleError;  
-          // 3请求成功完成触发
-          xhr.onload=handleLoad;  
-          // 4请求开始触发
-          xhr.onloadstart=handleLoadStart;  
-          xhr.onloadend=handleLoadEnd; 
-           // 5请求超时
-          xhr.ontimeout=handleTimeOut;  
-          // 6请求进度条
-          xhr.onprogress=handleProgress;
-           //7请求中止 
-          xhr.onabort=handleAbort;  
-          xhr.open("POST", "http://10.25.82.163:8084/uploadFile");
-          xhr.send(formData);
-          // xhr.send(JSON.stringify(formData));
-       }
-       // 1
-       function handleResponse (e){
-             if (xhr.readyState == 4 && xhr.status == 200) {
-                 document.getElementById("results").innerHTML=xhr.responseText;
-             }
-      } 
+        })(file);
+      }
+
+      function sendData(formData) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://10.25.82.163:8084/uploadFile");
+        xhr.send(formData);
+        xhr.addEventListener('readystatechange',function handleResponse(e) {
+          if (xhr.readyState == 4 && xhr.status == 200) {
+            document.getElementById("results").innerHTML = xhr.responseText;
+          }
+        });
+        var upload = xhr.upload;
+        upload.addEventListener('progress',function(e){
+          // progress.max = e.total;
+          // progress.value=e.loaded;
+          if(e.lengthComputable){ progress.value=Math.round(100*e.loaded/e.total) + "%" }
+        });
+        upload.addEventListener('load',function(e){
+          progress.max = 1;
+          progress.value=1;
+        });
+        // xhr.send(JSON.stringify(formData));
+      }
+      // 1
+      
       // 2
-      function handleError(e){};
+      function handleError(e) { };
       // 3
-      function handleLoad(e){};
+      function handleLoad(e) { };
       // 4
-      function handleLoadStart(e){alert("请求开始触发")};
-       function handleLoadEnd(e){alert("请求结束触发")};
+      function handleLoadStart(e) { console.log("请求开始触发") };
+      function handleLoadEnd(e) { console.log("请求结束触发") };
       // 5
-      function handleTimeOut(e){};
-        // 6
-      function handleProgress(e){
+      function handleTimeOut(e) { };
+      // 6
+      function handleProgress(e) {
         // if(e.lengthComputable){progress.innerHTML=Math.round(100*e.loaded/e,total) + "%"}
       };
-       function handleAbort(e){};
-}
-</script>
+      function handleAbort(e) { };
+    }
+  </script>
 </body>
+
 </html>
