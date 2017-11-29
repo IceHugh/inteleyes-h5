@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>慧眼-平安影像</title>
+        <script src="js/jquery-2.0.3.min.js"></script>
+		<style type="text/css">
+		</style>
+	</head>
+	
+	<body>
+	<a href="#" id="test">Test</a><br/>  
+    <div id="result"></div> 
+	</body>
+
+	<script type="text/javascript">
+		$(function(){
+	        $('#test').click(function(){  
+               $.ajax({  
+                     type: "GET",  
+                     url: "http://10.25.82.163:8084/requestAIResult",  
+                     data: "{seriesInstanceUid: 12345}",  
+                     dataType: "json",  
+                     success: function(data){  
+                       $("#result").html(data); 
+                       console.log(data); 
+                    },
+                    error:fuction(e){
+                    	console.log(e.message);
+                    }  
+                });  
+            });  
+	    })
+
+
+	</script> 
+
+</html>
