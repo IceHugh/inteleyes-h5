@@ -19,13 +19,13 @@
                $.ajax({  
                      type: "GET",  
                      url: "http://10.25.82.163:8084/requestAIResult",  
-                     data: "{seriesInstanceUid: 12345}",  
+                     data: {seriesInstanceUid: 12345},  
                      dataType: "json",  
                      success: function(data){  
                        $("#result").html(data); 
                        console.log(data); 
                     },
-                    error:fuction(e){
+                    error:function(e){
                     	console.log(e.message);
                     }  
                 });  
