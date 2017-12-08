@@ -15,27 +15,25 @@
 
 	<script type="text/javascript">
 		$(function(){
-	        getMsgNum();
+	        pointMsg();
 	    })
 
-	    function getMsgNum(){
+	    function pointMsg(seriesInstanceUid,callback){
     	    $.ajax({  
                 type: "GET",  
                 url: "http://10.25.82.163:8084/requestAIResult",  
-                data: {seriesInstanceUid: 12345},  
+                data: {seriesInstanceUid: seriesInstanceUid},  
                 dataType: "json", 
-                timeout:5000, 
+                // timeout:5000, 
                 success:function(data,testStatus){ 
-                    if(data){
-                    	console.log(data);
-                     	// var data = eval("("+data+")");
-                     	for(key in data){
-                     		console.log(key);	
-                     		console.log(data[key]);
-                     		if(data["code"]=="100301"){
-                     		  setInterval(function(){getMsgNum();},30);
+                    if(res){
+                    	console.log(res);
+                    	// var res = JSON.parse(res);
+                     		if(res["code"]=="000000"){
+                     			callback(res.data.list)
+                     		} else {
+                     		  setTimeout(function(){getMsgNum();},30000);
                      		}
-                     	}
                        console.log(data); 
                      } 
                      // if(testStatus=="success"){
@@ -44,16 +42,16 @@
                 
                 },
                 error:function(testStatus){
-                	if(testStatus == "timeout"){
-                		//请求超时
-                		// getMsgNum();
-                		clearInterval();
+                	// if(testStatus == "timeout"){
+                	// 	//请求超时
+                	// 	// getMsgNum();
+                	// 	clearInterval();
 
-                	}else{
-                		//其他错误
-                		// getMsgNum();
+                	// }else{
+                	// 	//其他错误
+                	// 	// getMsgNum();
 
-                	}
+                	// }
                 }  
             }); 
 	    }

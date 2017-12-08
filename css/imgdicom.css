@@ -1,0 +1,232 @@
+            /*****
+            ********************************
+            图片解析主要样式
+            ********************************
+            *****/
+
+ *{margin:0;padding:0;}
+ em{list-style: none;font-style: normal;}
+.nodePageActive{background: #999;}
+	.sidebar-nav{
+		width: 300px;
+	}
+	.table{
+		color:#fff;
+		margin-bottom: 0px;
+		
+	}
+	.btn-group .btn{
+		background: #000;	
+	}
+	.table th, .table td {
+	    padding: 8px;
+	    text-align: center;
+	}
+	.table thead th{
+		/*background:#ddd;*/
+	}
+	.tableHover{
+		position: relative;
+                         bottom: 20px;
+	}
+	.tableHover>thead>tr>th {
+		
+		 border-bottom:0; 
+	}
+	.tableHover>tbody>tr:hover{
+	background: #1e2c39 !important;
+	}
+	.nav .nav-header-content{
+		    min-height: 50px;
+		    display: block;
+		    position: relative;
+		 
+		    padding: 10px 15px;
+		    position: relative;
+		    display: -webkit-box;
+		    display: -webkit-flex;
+		    display: flex;
+		    -webkit-box-align: center;
+		    -webkit-align-items: center;
+		    align-items: center;
+	}
+	.titlediv {
+		    -webkit-box-align: start;
+		    -webkit-align-items: flex-start;
+		    align-items: flex-start;
+		    -webkit-box-flex: 1;
+		    -webkit-flex: 1;
+		    flex: 1;
+		    padding-left: 10px;
+		}
+	.titlediv span{
+		    color: #fff;
+		    font-size: 12px;
+		    display: block;
+		     line-height: 18px;
+		}
+	/*左面区域*/
+	.left_message{
+		position: absolute;
+		left:320px;
+		top:100px;
+	/*	width: 200px;*/
+		color:#fff;
+		
+	}
+	.nav_active{
+		border:1px solid #fff;
+	}
+	.title_right{
+		font-size: 10px;
+		 padding-bottom: 20px;
+	}
+	.clear{clear:both;}
+	.left_message .left_message_top span{
+		display: inline-block;
+		border:1px solid #fff;
+		font-size: 12px;
+		padding:5px;
+		height:40px;
+		line-height: 40px;
+		text-align: center;
+		 box-sizing: content-box;
+	}
+	.title_hd{position: relative;}
+	.title_hd span{
+		  width: 50%;  
+		  height: 50%;    
+		  margin: auto;  
+		  position: absolute;  
+		  top: 0; left: 0; bottom: 0; right: 0;   
+	}
+	.left_message .left_message_top span:nth-child(1){width:140px;}
+	.left_message .left_message_top span:nth-child(2){width:40px; margin-left: 15px;}
+	.nodelPointMessage{margin-top: 15px; }
+             .nodelPointMessage  .nodelPointMessageList{border:1px solid #fff;height:150px; position: relative;}
+             .border-style{
+		width:25px;
+		height:25px;
+		
+		position: absolute;
+	}
+	.border-style1{top:-4px;left:-4px;border-top:4px solid #0cad8d;border-left:4px solid #0cad8d;}
+	.border-style2{top:-4px;right:-4px;border-top:4px solid #0cad8d;border-right:4px solid #0cad8d;}
+	.border-style3{bottom:-4px;left:-4px;border-bottom:4px solid #0cad8d;border-left:4px solid #0cad8d;}
+	.border-style4{bottom:-4px;right:-4px;border-bottom:4px solid #0cad8d;border-right:4px solid #0cad8d;}
+	.formlogintop{display:block;text-align: center;font-size:20px;color:#fff;margin:40px 0 28px;}
+            .nodelPointMessageListTop{
+            	width:100%;
+            	height:40px;
+            	line-height:40px;
+            	text-align: center;
+            	border-bottom:1px solid #fff;
+            	position: relative;
+            }
+            #delete{position: absolute;right:0px; width: 25px;text-align: center;}
+            .nodelPointMessageListBody span{
+		display: block;
+		margin: 5px 0 0 20px;
+            }
+            .nodelPointMessagePage{margin-top:10px;height:28px;line-height: 28px;text-align: center;}
+            .nodelPointMessagePage span{width:98px; border:1px solid #fff; display:inline-block;}
+            .nodelPointMessagePage span:nth-child(1){float:left;}
+            .nodelPointMessagePage span:nth-child(2){float: right;}
+            .nodelPointMessagePage span:nth-child(2):after {
+		    content: " ";
+		    display: inline-block;
+		    height: 6px;
+		    width: 6px;
+		    border-width: 2px 2px 0 0;
+		    border-color: #C8C8CD;
+		    border-style: solid;
+		    -webkit-transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
+		    transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
+		    position: relative;
+		    top: -2px;
+		    top: 50%;
+		    margin-top: -4px;
+		    right: -15px;
+	}
+	/*右边区域*/
+	#dicomImage canvas{height:666px !important;}
+            .right_button .btnImg{position: absolute; right: 25px;background: none;border: 1px solid #fff;color:#fff;font-size: 12px;width:40px;height:40px;line-height: 40px;text-align: center;}
+             .right_button .btnRange{position: absolute;right:-75px;color: #fff;}
+            .right_button .btnRange:nth-child(1){top:210px;}
+            .right_button .btnImg:nth-child(2){top:360px;}
+            .right_button .btnImg:nth-child(3){top:410px;}
+            .right_button .btnImg:nth-child(4){top:460px;}
+            .right_button .btnImg:nth-child(5){top:510px;}
+            .right_button .btnImg:nth-child(6){top:560px;}
+
+            /*拖拽条*/
+             input[type="range"] {display: block;-webkit-appearance: none;background-color: #bdc3c7;width: 100%;height: 1px;border-radius: 5px;margin: 0 auto;outline: 0;}
+	input[type="range"]::-webkit-slider-thumb {-webkit-appearance: none;background-color: #fff;width: 20px;height:8px;cursor: pointer;transition: 0.3s ease-in-out;}
+	.range{
+		position:relative;width:240px;margin:0 auto;
+		transform:rotate(90deg);
+		-ms-transform:rotate(90deg); 	
+		-moz-transform:rotate(90deg); 	
+		-webkit-transform:rotate(90deg); 
+		-o-transform:rotate(90deg); 	
+
+	}
+	.btnRange .value{
+		position: absolute;
+		bottom: 125px;
+                         left: 110px;
+	}
+
+            /*进度条样式*/
+            .upload-progress{
+            	text-align: center;
+            	padding: 20px 0;
+            }
+            .progressStyle{
+            	    width: 400px;
+                  margin: 45px auto;
+                  border-radius: 10px;
+            }
+            .closeBtn{
+                   left: 32%;
+	    background-color: #428bca;
+	    color: #fff;
+	    width: 200px;
+	    text-align: center;
+	    padding: 5px 0px;
+	    border-radius: 4px;
+            }
+            /*节点检测状态*/
+        
+            .checkError span:nth-child(1){
+              color:#f00;
+               text-align: center;
+              display:block;
+             }
+            .checkError span:nth-child(2){
+            	 display:block;
+	 color:#fff;
+	 background: #f00;
+	 padding:0 5px;
+            }
+           .checkProgress{
+           	width:100%;
+           	height:1px;
+           	background: #222;
+           	z-index:888;
+           }
+           .checkProgressBar{
+           	background: #fff;
+           	height:100%;
+             z-index:999;
+           }
+
+     /*      .failFiles{
+           	    text-align: center;
+	    padding: 30px;
+	    font-size: 13px;
+           }*/
+/*.layui-layer  .layui-layer-btn  .layui-layer-title{background:#c00; color:#fff; border: none;}
+.layui-layer  .layui-layer-btn  .layui-layer-btn{border-top:1px solid #E9E7E7}
+.layui-layer  .layui-layer-btn .layui-layer-btn a{background:#333;}
+.layui-layer  .layui-layer-btn .layui-layer-btn1{background:#000;}*/

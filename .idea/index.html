@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+    </style>
+</head>
+<body>
+    <input type="file" name="" id="slectFiles" multiple>
+    <div class="dicom-viewer">
+        <div class="progress-bar"></div>
+        <button id="up">上一张</button>
+        <button id="down">下一张</button>
+        <button id="zoomin">放大</button>
+        <button id="zoomout">缩小</button>
+        <button id="reset">重置</button>
+        <!-- <button id="rotate">旋转</button> -->
+        <canvas class="dicom-canvas" width="1200" height="800"></canvas>
+    </div>
+    
+    <!-- include the dicomParser library as the WADO image loader depends on it -->
+    <script src="lib/dicomParser.min.js"></script>
+    
+    <script src="DICOMImage.min.js"></script>
+    <script src="DICOMViewer.min.js"></script>
+    <script src="DICOMUploader.min.js"></script>
+    <script>
+        const domSlector = document.getElementById('slectFiles');
+        const domCanvas = document.querySelector('.dicom-canvas');
+        domSlector.addEventListener('change', e => {
+            const files = e.target.files;
+            if (!files.length) return;
+            const dicomImage = new DICOMImage();
+            let SeriesSets = {};
+            dicomImage.loadDicomFiles(files).then(seriesSets => {
+                SeriesSets = seriesSets;
+                const dicomUploader = new DICOMUploader(seriesSets,{
+                    url: 'http://103.28.215.253:10219//uploadFile',
+                    progress: (step,res) => console.log(step*100,'%')
+                });
+                return dicomUploader.send();
+            }).then(res => {
+
+                const domCanvas = document.querySelector('.dicom-canvas');
+                const dicomViewer = new DICOMViewer(domCanvas);
+                // 查看器点击事件 
+                bindEvent(dicomViewer);
+        
+                // 点击列表项按钮
+                // 获取seriesID
+                const seriesID = Object.keys(SeriesSets)[0];
+                // 请求结点数据
+                const pointsSet = [
+                    {"diameter":"30","density":"600","dicomImageKey":"22","probability":"90.1","imageNo":"-360.5","location":"180,303","jpgImageKey":"22"},
+                    {"diameter":"15","density":"400","dicomImageKey":"11","probability":"98.9","imageNo":"-360.5","location":"100,234","jpgImageKey":"11"},
+                    {"diameter":"30","density":"300","dicomImageKey":"22","probability":"90.1","imageNo":"-360.5","location":"280,83","jpgImageKey":"22"},
+                    {"diameter":"15","density":"500","dicomImageKey":"11","probability":"98.9","imageNo":"-360.5","location":"300,134","jpgImageKey":"11"},
+                    {"diameter":"15","density":"400","dicomImageKey":"11","probability":"98.9","imageNo":"-196.5","location":"100,234","jpgImageKey":"11"},
+                    {"diameter":"25","density":"400","dicomImageKey":"11","probability":"98.9","imageNo":"-196.5","location":"250,450","jpgImageKey":"11"}
+                ];
+                dicomViewer.setDcmSeriesInfo(SeriesSets[seriesID],pointsSet);
+            }).catch(err => {
+                console.log(err || '失败')
+            });
+            // dicomImage.getPixelDataSet(files).then(dataset => {
+            //     localStorage.setItem('user1',JSON.stringify(dataset));
+            // });
+        });
+        function bindEvent(dicomViewer) {
+            document.getElementById('up').addEventListener('click',e => {
+                dicomViewer.up();
+            });
+            document.getElementById('down').addEventListener('click',e => {
+                dicomViewer.down();
+            });
+            document.getElementById('zoomin').addEventListener('click',e => dicomViewer.zoomIn());
+            document.getElementById('zoomout').addEventListener('click',e => dicomViewer.zoomOut());
+            document.getElementById('reset').addEventListener('click',e => dicomViewer.reset());
+            dicomViewer.setPointEvent(point => console.log(point));
+        }
+    </script>
+</body>
+</html>

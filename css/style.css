@@ -9,6 +9,7 @@ body{
     position: relative;
 
 }
+.contentPublic{padding:0 20px;}
 .spacer {
   overflow: hidden;
   margin: 11px 5px 0;
@@ -21,16 +22,26 @@ body{
     bottom: 47px;
 }
 .sloganboxcontent1{
-    height:38px;
-    line-height: 38px;
-    font-size: 30px;
+/*    height:38px;
+    line-height: 38px;*/
+    font-size:26px;
+    color:#fff;
+     padding-bottom: 25px;
 
 }
 .sloganboxcontent2{
     height:38px;
     line-height: 38px;
-    font-size: 14px;
+    font-size: 13px;
+        color:#fff;
 
+}
+.filesUploader{
+    position: absolute;
+    width: 100%;
+    overflow: hidden;
+    top:  0px;
+    opacity: 0;
 }
 
 div {
@@ -54,9 +65,9 @@ p {
 .navbar-header a {
 	text-decoration: none;
 }
-.mainhead-navbox {
-	height:60px;
-}
+/*.mainhead-navbox {
+	height:40px;
+}*/
 .mainhead-navbox .navbar-brand {
   float: left;
   height: 60px;
@@ -79,7 +90,7 @@ p {
     height:40px;
     margin: 0 auto;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 14px;
     text-align:center;
     position: relative;
     color:#fff;
@@ -96,7 +107,7 @@ p {
     display: inline-block;
 }
 .praise img{
-    width:30px;
+/*    width:30px;*/
     height:30px;
     margin: 0 auto;
 }
@@ -128,202 +139,8 @@ p {
 .praise .hover , #add-num .add-animation.hover , #praise-txt.hover{
     color: #EB4F38;
 }
-/*点赞图标放大动画开始*/
-@keyframes myfirst
-{
-    0%{
-        width:30px;
-        height:30px;
-    }
-    50%{
-        width:40px;
-        height:40px;
-    }
-    100% {
-        width:30px;
-        height:30px;
-    }
-}
-@-moz-keyframes myfirst /* Firefox */
-{
-    0%{
-        width:30px;
-        height:30px;
-    }
-    50%{
-        width:40px;
-        height:40px;
-    }
-    100% {
-        width:30px;
-        height:30px;
-    }
-}
-@-webkit-keyframes myfirst /* Safari 和 Chrome */
-{
-    0%{
-        width:30px;
-        height:30px;
-    }
-    50%{
-        width:40px;
-        height:40px;
-    }
-    100% {
-        width:30px;
-        height:30px;
-    }
-}
-@-o-keyframes myfirst /* Opera */
-{
-    0%{
-        width:30px;
-        height:30px;
-    }
-    50%{
-        width:40px;
-        height:40px;
-    }
-    100% {
-        width:30px;
-        height:30px;
-    }
-}
-/*点赞图标放大动画结束*/
-/*点赞数量加减动画开始*/
-@keyframes mypraise
-{
-    0%{
-        top:-15px;
-        opacity: 0;
-        filter: Alpha(opacity=0);
-        -moz-opacity:0;
-    }
-    25%{
-        top:-20px;
-        opacity: 0.5;
-        filter: Alpha(opacity=50);
-        -moz-opacity:0.5;
-    }
-    50%{
-        top:-25px;
-        opacity: 1;
-        filter: Alpha(opacity=100);
-        -moz-opacity:1;
-    }
-    75%{
-        top:-30px;
-        opacity: 0.5;
-        filter: Alpha(opacity=50);
-        -moz-opacity:0.5;
-    }
-    100% {
-        top:-35px;
-        opacity: 0;
-        filter: Alpha(opacity=0);
-        -moz-opacity:0;
-    }
-}
-@-moz-keyframes mypraise /* Firefox */
-{
-    0%{
-        top:-15px;
-        opacity: 0;
-        filter: Alpha(opacity=0);
-        -moz-opacity:0;
-    }
-    25%{
-        top:-20px;
-        opacity: 0.5;
-        filter: Alpha(opacity=50);
-        -moz-opacity:0.5;
-    }
-    50%{
-        top:-25px;
-        opacity: 1;
-        filter: Alpha(opacity=100);
-        -moz-opacity:1;
-    }
-    75%{
-        top:-30px;
-        opacity: 0.5;
-        filter: Alpha(opacity=50);
-        -moz-opacity:0.5;
-    }
-    100% {
-        top:-35px;
-        opacity: 0;
-        filter: Alpha(opacity=0);
-        -moz-opacity:0;
-    }
-}
-@-webkit-keyframes mypraise /* Safari 和 Chrome */
-{
-    0%{
-        top:-15px;
-        opacity: 0;
-        filter: Alpha(opacity=0);
-        -moz-opacity:0;
-    }
-    25%{
-        top:-20px;
-        opacity: 0.5;
-        filter: Alpha(opacity=50);
-        -moz-opacity:0.5;
-    }
-    50%{
-        top:-25px;
-        opacity: 1;
-        filter: Alpha(opacity=100);
-        -moz-opacity:1;
-    }
-    75%{
-        top:-30px;
-        opacity: 0.5;
-        filter: Alpha(opacity=50);
-        -moz-opacity:0.5;
-    }
-    100% {
-        top:-35px;
-        opacity: 0;
-        filter: Alpha(opacity=0);
-        -moz-opacity:0;
-    }
-}
-@-o-keyframes mypraise /* Opera */
-{
-    0%{
-        top:-15px;
-        opacity: 0;
-        filter: Alpha(opacity=0);
-        -moz-opacity:0;
-    }
-    25%{
-        top:-20px;
-        opacity: 0.5;
-        filter: Alpha(opacity=50);
-        -moz-opacity:0.5;
-    }
-    50%{
-        top:-25px;
-        opacity: 1;
-        filter: Alpha(opacity=100);
-        -moz-opacity:1;
-    }
-    75%{
-        top:-30px;
-        opacity: 0.5;
-        filter: Alpha(opacity=50);
-        -moz-opacity:0.5;
-    }
-    100% {
-        top:-35px;
-        opacity: 0;
-        filter: Alpha(opacity=0);
-        -moz-opacity:0;
-    }
-}
-/*点赞数量加减动画结束*/
+
+
 /*动态点赞结束*/
 .mainhead-nav > li {
   display: inline-block;
@@ -405,7 +222,7 @@ p {
 		width: 1180px;
 	} 
 }
-.container { 
+.container1{ 
          background:#1e2c39;
     }
 .center {
@@ -420,7 +237,7 @@ p {
 	margin-bottom:8em;
 }
 .sloganbox p {
-	color:#888;
+	/*color:#888;*/
 	line-height: 160%;
 }
 a.btn {
@@ -534,8 +351,8 @@ a.btn {
     color: #bcb9b2;
 }
 .mainfoot {
-    /*min-height: 200px;
-    padding-top: 1em;*/
+    /*min-height: 200px;*/
+    padding-top: 1em;
 }
 .mainfoot .partnerbox {
     color: #ddd;
@@ -548,7 +365,8 @@ a.btn {
     color: #ccc;
 }
 .mainfoot, .mainfoot a {
-    color: #999999;
+   color:#fff;
+   font-size:12px;
 }
 
 /*左侧*/
@@ -622,3 +440,90 @@ a.btn {
     -moz-transition: all 0.3s;
     transition: all 0.3s;
 }
+
+/*弹框内容筛选*/
+.filesFilter{
+    margin-bottom: 20px !important;
+}
+.filesFilter tr th{
+  background:#eef3f2;
+}
+.filesFilter >tbody>tr:nth-child(2){
+background:#eef3f2;
+}
+.filesFilter tr th,.filesFilter tr td{
+    width:25%;
+    overflow: hidden;
+    color:#333;
+    font-size:10px;
+}
+    .layui-layer {position: relative}
+    .submitBtn{
+        position: absolute;
+        left:37%;
+        bottom: 20px;
+        display: inline-block;
+        padding: 5px 45px;
+        margin-bottom: 0;
+        font-size: 14px;
+        font-weight: normal;
+        line-height: 1.428571429;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        cursor: pointer;
+        background-image: none;
+        border: 1px solid transparent;
+        border-radius: 1px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -o-user-select: none;
+        user-select: none;
+        color: #ffffff;
+        background-color: #099a84;
+       /* border-color: #357ebd;*/
+    }
+    .totalFiles{
+        position: absolute;
+        bottom:55px;
+        right:20px;
+        font-size: 12px;
+        
+    }
+    .totalFiles1{
+        position: absolute;
+        bottom: 55px;
+        left:35%;
+        font-size: 12px;
+
+    }
+
+
+
+  /*  .btn-primary {
+        color: #ffffff;
+        background-color: #428bca;
+        border-color: #357ebd;
+    }*/
+
+/*    .btn {
+        display: inline-block;
+        padding: 6px 12px;
+        margin-bottom: 0;
+        font-size: 14px;
+        font-weight: normal;
+        line-height: 1.428571429;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        cursor: pointer;
+        background-image: none;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -o-user-select: none;
+        user-select: none;
+    }*/

@@ -21,9 +21,9 @@ var Login = {
     //用户名验证
     NameValidate: function () {
         //邮箱验证
-        var regEmail = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+        // var regEmail = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
         //手机号码验证
-        // var phone = /(\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{3,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$/;
+        var phone = /(\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{3,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$/;
         var txtName = $.trim($('#txtName').val());
 
         if (txtName=="") {
@@ -31,7 +31,7 @@ var Login = {
             return false;
         }
         if (!regEmail.test(txtName)) {
-            Tips.ShowError('TName', '邮箱格式不对');
+            Tips.ShowError('TName', '手机格式不对');
             $('#txtName').attr('right', 0);
             return false;
         }
