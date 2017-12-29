@@ -13,9 +13,6 @@
 	<link href="css/imgdicom.css" rel="stylesheet">
 	<!-- 弹窗样式 -->
 	<link rel="stylesheet" type="text/css" href="http://res.layui.com/layui/dist/css/layui.css"/>
-
-
-
 </head>
 
 <body>
@@ -28,7 +25,7 @@
 					<span id="praise">
 						<img src="img/logo.png" id="praise-img" />
 						<span style="position:relative;top:3px;left:10px;">智能影像体验平台</span>
-                       				</span>
+                    </span>
 				</div>
 			</div>
 		</div>
@@ -51,7 +48,7 @@
 			<div class='row sloganbox'>
 				<div class='col-xs-8 col-xs-offset-2 center'>
 					<p class="sloganboxcontent1">上传DICOM文件</p>
-					<p class="sloganboxcontent2"><img src="img/tips.png" alt="" style="width:16px;height:16px;">目前仅支持肺部结合智能分析，请上传胸部CT影像文件<br/>支持小于XXXM的文件上传，建议一个文件夹放置一个影响序列</p>
+					<p class="sloganboxcontent2"><img src="img/tips.png" alt="" style="width:18px;height:18px;">目前仅支持肺部结合智能分析，请上传胸部CT影像文件<br/>支持小于XXXM的文件上传，建议一个文件夹放置一个影响序列</p>
 					<form id="form1" enctype="multipart/form-data" method="post" action="http://103.28.215.253:10219//uploadFile">
 
 						<a href='javaScript;;' class='btn btn-hero radius-2 margin-t10 no-decoration btn-file' style="background: #099a84;position:relative;font-size:14px;padding: 5px 15px;">
@@ -85,7 +82,7 @@
 				<!-- nav   end -->
 				<!-- section  start -->
 				<div class="demo ui-sortable">
-					<canvas   id="dicomImage"width="800" height="800"></canvas>
+					<canvas   id="dicomImage" width="1200" height="800" style="margin-left:-150px;"></canvas>
 				</div>
 				<div class="left_message" style="display:none;"></div>
 				<div class="right_button">
@@ -124,10 +121,23 @@
 <script type="text/javascript"  src="js/dicomParser.min.js" charset="utf-8"></script>
 <script type="text/javascript"  src="js/DICOMImage.min.js" charset="utf-8"></script>
 <script type="text/javascript"  src="js/DICOMViewer.min.js" charset="utf-8"></script>
-<script type="text/javascript"  src="js/DICOMUploader.min.js"></script>
+<script type="text/javascript"  src="js/DICOMUploader.js"></script>
 <script type="text/javascript"  src="layer/layer.js" charset="utf-8"></script>
+<!-- 加密价签算法js -->
+<script type="text/javascript"  src="js/core.js" charset="utf-8"></script>
+<script type="text/javascript"  src="js/cipher-core.js" charset="utf-8"></script>
+<script type="text/javascript"  src="js/aes.js" charset="utf-8"></script>
+<script type="text/javascript"  src="js/hmac.js" charset="utf-8"></script>
+<script type="text/javascript"  src="js/sha1.js" charset="utf-8"></script>
+<script type="text/javascript"  src="js/sha256.js" charset="utf-8"></script>
+<script type="text/javascript"  src="js/enc-base64.js" charset="utf-8"></script>
+<script type="text/javascript"  src="js/jsbn.js" charset="utf-8"></script>
+<script type="text/javascript"  src="js/prng4.js" charset="utf-8"></script>
+<script type="text/javascript"  src="js/rng.js" charset="utf-8"></script>
+<script type="text/javascript"  src="js/rsa.js" charset="utf-8"></script>
 <script type="text/javascript"  src="js/uploaderflies.js" charset="utf-8"></script>
 <!-- 进度条 -->
+
 
 
 <script>

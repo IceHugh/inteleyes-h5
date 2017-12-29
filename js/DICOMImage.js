@@ -27,7 +27,7 @@ class DICOMImage {
     }
     lightImage(imageData, light) {
         var data = imageData.data;
-        for(var i=0;i<data.length;i+=4)
+        for(let i=0;i<data.length;i+=4)
         {
             data[i] += light;
             data[i+1] += light;
@@ -40,7 +40,7 @@ class DICOMImage {
             var data = imageData.data;
             var factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
         
-            for(var i=0;i<data.length;i+=4)
+            for(let i=0;i<data.length;i+=4)
             {
                 data[i] = factor * (data[i] - 128) + 128;
                 data[i+1] = factor * (data[i+1] - 128) + 128;
@@ -64,11 +64,12 @@ class DICOMImage {
             var SeriesInstanceUID = dataSet.string('x0020000e');
             // console.log('SeriesInstanceUID',SeriesInstanceUID);
             var imageNo = parseFloat(dataSet.string('x00201041'));
-            var SOPInstanceUID = dataSet.string('x00080018');
-            var BodyPartExamined = dataSet.string('x00180015');
-            var PatientAge = parseInt(dataSet.string('x00101010').replace('Y','')) + '岁';
-            var PatientSex = (dataSet.string('x00100040') === 'F') ? '女' : '男';
-            var PersonName = dataSet.string('x0040a123');
+            const SOPInstanceUID = dataSet.string('x00080018');
+            const BodyPartExamined = dataSet.string('x00180015');
+            let PatientAge = dataSet.string('x00101010');
+            PatientAge = PatientAge? parseInt(PatientAge.replace('Y','')) + '岁' : '';
+            const PatientSex = (dataSet.string('x00100040') === 'F') ? '女' : '男';
+            const PersonName = dataSet.string('x0040a123');
             let SeriesDate = dataSet.string('x00080021');
             SeriesDate = SeriesDate.slice(0,4) + '-' + SeriesDate.slice(-4,-2) + '-' + SeriesDate.slice(-2);
             // create a typed array on the pixel data (this example assumes 16 bit unsigned data)

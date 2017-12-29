@@ -25,6 +25,7 @@ class DICOMUploader {
                 // res.seriesID = seriesID;
                 res.SOPInstanceUID = dicomDetail.SOPInstanceUID
                 res.imageNo = dicomDetail.imageNo;
+                debugger;
                 res.SeriesInstanceUID = dicomDetail.SeriesInstanceUID;
                 return res;
             });
@@ -33,7 +34,6 @@ class DICOMUploader {
                 groups.push(fileSeries.slice(i,Math.min(i + 4)));
             }
         }
-        debugger;
         for (let i = 0; i < groups.length; i++) {
             try {
                 this.sendingNum = groups[i].length;
@@ -78,7 +78,8 @@ class DICOMUploader {
         }
     }
     addUploadRecord(groupRecord) {
-        this.uploadRecord = [...new Set(this.uploadRecord.concat(groupRecord))];
+        this.uploadRecord = Array.from(new Set(this.uploadRecord.concat(groupRecord)));
+        console.log(this.uploadRecord);
         localStorage.setItem('uploadRecord',JSON.stringify(this.uploadRecord));
         
     }
@@ -99,7 +100,7 @@ class DICOMUploader {
             xhr.addEventListener('load', e => {
                 if (xhr.readyState == 4 && xhr.status == 200) {
                     const res = JSON.parse(xhr.responseText);
-                    if (res.code === 0) {
+                    if (res.code === '000000') {
                         resolve(res);
                     } else reject(res.message);
                 } else reject();
@@ -172,3 +173,4 @@ class DICOMUploader {
         return (crc ^ (-1)) >>> 0;
     }
 }
+window.DICOMUploader = DICOMUploader;
