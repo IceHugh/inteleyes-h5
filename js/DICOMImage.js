@@ -5,6 +5,7 @@ class DICOMImage {
         this.canvas = canvas;
     }
     processImage(pixelData,rows,columns) {
+        console.log(pixelData)
         const canvas = document.createElement('canvas');
         canvas.width = rows;
         canvas.height = columns;
@@ -56,7 +57,7 @@ class DICOMImage {
             var byteArray = new Uint8Array(arrayBuffer);
             // parse byteArray into a DataSet object using the parseDicom library
             var dataSet = dicomParser.parseDicom(byteArray);
-
+            console.log(dataSet)
             // get the pixel data element (contains the offset and length of the data)
             var pixelDataElement = dataSet.elements.x7fe00010;
             var rows = dataSet.uint16('x00280010');
@@ -64,6 +65,7 @@ class DICOMImage {
             var SeriesInstanceUID = dataSet.string('x0020000e');
             // console.log('SeriesInstanceUID',SeriesInstanceUID);
             var imageNo = parseFloat(dataSet.string('x00201041'));
+            var imagePosition = parseFloat(dataSet.string('x00200032').split('\\')[2]);
             const SOPInstanceUID = dataSet.string('x00080018');
             const BodyPartExamined = dataSet.string('x00180015');
             let PatientAge = dataSet.string('x00101010');
@@ -71,11 +73,16 @@ class DICOMImage {
             const PatientSex = (dataSet.string('x00100040') === 'F') ? '女' : '男';
             const PersonName = dataSet.string('x0040a123');
             let SeriesDate = dataSet.string('x00080021');
-            SeriesDate = SeriesDate.slice(0,4) + '-' + SeriesDate.slice(-4,-2) + '-' + SeriesDate.slice(-2);
+            console.log(imagePosition);
+            
+            if(!!SeriesDate) {
+                SeriesDate = SeriesDate.slice(0,4) + '-' + SeriesDate.slice(-4,-2) + '-' + SeriesDate.slice(-2);
+            }
             // create a typed array on the pixel data (this example assumes 16 bit unsigned data)
             var imageData = new Uint16Array(dataSet.byteArray.buffer, pixelDataElement.dataOffset);
             return {
                 imageData,
+                imagePosition,
                 rows,
                 columns,
                 SOPInstanceUID,
@@ -111,6 +118,7 @@ class DICOMImage {
                 } = dcmDetail;
                 dcmDetail.imageData = this.processImage(imageData,rows,columns);
                 dcmDetail.arrayBuffer = arrayBuffer;
+                console.log(dcmDetail)
                 resolve(dcmDetail);
             }
             reader.readAsArrayBuffer(DicomFile);
@@ -126,7 +134,8 @@ class DICOMImage {
             if(!(datasets[SeriesInstanceUID] instanceof Array)) datasets[SeriesInstanceUID] = [];
             datasets[SeriesInstanceUID].push(dcmDetail);
         }
-        Object.keys(datasets).forEach(seriesID => datasets[seriesID] = datasets[seriesID].sort((a,b) => a.imageNo>b.imageNo));
+        Object.keys(datasets).forEach(seriesID => [seriesID] = datasets[seriesID].sort((a, b) => a.imagePosition > b.imagePosition));
+        console.log(datasets)
         return datasets;
     }
 }

@@ -80,7 +80,8 @@
   $(function(){
       $('#loginsubmit').click(function(){
           var txtName =  $.trim($("#txtName").val());
-          var txtPwd = $.md5($.trim($("#txtPwd").val()));//md5密码校验
+        //   var txtPwd = $.md5($.trim($("#txtPwd").val()));//md5密码校验
+          var txtPwd = $.trim($("#txtPwd").val());
           if(txtName==""){       //验证用户名是否为空
               $("#result").show().html("请输入用户名！");
               return false;
@@ -97,7 +98,7 @@
           }else{
               $.ajax({
                   url:param,
-                  type:"POST",
+                  type:"GET",
                   dataType:"json",
                   data: {"username": txtName, "password":txtPwd},
                   beforeSend: function () {
@@ -109,15 +110,15 @@
                           $("#result").show().html("您输入正确用户名或密码！");
                           return false;
                       }else{
-                          if(data.username=="zhujunming"||data.password=="123456"){
-                              debugger;
+                        //   if(data.username=="zhujunming"|| data.password=="123456"){
+                        //       debugger;
                               window.location.href = "index.html";//跳转到主页
                           // //  cookie存储
                           // if(CookieHelper.Get("username")&&CookieHelper.Get("password")){
                           //   txtName = CookieHelper.Get("username");
                           //   txtPwd = CookieHelper.Get("password");
                           // }
-                          }
+                        //   }
 
                       }
                   },

@@ -25,7 +25,7 @@ class DICOMUploader {
                 // res.seriesID = seriesID;
                 res.SOPInstanceUID = dicomDetail.SOPInstanceUID
                 res.imageNo = dicomDetail.imageNo;
-                debugger;
+                // debugger;
                 res.SeriesInstanceUID = dicomDetail.SeriesInstanceUID;
                 return res;
             });
@@ -84,6 +84,7 @@ class DICOMUploader {
         
     }
     sendData(formData) {
+        console.log(formData)
         const {hasSentNum,sendingNum,totalSendNum} = this;
         return new Promise((resolve,reject) => {
             const xhr = new XMLHttpRequest();

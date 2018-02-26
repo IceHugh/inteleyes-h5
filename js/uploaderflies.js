@@ -1,7 +1,12 @@
 var $ = function (id) {
     return document.getElementById(id)
 };
-
+/**
+ * 
+ * @param {} title 
+ * @param {*} content 
+ * @param {*} btn 
+ */
 function dislog(title, content, btn) {
     layer.open({
         title: title,
@@ -44,9 +49,28 @@ var ctheader = $("ctheader"),
     submit = $("submit"),
     fileArray = [],
     fileSplitSize = 1024 * 10000;
-function fileSelected() {
-    var files = $("fileToUpload").files;
+
+function directorySelected (e){
+    const files = document.querySelector('#file01').files;
     console.log(files);
+}
+// 单文件选择
+function fileSelected(e) {
+    // var files = $("fileToUpload").files;
+    var files = e.files;
+    console.log(files);
+    let path = [];
+    for (const key in files) {
+        if (files.hasOwnProperty(key)) {
+            const val = files[key];
+            const { webkitRelativePath } = val;
+            const relativePath = webkitRelativePath.split('\/');
+            relativePath.pop();
+            console.log(relativePath)
+            path = new Set(relativePath)
+        }
+    }
+    console.log(path)
     var shtml = "";
     shtml += "<table class='table table-hover filesFilter' >";
     shtml += "<thead>";
@@ -69,7 +93,7 @@ function fileSelected() {
 
         //对文件类型及文件大小做判断处理
         if (stuff != "dcm") {
-            // alert("请选择正确文件");
+            alert("请选择正确文件");
             return false;
            
         }
@@ -114,6 +138,7 @@ function fileSelected() {
     btnShtml += "</div>";
     var btn = btnShtml;
     console.log(btn);
+    
     var txt = shtml;
     var title1 = "检测出待上传DICOM文件";
     dislog(title1, txt, btn);
@@ -135,7 +160,7 @@ function fileSelected() {
             //  debugger;
             // alert(55115);
             event.preventDefault();
-            uploadFile();
+            uploadFile(files);
             layer.close();
         });
     }
@@ -148,21 +173,21 @@ function fileSelected() {
     // }
 }
 
-function uploadFile() {
+function uploadFile(files) {
     //定义表单变量    
-    var files = document.getElementById('fileToUpload').files;
+    // var files = document.getElementById('fileToUpload').files;
     console.log(files);
-    var progress = document.getElementById('prog');
-    var title2 = "上传进度条";
-    var upPregress = ' ';
-    upPregress += '<div class="upload-progress"><span class="upload-son" id="uploaderprogress">DICOM文件上传中……</span></div>';
-    upPregress += '<div class="progress progressStyle">';
-    upPregress += '<div id="progressbar" class="progress-bar" style="width:0%;" role="progressbar" >0%</div>';
-    upPregress += '</div>';
-    // upPregress+='<span class=" layui-layer-close layui-layer-close1 closeBtn" >取&nbsp;&nbsp;消</span>';
+    // var progress = document.getElementById('prog');
+    // var title2 = "上传进度条";
+    // var upPregress = ' ';
+    // upPregress += '<div class="upload-progress"><span class="upload-son" id="uploaderprogress">DICOM文件上传中……</span></div>';
+    // upPregress += '<div class="progress progressStyle">';
+    // upPregress += '<div id="progressbar" class="progress-bar" style="width:0%;" role="progressbar" >0%</div>';
+    // upPregress += '</div>';
+    // // upPregress+='<span class=" layui-layer-close layui-layer-close1 closeBtn" >取&nbsp;&nbsp;消</span>';
 
-    // //  上传文件弹窗
-    dislog1(title2, upPregress);
+    // // //  上传文件弹窗
+    // dislog1(title2, upPregress);
     var SeriesSets = {};
     if (!files.length) return;
     var dicomImage = new DICOMImage();
@@ -172,106 +197,176 @@ function uploadFile() {
     // console.log(getDcmDetail.BodyPartExamined);
     dicomImage.loadDicomFiles(files).then(function (seriesSets) {
         SeriesSets = seriesSets;
-
-        // 轮询请求接口调用
-     
-
-        var progressbar = document.getElementById('progressbar');
-        debugger;
-        var dicomUploader = new DICOMUploader(seriesSets, {
-            url: 'http://103.28.215.253:10219/fileupload/file',
-            progress: function (step, res) {
-                var percent = Math.floor(step * 100) + '%';
-                console.log(percent);
-                progressbar.style.width = percent;
-                progressbar.innerHTML = percent;
+        // var dicomcheckResult = document.querySelector(".dicomcheckResult");
+        // 请求接口调用
+        loopRequest({
+            url: 'http://103.28.215.253:10219/api/ai/requestAIResult',
+            data: {
+                serialInstanceUid: Object.keys(SeriesSets)[0]
+            },
+            success: function () {
+                console.log(1);
+                dicomcheckResult.innerHTML = '<span class="complete">' + 3 + '个结节</span> ';
+                
+            },
+            loading: function () {
+                function setProcess() {
+                    debugger;
+                    var checkProgress = document.querySelector(".checkProgress");
+                    // if (checkProgressBar.style.width == "90%") return;
+                    var checkProgressBar = document.querySelector(".checkProgressBar");
+                    var checkProgressBarWidth = checkProgressBar.style.width;
+                    checkProgressBarWidth = parseInt(checkProgressBar.style.width) + 10 + "%";;
+                }
+                var time = setInterval(function () { setProcess(); }, 5000)
+                // dicomcheckResult.innerHTML = '<span class="checking">结节检测中...</span>';
+            },
+            error: function () {
+                console.log(1);
+                // dicomcheckResult.innerHTML = '<span class="checkError"><span>出现错误</span><span onclick="requestResult(this);">重新检测</span></span>';
+                requestAISuccess(SeriesSets) 
             }
         });
-        return dicomUploader.send();
-    }).then(function (res) {
-        /************************************************************************1判断是否为肺部影像**********************************************************************/
-        // var seriesID = Object.keys(SeriesSets)[0];
-        //  for(var i=0;i<= SeriesSets[seriesID].length;i++){
-        //      var k=SeriesSets[seriesID][i] ;
-        //      for(var j=0;j<=k;j++){
-
-        //      }
+        console.log(seriesSets);
+        // var progressbar = document.getElementById('progressbar');
+        // debugger;
+        // var dicomUploader = new DICOMUploader(seriesSets, {
+        //     url: 'http://103.28.215.253:10219/fileupload/file',
+        //     progress: function (step, res) {
+        //         var percent = Math.floor(step * 100) + '%';
+        //         console.log(percent);
+        //         progressbar.style.width = percent;
+        //         progressbar.innerHTML = percent;
         //     }
+        // });
+        // return dicomUploader.send();
+        // return true
+    })
+    // .then(function (res) {
+    //     /************************************************************************1判断是否为肺部影像**********************************************************************/
+    //     // var seriesID = Object.keys(SeriesSets)[0];
+    //     //  for(var i=0;i<= SeriesSets[seriesID].length;i++){
+    //     //      var k=SeriesSets[seriesID][i] ;
+    //     //      for(var j=0;j<=k;j++){
+
+    //     //      }
+    //     //     }
 
 
-        if (false) {
-            //k['BodyPartExamined']!== "CHEST"
-            var dicomcheck = "您上传的文件非胸部CT，目前仅支持智能识别肺结节，请重新上传";
-            layer.open({
-                type: 1
-                , content: dicomcheck
-                , area: ['640px', '320px']
-                , btn: '确定'
-                , btnAlign: 'c' //按钮居中
-                , shade: 0 //不显示遮罩
-                , yes: function (index) {
-                    layer.closeAll();
-                }
-            });
-        } else {
+    //     if (false) {
+    //         //k['BodyPartExamined']!== "CHEST"
+    //         var dicomcheck = "您上传的文件非胸部CT，目前仅支持智能识别肺结节，请重新上传";
+    //         layer.open({
+    //             type: 1
+    //             , content: dicomcheck
+    //             , area: ['640px', '320px']
+    //             , btn: '确定'
+    //             , btnAlign: 'c' //按钮居中
+    //             , shade: 0 //不显示遮罩
+    //             , yes: function (index) {
+    //                 // layer.closeAll();
+    //             }
+    //         });
+    //     } else {
 
-            var domCanvas = document.getElementById("dicomImage");
-            // uploaderprogress.innerHTML = '100%';
+    //         var domCanvas = document.getElementById("dicomImage");
+    //         // uploaderprogress.innerHTML = '100%';
 
-            var dicomViewer = new DICOMViewer(domCanvas);
-            var seriesID = Object.keys(SeriesSets)[0];
-            // console(seriesID);
-            // 查看器点击事件 
-            bindEvent(dicomViewer, SeriesSets[seriesID].length);
-            // var dicomUploader1 = new DICOMUploader(datasets);
-            //  console.log(dicomUploader1);
-            // 点击列表项按钮
-            // 获取seriesID
-            // 请求结点数据
-            var pointsSet = [
-                { "diameter": "30", "density": "600", "dicomImageKey": "22", "probability": "90.1", "imageNo": "-360.5", "location": "180,303", "jpgImageKey": "22" },
-                { "diameter": "15", "density": "400", "dicomImageKey": "11", "probability": "98.9", "imageNo": "-360.5", "location": "100,234", "jpgImageKey": "11" },
-                { "diameter": "30", "density": "300", "dicomImageKey": "22", "probability": "90.1", "imageNo": "-360.5", "location": "280,83", "jpgImageKey": "22" },
-                { "diameter": "15", "density": "500", "dicomImageKey": "11", "probability": "98.9", "imageNo": "-360.5", "location": "300,134", "jpgImageKey": "11" },
-                { "diameter": "15", "density": "400", "dicomImageKey": "11", "probability": "98.9", "imageNo": "-196.5", "location": "100,234", "jpgImageKey": "11" },
-                { "diameter": "25", "density": "400", "dicomImageKey": "11", "probability": "98.9", "imageNo": "-196.5", "location": "250,450", "jpgImageKey": "11" }
-            ];
-            dicomViewer.setDcmSeriesInfo(SeriesSets[seriesID], pointsSet);
-            filesDicom(SeriesSets, dicomViewer);
-            Object.keys(SeriesSets).forEach(function(seriesID) {
-                requestResult({
-                    url: '',
-                    handleResponse: function() {
-                        requestAI_handleResponse(xhr,options);
-                    },
-                    data: {
-                        serialInstanceUid: seriesID
-                    }
-                });
-            });
-            // dislog('','上传成功');
-            var page1 = document.getElementById("page1");
-            var page2 = document.getElementById("page2");
-            page1.style.display = "none";
-            page2.style.display = "block";
-            layer.closeAll();
-        }
-    }).catch(function (err) {
-        console.log(err || '失败')
-        var offline = "<div class=\"offline\">网络中断，待网络正常后继续上传</div>";
-        // layer.close();
+    //         var dicomViewer = new DICOMViewer(domCanvas);
+    //         var seriesID = Object.keys(SeriesSets)[0];
+    //         // console(seriesID);
+    //         // 查看器点击事件 
+    //         bindEvent(dicomViewer, SeriesSets[seriesID].length);
+    //         // var dicomUploader1 = new DICOMUploader(datasets);
+    //         //  console.log(dicomUploader1);
+    //         // 点击列表项按钮
+    //         // 获取seriesID
+    //         // 请求结点数据
+    //         var pointsSet = [
+    //             { "diameter": "30", "density": "600", "dicomImageKey": "22", "probability": "90.1", "imageNo": "-360.5", "location": "180,303", "jpgImageKey": "22" },
+    //             { "diameter": "15", "density": "400", "dicomImageKey": "11", "probability": "98.9", "imageNo": "-360.5", "location": "100,234", "jpgImageKey": "11" },
+    //             { "diameter": "30", "density": "300", "dicomImageKey": "22", "probability": "90.1", "imageNo": "-360.5", "location": "280,83", "jpgImageKey": "22" },
+    //             { "diameter": "15", "density": "500", "dicomImageKey": "11", "probability": "98.9", "imageNo": "-360.5", "location": "300,134", "jpgImageKey": "11" },
+    //             { "diameter": "15", "density": "400", "dicomImageKey": "11", "probability": "98.9", "imageNo": "-196.5", "location": "100,234", "jpgImageKey": "11" },
+    //             { "diameter": "25", "density": "400", "dicomImageKey": "11", "probability": "98.9", "imageNo": "-196.5", "location": "250,450", "jpgImageKey": "11" }
+    //         ];
+    //         dicomViewer.setDcmSeriesInfo(SeriesSets[seriesID], pointsSet);
+    //         filesDicom(SeriesSets, dicomViewer);
+    //         Object.keys(SeriesSets).forEach(function(seriesID) {
+    //             requestResult({
+    //                 url: 'http://103.28.215.253:10219/api/ai/requestAIResult',
+    //                 handleResponse: requestAI_handleResponse,
+    //                 data: {
+    //                     serialInstanceUid: seriesID
+    //                 }
+    //             });
+    //         });
+    //         // dislog('','上传成功');
+    //         var page1 = document.getElementById("page1");
+    //         var page2 = document.getElementById("page2");
+    //         page1.style.display = "none";
+    //         page2.style.display = "block";
+    //         // layer.closeAll();
+    //     }
+    // }).catch(function (err) {
+    //     console.log(err || '失败')
+    //     var offline = "<div class=\"offline\">网络中断，待网络正常后继续上传</div>";
+    //     // layer.close();
+    //     layer.open({
+    //         type: 1
+    //         , content: offline
+    //         , area: ['640px', '320px']
+    //         , btn: '确定'
+    //         , btnAlign: 'c' //按钮居中
+    //         , shade: 0 //不显示遮罩
+    //         , yes: function (index) {
+    //             // layer.close(index);
+    //         }
+    //     });
+    // });
+}
+function requestAISuccess(seriesSets) {
+    // var dicomcheckResult = document.querySelector(".dicomcheckResult");
+    if (false) {
+        //k['BodyPartExamined']!== "CHEST"
+        var dicomcheck = "您上传的文件非胸部CT，目前仅支持智能识别肺结节，请重新上传";
         layer.open({
             type: 1
-            , content: offline
+            , content: dicomcheck
             , area: ['640px', '320px']
             , btn: '确定'
             , btnAlign: 'c' //按钮居中
             , shade: 0 //不显示遮罩
             , yes: function (index) {
-                layer.close(index);
+                // layer.closeAll();
             }
         });
-    });
+    } else {
+
+        var domCanvas = document.getElementById("dicomImage");
+        // uploaderprogress.innerHTML = '100%';
+
+        var dicomViewer = new DICOMViewer(domCanvas);
+        var seriesID = Object.keys(seriesSets)[0];
+        // console(seriesID);
+        // 查看器点击事件 
+        bindEvent(dicomViewer, seriesSets[seriesID].length);
+        // var dicomUploader1 = new DICOMUploader(datasets);
+        //  console.log(dicomUploader1);
+        // 点击列表项按钮
+        // 获取seriesID
+        // 请求结点数据
+        var pointsSet = [
+            { "diameter": "30", "density": "600", "dicomImageKey": "22", "probability": "90.1", "imageNo": "-360.5", "location": "180,303", "jpgImageKey": "22" },
+            { "diameter": "15", "density": "400", "dicomImageKey": "11", "probability": "98.9", "imageNo": "-360.5", "location": "100,234", "jpgImageKey": "11" },
+            { "diameter": "30", "density": "300", "dicomImageKey": "22", "probability": "90.1", "imageNo": "-360.5", "location": "280,83", "jpgImageKey": "22" },
+            { "diameter": "15", "density": "500", "dicomImageKey": "11", "probability": "98.9", "imageNo": "-360.5", "location": "300,134", "jpgImageKey": "11" },
+            { "diameter": "15", "density": "400", "dicomImageKey": "11", "probability": "98.9", "imageNo": "-196.5", "location": "100,234", "jpgImageKey": "11" },
+            { "diameter": "25", "density": "400", "dicomImageKey": "11", "probability": "98.9", "imageNo": "-196.5", "location": "250,450", "jpgImageKey": "11" }
+        ];
+        dicomViewer.setDcmSeriesInfo(seriesSets[seriesID], pointsSet);
+        filesDicom(seriesSets, dicomViewer);
+    }
 }
 /*canvasBtn 操作事件*/
 function bindEvent(dicomViewer, firstDcmNumber) {
@@ -305,7 +400,7 @@ function initRangeSlider(dicomViewer, dcmNumber) {
 
     // elem.removeEventListener('input');
     var rangeValue = function () {
-        debugger;
+        // debugger;
         var newValue = elem.value;
         var target = document.querySelector('.value');
         target.innerHTML = newValue + '/' + dcmNumber;
@@ -369,10 +464,11 @@ function requestAI_handleResponse(xhr,options) {
 function loopRequest(options) {
     requestResult({
         url: options.url,
+        data: options.data,
         handleResponse: requestAIResult_handleResponse
     });
     //请求成功时
-    function requestAIResult_handleResponse(xhr,options) {
+    function requestAIResult_handleResponse(xhr) {
         if (xhr.readyState == 4 && xhr.status == 200) {
             debugger;
             var res = xhr.responseText;
@@ -381,8 +477,8 @@ function loopRequest(options) {
                 if (res["code"] == "000000") {
                     options.success();
                 } else if (res["code"] == "100860") {
-                    options.loading();
-                    setTimeout(function () { loopRequest(); }, 30000);
+                    // options.loading();
+                    // setTimeout(function () { loopRequest(); }, 30000);
                 } else {
                     options.error();
                 }
@@ -390,6 +486,8 @@ function loopRequest(options) {
             } else {
                 options.error();
             }
+        } else {
+            options.error();
         };
     }
 }
@@ -595,7 +693,7 @@ function preProcess(uri_path,data,isNeedEncode) {
     // 3 数据构造授权信息authorization 
     var once = hashCode(timestamp.toString(16) + outputData.deviceIp);
     var authorization = once + ":" + timestamp + ":" + AK + ":" + signature;
-    debugger;
+    // debugger;
     // base64转码
     var authorization_base64 = CryptoJS.enc.Base64.stringify( CryptoJS.enc.Utf8.parse(authorization));
     // hash的算法
