@@ -91,7 +91,8 @@
               return false;
           }
 
-          var param="http://103.28.215.253:10219/login";//验证接口
+          var param="http://127.0.0.1:10219/login";//验证接口
+          var successCode = '000000';
           if(txtName==""||txtPwd==""){
               $("#result").show().html("请输入用户和密码！");
               return false;
@@ -104,12 +105,16 @@
                   beforeSend: function () {
                       $(this).css("background", "#06bc99");
                   },
-                  success:function(data){
-
-                      if(data == false){
+                  success:function(data) {
+                      console.log(data);
+                      if (data === undefined) {
+                        $("#result").show().html("未知错误！");
+                          return false;
+                      }
+                      if(data.code !== successCode) {
                           $("#result").show().html("您输入正确用户名或密码！");
                           return false;
-                      }else{
+                      } else {
                         //   if(data.username=="zhujunming"|| data.password=="123456"){
                         //       debugger;
                               window.location.href = "index.html";//跳转到主页

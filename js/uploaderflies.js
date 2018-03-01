@@ -200,7 +200,7 @@ function uploadFile(files) {
         // var dicomcheckResult = document.querySelector(".dicomcheckResult");
         // 请求接口调用
         loopRequest({
-            url: 'http://103.28.215.253:10219/api/ai/requestAIResult',
+            url: 'http://127.0.0.1:10219/api/ai/requestAIResult',
             data: {
                 serialInstanceUid: Object.keys(SeriesSets)[0]
             },
@@ -231,7 +231,7 @@ function uploadFile(files) {
         // var progressbar = document.getElementById('progressbar');
         // debugger;
         // var dicomUploader = new DICOMUploader(seriesSets, {
-        //     url: 'http://103.28.215.253:10219/fileupload/file',
+        //     url: 'http://127.0.0.1:10219/fileupload/file',
         //     progress: function (step, res) {
         //         var percent = Math.floor(step * 100) + '%';
         //         console.log(percent);
@@ -294,7 +294,7 @@ function uploadFile(files) {
     //         filesDicom(SeriesSets, dicomViewer);
     //         Object.keys(SeriesSets).forEach(function(seriesID) {
     //             requestResult({
-    //                 url: 'http://103.28.215.253:10219/api/ai/requestAIResult',
+    //                 url: 'http://127.0.0.1:10219/api/ai/requestAIResult',
     //                 handleResponse: requestAI_handleResponse,
     //                 data: {
     //                     serialInstanceUid: seriesID
@@ -432,7 +432,7 @@ function requestAI_handleResponse(xhr,options) {
     var dicomcheckResult = document.querySelector(".dicomcheckResult");
     if (xhr.readyState == 4 && xhr.status == 200) {
         var requestAIRes =JSON.stringify(xhr.responseText);
-        var url = "http://103.28.215.253:10219/api/ai/requestAIResult"
+        var url = "http://127.0.0.1:10219/api/ai/requestAIResult"
         // var data = { seriesInstanceUid: seriesInstanceUid };
         if(requestAIRes.code !== "000000") return;
         loopRequest({
