@@ -207,7 +207,7 @@ function uploadFile(files) {
             success: function () {
                 console.log(1);
                 dicomcheckResult.innerHTML = '<span class="complete">' + 3 + '个结节</span> ';
-                
+                requestAISuccess(SeriesSets) 
             },
             loading: function () {
                 function setProcess() {
@@ -224,7 +224,7 @@ function uploadFile(files) {
             error: function () {
                 console.log(1);
                 // dicomcheckResult.innerHTML = '<span class="checkError"><span>出现错误</span><span onclick="requestResult(this);">重新检测</span></span>';
-                requestAISuccess(SeriesSets) 
+                
             }
         });
         console.log(seriesSets);
@@ -327,7 +327,7 @@ function uploadFile(files) {
 }
 function requestAISuccess(seriesSets) {
     // var dicomcheckResult = document.querySelector(".dicomcheckResult");
-    if (false) {
+    if (seriesSets) {
         //k['BodyPartExamined']!== "CHEST"
         var dicomcheck = "您上传的文件非胸部CT，目前仅支持智能识别肺结节，请重新上传";
         layer.open({
