@@ -30,7 +30,7 @@
 			</div>
 		</div>
 		<ul class="nav mainhead-nav">
-			<li>早上好，李医生</li>
+			<li id="username"></li>
 			<li class="spacer"></li>
 			<li onclick="window.location.href='login.html';">安全退出</li>
 		</ul>
@@ -153,7 +153,14 @@
         {"diameter":"28","density":"400","dicomImageKey":"11","probability":"98.9","imageNo":"-196.5","location":"250,450","jpgImageKey":"11"},
         {"diameter":"29","density":"400","dicomImageKey":"11","probability":"98.9","imageNo":"-196.5","location":"250,450","jpgImageKey":"11"},
         {"diameter":"30","density":"400","dicomImageKey":"11","probability":"98.9","imageNo":"-196.5","location":"250,450","jpgImageKey":"11"},
-    ];
+	];
+	
+	var username = window.sessionStorage.getItem("username");
+
+	window.onload = function() {
+		obj = document.getElementById("username");
+		obj.innerHTML = username;
+	}
 
 
 </script>
