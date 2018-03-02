@@ -5,7 +5,7 @@ class DICOMImage {
         this.canvas = canvas;
     }
     processImage(pixelData,rows,columns) {
-        console.log(pixelData)
+        // console.log(pixelData)
         const canvas = document.createElement('canvas');
         canvas.width = rows;
         canvas.height = columns;
@@ -57,7 +57,7 @@ class DICOMImage {
             var byteArray = new Uint8Array(arrayBuffer);
             // parse byteArray into a DataSet object using the parseDicom library
             var dataSet = dicomParser.parseDicom(byteArray);
-            console.log(dataSet)
+            // console.log(dataSet)
             // get the pixel data element (contains the offset and length of the data)
             var pixelDataElement = dataSet.elements.x7fe00010;
             var rows = dataSet.uint16('x00280010');
@@ -73,7 +73,7 @@ class DICOMImage {
             const PatientSex = (dataSet.string('x00100040') === 'F') ? '女' : '男';
             const PersonName = dataSet.string('x0040a123');
             let SeriesDate = dataSet.string('x00080021');
-            console.log(imagePosition);
+            // console.log(imagePosition);
             
             if(!!SeriesDate) {
                 SeriesDate = SeriesDate.slice(0,4) + '-' + SeriesDate.slice(-4,-2) + '-' + SeriesDate.slice(-2);
@@ -118,7 +118,7 @@ class DICOMImage {
                 } = dcmDetail;
                 dcmDetail.imageData = this.processImage(imageData,rows,columns);
                 dcmDetail.arrayBuffer = arrayBuffer;
-                console.log(dcmDetail)
+                // console.log(dcmDetail)
                 resolve(dcmDetail);
             }
             reader.readAsArrayBuffer(DicomFile);
@@ -135,7 +135,7 @@ class DICOMImage {
             datasets[SeriesInstanceUID].push(dcmDetail);
         }
         Object.keys(datasets).forEach(seriesID => [seriesID] = datasets[seriesID].sort((a, b) => a.imagePosition > b.imagePosition));
-        console.log(datasets)
+        // console.log(datasets)
         return datasets;
     }
 }
