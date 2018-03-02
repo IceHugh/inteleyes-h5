@@ -127,6 +127,9 @@
 
                       }
                   },
+                  error: function(XMLHttpRequest, textStatus, errorThrown) {
+                      $("#result").show().html("登录失败，请检查网络是否畅通！");
+                  },
                   complete: function (data) {
                       $(this).css("background", "#f0f");
                   }
