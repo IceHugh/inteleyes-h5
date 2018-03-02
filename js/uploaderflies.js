@@ -202,7 +202,7 @@ function uploadFile(files) {
         loopRequest({
             url: 'http://127.0.0.1:10219/api/ai/requestAIResult',
             data: {
-                serialInstanceUid: Object.keys(SeriesSets)[0]
+                seriesInstanceUid: Object.keys(SeriesSets)[0]
             },
             success: function () {
                 console.log(1);
@@ -415,6 +415,18 @@ function initRangeSlider(dicomViewer, dcmNumber) {
 }
 
 /************************************************************************2请求AI接口结果，是否发起轮询**********************************************************************/
+function requestResultGetResult(options) {
+    var xhr = new XMLHttpRequest();
+    var url = options.url;
+
+    xhr.onreadystatechange = function() {
+        options.handleResponse(xhr,options);
+    }
+
+    xhr.open("GET", url + "?seriesInstanceUid=" + options.data.seriesInstanceUid);
+    xhr.send(null);
+}
+
 function requestResult(options) {
     var xhr = new XMLHttpRequest();
     var url = options.url;
@@ -462,7 +474,7 @@ function requestAI_handleResponse(xhr,options) {
 }
 /*请求成功时，轮询*/
 function loopRequest(options) {
-    requestResult({
+    requestResultGetResult({
         url: options.url,
         data: options.data,
         handleResponse: requestAIResult_handleResponse
@@ -470,7 +482,7 @@ function loopRequest(options) {
     //请求成功时
     function requestAIResult_handleResponse(xhr) {
         if (xhr.readyState == 4 && xhr.status == 200) {
-            debugger;
+            // debugger;
             var res = xhr.responseText;
             if (res) {
                 res = JSON.parse(res);
@@ -630,14 +642,14 @@ function showdiv() {
 }
 function preProcess(uri_path,data,isNeedEncode) {
     /*************************加密加签入参格式**********************************/
-    var AK="PSZ0tepOD9c_ckSb_rRHRFfHgkZDbEyHDHLRifF6eAWwHzK1yuGE6OdGegu_1gTQwQQG9l5FY37Q_RZvaVsWnLDrwuKWN-ykyyA8SSIpdp27s6ihTrTVUwFrLxtmD8S4QuFwYVrLojYRFBcA5ivhYTnfqOCeVkilMExniIr45xo";
-    var SK="PW5biLPzMo-jpObNv6zsiOnywwAH5UszWFQtTE-_VZazX232EJzF94N7I_seDQHPhWTGvv7tpdbx-EiQqzeamgINo7wkxgkUMSKovEukHT13PKOU7PcKRaKI4DomIFhSy-1NqlYJZObLBWXQLPuIXXF9P7z0aNy2_kUKCxHsPcI";
+    var AK="K8-olPawFfwd9i3Ryc4xEgJxipRS1baU3oViSTrzEetSMLFLF5P0AVPQr3Ye0i89WsKfdjNMhF7qmfL7eyWCExj0R2B3BKkoWaDCUlpT63RdpXABwH-WrBaWum5d3jR4k-QUxjAcSWxDDFqgIDDMurPIk0-vpRiAJ8TFwxuayHs";
+    var SK="Ky3x7Syyj2qzeB4MxK2pgfogFy9Z-Jpjl-l-HxnMp7oRJTh1YkyW2BQHG8jSxS744zAGFX1juAakmQZUrIjaLQJxnLyBSwpy9vSpQJSAZtX3QdJ5igC3U1YVD-iDOOCWg9pmu-dW0IxsyNJ5lI16n7odVG3QgDrfwjbHW2jppX0";
     // 时间戳(时区GMT+8)
     var timestamp = new Date().getTime() + 28800;
     /***************签名字符串******************/
     var http_verb = "POST";
     /**********接口入参加密加签***************/
-    var publicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCodcP7ToIS9W2gphkpeQAaukEsGoTx1aTOwQ518Qf95SnykOTsygs4ZqkX9l1o1Y1KWy662LTCpxKceXLM7gcgKKZuDWhRkfQBL5x2Gh9Y73to3RWxoVTPqa6kcq44yefbaHMWXdSMbG8rm_v28iNrS1axEbw8aFUWksR5BuyM9QIDAQAB"; //颖像平台下发的publicKey
+    var publicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCDWHotgLlIDhEQzjECR3rAZKk-IksiWDNVtD8RUi89skU_H1oF82YXbfMlxXsGvpLU87Q06GDvyID7EfJe2EgGiaOhJQE5slmFgSPHIIa1xodtnuOoKPbZnksNgGZlQlK7hA-oJvUgnkfZiOk9AtBZgiyP8ohNE7cfcoj0edK_FQIDAQAB"; //颖像平台下发的publicKey
     // 随机产生16位字符串
     function randomWord(randomFlag, min, max) {
         var str = "",
