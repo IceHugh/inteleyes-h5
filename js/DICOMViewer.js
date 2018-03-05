@@ -12,7 +12,7 @@ class DICOMViewer {
         this.states = {
             current: 0,
             rotate: 0,
-            scale: 1,
+            scale: 0.7,
             translate: { x:0, y:0},
             preTranslate: { x:0, y:0},
             num: dcmSet.length,
