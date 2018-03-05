@@ -25,7 +25,6 @@ class DICOMUploader {
                 // res.seriesID = seriesID;
                 res.SOPInstanceUID = dicomDetail.SOPInstanceUID
                 res.imageNo = dicomDetail.imageNo;
-                // debugger;
                 res.SeriesInstanceUID = dicomDetail.SeriesInstanceUID;
                 return res;
             });
@@ -41,7 +40,6 @@ class DICOMUploader {
                 this.addUploadRecord(groups[i].map(item => item.SOPInstanceUID)); // 该组发送成功，将该组的文件id添加至本地缓存
                 this.hasSentNum += this.sendingNum;
                 this.sendingNum = 0;
-                debugger
                 this.progressCallback(this.hasSentNum/this.totalSendNum,res);
             } catch(err) {
                 throw err;

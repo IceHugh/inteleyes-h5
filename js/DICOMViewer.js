@@ -26,7 +26,7 @@ class DICOMViewer {
     }
     resetStates() {
         this.states.rotate = 0;
-        this.states.scale = 1;
+        this.states.scale = 0.7;
         this.states.translate = { x:0, y:0};
         this.states.preTranslate = { x:0, y:0};
     }
@@ -46,7 +46,6 @@ class DICOMViewer {
         this.currentDcmInfo =currentDcmInfo;
         const [DcmWidth,DcmHeight] = rows/columns > width/height ? [width,width * columns/rows] : [height*rows/columns,height];
         this.DcmWidth = DcmWidth,this.DcmHeight = DcmHeight;
-        debugger
         return pointSet.filter(({imageNo}) => parseFloat(imageNo) === currentDcmInfo.imageNo).map((item => {
             const [x,y] = item.location.split(',');
             item.x = +x/currentDcmInfo.rows * DcmWidth;
@@ -176,7 +175,6 @@ class DICOMViewer {
         const {ctx,width,height,states,DcmWidth,DcmHeight} = this;
         const {loopNumber,currentPointLocationID} = states;
         const { diameter,x,y,location:locationID } = point;
-        // debugger
         const highLight = currentPointLocationID === locationID;
         const radius = diameter/2;
         const a = (x - DcmWidth/2) > 0 ? 1 : -1;
@@ -232,7 +230,7 @@ class DICOMViewer {
         // the alternative is to untranslate & unrotate after drawing
     
         // move to the center of the canvas
-        ctx.translate(width/2,height/2 );
+        ctx.translate(width/2,height/2);
         ctx.scale(scale,scale);
         ctx.translate(-width/2+translate.x + (width - DcmWidth)/2,-height/2+translate.y + (height - DcmHeight)/2);
         ctx.drawImage(imgList[current],0,0,DcmWidth,DcmHeight); // 画dicom图片
