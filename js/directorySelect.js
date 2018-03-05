@@ -5,7 +5,7 @@ function directorySelect(e) {
   console.log(files);
   pathList = [];
   fileList = [];
-  var dcmFileList = [];
+  var dcmFileList = []; // 过滤其他非dcm后缀的文件
   for (const key in files) {
     if (files.hasOwnProperty(key)) {
       var val = files[key];

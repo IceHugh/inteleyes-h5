@@ -134,7 +134,7 @@ class DICOMImage {
             if(!(datasets[SeriesInstanceUID] instanceof Array)) datasets[SeriesInstanceUID] = [];
             datasets[SeriesInstanceUID].push(dcmDetail);
         }
-        Object.keys(datasets).forEach(seriesID => [seriesID] = datasets[seriesID].sort((a, b) => a.imagePosition > b.imagePosition));
+        Object.keys(datasets).forEach(seriesID => [seriesID] = datasets[seriesID].sort((a, b) => b.imagePosition - a.imagePosition));
         // console.log(datasets)
         return datasets;
     }
