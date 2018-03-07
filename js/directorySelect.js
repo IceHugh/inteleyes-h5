@@ -58,7 +58,7 @@ function showImages(dcmFiles) {
 
     var pointsSet = [];
     dicomViewer.setDcmSeriesInfo(SeriesSets[seriesID], pointsSet);
-    filesDicom(SeriesSets, dicomViewer);
+    filesDicom(SeriesSets, pointsSet, dicomViewer);
   })
 }
 

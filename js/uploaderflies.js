@@ -197,33 +197,36 @@ function uploadFile(files) {
     // console.log(getDcmDetail.BodyPartExamined);
     dicomImage.loadDicomFiles(files).then(function (seriesSets) {
         SeriesSets = seriesSets;
-        // var dicomcheckResult = document.querySelector(".dicomcheckResult");
+        var dicomcheckResult = document.querySelector(".dicomcheckResult");
         // 请求接口调用
         loopRequest({
             url: 'http://127.0.0.1:10219/api/ai/requestAIResult',
             data: {
                 seriesInstanceUid: Object.keys(SeriesSets)[0]
             },
-            success: function () {
-                console.log(1);
-                dicomcheckResult.innerHTML = '<span class="complete">' + 3 + '个结节</span> ';
-                requestAISuccess(SeriesSets) 
+            success: function (data) {
+                console.log("请求AI分析结果-成功");
+                console.log(data);
+                if (data.aiCode === '000000') {
+                    dicomcheckResult.innerHTML = '<span class="complete">' + data.aiResults.length + '个结节</span> ';
+                    requestAISuccess(SeriesSets, data.aiResults);
+                }
             },
             loading: function () {
+                console.log("请求AI分析结果-分析中")
                 function setProcess() {
-                    debugger;
                     var checkProgress = document.querySelector(".checkProgress");
                     // if (checkProgressBar.style.width == "90%") return;
                     var checkProgressBar = document.querySelector(".checkProgressBar");
                     var checkProgressBarWidth = checkProgressBar.style.width;
-                    checkProgressBarWidth = parseInt(checkProgressBar.style.width) + 10 + "%";;
+                    checkProgressBarWidth = parseInt(checkProgressBar.style.width) + 10 + "%";
                 }
                 var time = setInterval(function () { setProcess(); }, 5000)
-                // dicomcheckResult.innerHTML = '<span class="checking">结节检测中...</span>';
+                dicomcheckResult.innerHTML = '<span class="checking">结节检测中...</span>';
             },
             error: function () {
-                console.log(1);
-                // dicomcheckResult.innerHTML = '<span class="checkError"><span>出现错误</span><span onclick="requestResult(this);">重新检测</span></span>';
+                console.log("请求AI分析结果-出现错误");
+                dicomcheckResult.innerHTML = '<span class="checkError"><span>出现错误</span><span onclick="requestResult(this);">重新检测</span></span>';
                 
             }
         });
@@ -325,9 +328,9 @@ function uploadFile(files) {
     //     });
     // });
 }
-function requestAISuccess(seriesSets) {
+function requestAISuccess(seriesSets, pointsSet) {
     // var dicomcheckResult = document.querySelector(".dicomcheckResult");
-    if (seriesSets) {
+    if (seriesSets == undefined) {
         //k['BodyPartExamined']!== "CHEST"
         var dicomcheck = "您上传的文件非胸部CT，目前仅支持智能识别肺结节，请重新上传";
         layer.open({
@@ -342,7 +345,6 @@ function requestAISuccess(seriesSets) {
             }
         });
     } else {
-
         var domCanvas = document.getElementById("dicomImage");
         // uploaderprogress.innerHTML = '100%';
 
@@ -356,16 +358,16 @@ function requestAISuccess(seriesSets) {
         // 点击列表项按钮
         // 获取seriesID
         // 请求结点数据
-        var pointsSet = [
-            { "diameter": "30", "density": "600", "dicomImageKey": "22", "probability": "90.1", "imageNo": "-360.5", "location": "180,303", "jpgImageKey": "22" },
-            { "diameter": "15", "density": "400", "dicomImageKey": "11", "probability": "98.9", "imageNo": "-360.5", "location": "100,234", "jpgImageKey": "11" },
-            { "diameter": "30", "density": "300", "dicomImageKey": "22", "probability": "90.1", "imageNo": "-360.5", "location": "280,83", "jpgImageKey": "22" },
-            { "diameter": "15", "density": "500", "dicomImageKey": "11", "probability": "98.9", "imageNo": "-360.5", "location": "300,134", "jpgImageKey": "11" },
-            { "diameter": "15", "density": "400", "dicomImageKey": "11", "probability": "98.9", "imageNo": "-196.5", "location": "100,234", "jpgImageKey": "11" },
-            { "diameter": "25", "density": "400", "dicomImageKey": "11", "probability": "98.9", "imageNo": "-196.5", "location": "250,450", "jpgImageKey": "11" }
-        ];
+        // var pointsSet = [
+        //     { "diameter": "30", "density": "600", "dicomImageKey": "22", "probability": "90.1", "imageNo": "-360.5", "location": "180,303", "jpgImageKey": "22" },
+        //     { "diameter": "15", "density": "400", "dicomImageKey": "11", "probability": "98.9", "imageNo": "-360.5", "location": "100,234", "jpgImageKey": "11" },
+        //     { "diameter": "30", "density": "300", "dicomImageKey": "22", "probability": "90.1", "imageNo": "-360.5", "location": "280,83", "jpgImageKey": "22" },
+        //     { "diameter": "15", "density": "500", "dicomImageKey": "11", "probability": "98.9", "imageNo": "-360.5", "location": "300,134", "jpgImageKey": "11" },
+        //     { "diameter": "15", "density": "400", "dicomImageKey": "11", "probability": "98.9", "imageNo": "-196.5", "location": "100,234", "jpgImageKey": "11" },
+        //     { "diameter": "25", "density": "400", "dicomImageKey": "11", "probability": "98.9", "imageNo": "-196.5", "location": "250,450", "jpgImageKey": "11" }
+        // ];
         dicomViewer.setDcmSeriesInfo(seriesSets[seriesID], pointsSet);
-        filesDicom(seriesSets, dicomViewer);
+        filesDicom(seriesSets, pointsSet, dicomViewer);
     }
 }
 /*canvasBtn 操作事件*/
@@ -455,7 +457,7 @@ function requestAI_handleResponse(xhr,options) {
             },
             loading: function () {
                 function setProcess() {
-                    debugger;
+                    // debugger;
                     var checkProgress = document.querySelector(".checkProgress");
                     // if (checkProgressBar.style.width == "90%") return;
                     var checkProgressBar = document.querySelector(".checkProgressBar");
@@ -487,10 +489,10 @@ function loopRequest(options) {
             if (res) {
                 res = JSON.parse(res);
                 if (res["code"] == "000000") {
-                    options.success();
-                } else if (res["code"] == "100860") {
-                    // options.loading();
-                    // setTimeout(function () { loopRequest(); }, 30000);
+                    options.success(res.data);
+                } else if (res["code"] == "003005" || res["code"] == "003006") {
+                    options.loading();
+                    setTimeout(function () { loopRequest(options); }, 30000);
                 } else {
                     options.error();
                 }
@@ -504,7 +506,7 @@ function loopRequest(options) {
     }
 }
 /*creat_group_list*/
-function filesDicom(SeriesSets, dicomViewer) {
+function filesDicom(SeriesSets, pointsSet, dicomViewer) {
     var seriesIDList = Object.keys(SeriesSets);
     console.log(seriesIDList);
     var fileDicom = ' ';
@@ -591,7 +593,7 @@ function pointRowMsg(obj) {
     console.log(obj);
     var pointMsg = ' ';
     pointMsg += ' <div class="left_message_top">';
-    pointMsg += '        <span><img src="img/nodepoint.png" alt="" style="width:23px;position:relative;right:10px;"><em>' + 3 + '</em>个节点</span>';
+    pointMsg += '        <span><img src="img/nodepoint.png" alt="" style="width:23px;position:relative;right:10px;"><em>' + 3 + '</em>个结节</span>';
     pointMsg += '        <span class="nodepoint" id="pointImg"><img src="img/checkpointhide.png" alt="" style="width:30px;" id="imgChange"></span>';
     pointMsg += '</div>';
     // pointMsg +='      <div class="clear"></div>';
@@ -600,9 +602,9 @@ function pointRowMsg(obj) {
     pointMsg += '<div class="nodelPointMessageListTop"><span>结节' + obj.dicomImageKey + '</span><span id="delete" class="nodepoint">X</span></div>';
     pointMsg += '<div class="nodelPointMessageListBody">';
     pointMsg += '<span>直径：' + obj.diameter + '</span>';
-    pointMsg += '<span>密度：' + obj.jpgImageKey + '</span>';
-    pointMsg += '<span>可能性：' + obj.location + '</span>';
-    pointMsg += '<span>坐标：' + obj.probability + '</span>';
+    pointMsg += '<span>密度：' + obj.density + '</span>';
+    pointMsg += '<span>可能性：' + obj.probability + '</span>';
+    pointMsg += '<span>坐标：' + obj.location + '</span>';
     pointMsg += '</div>';
 
     pointMsg += '<div class="border-style border-style1"></div>';
