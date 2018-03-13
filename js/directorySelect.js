@@ -24,35 +24,43 @@ function directorySelect(e) {
   // console.log(pathList)
   // console.log(fileList)
   // console.log(dcmFileList);
-  showDir(pathList);
+  //showDir(pathList);
   showImages(dcmFileList);
 }
 
-function showDir(list) {
-  var page1 = document.getElementById("page1");
-  var page2 = document.getElementById("page2");
-  page1.style.display = "none";
-  page2.style.display = "block";
-  var html = '';
-  list.forEach(val => {
-    html += `<div class="dir-item" onclick="test(this)">${val}</div>`;
-  });
-  const dirDom = document.getElementById('jsdir');
-  dirDom.innerHTML = html;
-}
+// function showDir(list) {
+//   var page1 = document.getElementById("page1");
+//   var page2 = document.getElementById("page2");
+//   page1.style.display = "none";
+//   page2.style.display = "block";
+//   var html = '';
+//   list.forEach(val => {
+//     html += `<div class="dir-item" onclick="test(this)">${val}</div>`;
+//   });
+//   const dirDom = document.getElementById('jsdir');
+//   dirDom.innerHTML = html;
+// }
 
 function showImages(dcmFiles) {
+  var page1 = document.getElementById('page1')
+  var page2 = document.getElementById('page2')
+  page1.style.display = 'none';
+  page2.style.display = 'block';
   var dicomImage = new DICOMImage();
   var SeriesSets = {};
   dicomImage.loadDicomFiles(dcmFiles).then(function (seriesSets) {
     SeriesSets = seriesSets;
+    
   }).then(function (res) {
     var domCanvas = document.getElementById("dicomImage");
     // uploaderprogress.innerHTML = '100%';
-
+    // console.log(SeriesSets)
     var dicomViewer = new DICOMViewer(domCanvas);
     var seriesID = Object.keys(SeriesSets)[0];
-    // console(seriesID);
+    // console.log(SeriesSets[seriesID][0].dataSet)
+    const dcmData = dataDicom(SeriesSets[seriesID][0].dataSet);
+    dataDicomShow(dcmData);
+    console.log(SeriesSets[seriesID]);
     // 查看器点击事件 
     bindEvent(dicomViewer, SeriesSets[seriesID].length);
 
@@ -62,12 +70,12 @@ function showImages(dcmFiles) {
   })
 }
 
-function test(e) {
-  console.log();
-  const relativePath = e.innerText;
-  const selectFileList = fileList.filter( val => {
-    return val.webkitRelativePath.match(relativePath);
-  });
-  console.log(selectFileList);
-  uploadFile(selectFileList)
-}
+// function test(e) {
+//   console.log();
+//   const relativePath = e.innerText;
+//   const selectFileList = fileList.filter( val => {
+//     return val.webkitRelativePath.match(relativePath);
+//   });
+//   console.log(selectFileList);
+//   uploadFile(selectFileList)
+// }

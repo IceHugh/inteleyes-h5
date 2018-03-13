@@ -9,14 +9,36 @@
  	overflow: hidden;
  }
  em{list-style: none;font-style: normal;}
+ .greenGradient{
+	background-image:linear-gradient(-30deg,#01847d 0%,#00cea3 100%);
+ }
+ .upDownbtn{
+	width: 81px;
+	height: 21px;
+	border-radius: 1px;
+	background: transparent;
+	border: 1px solid #0cad8d;
+	color:#fff;
+	font-size: 12px;
+ }
+ .upDownbtn:active {
+    background-image: linear-gradient(-30deg,#01847d 0%,#00cea3 100%);
+ }
 .nodePageActive{background: #999;}
 	.sidebar-nav{
-		width: 200px;
+		width: 350px;
 	}
 	.table{
 		color:#fff;
 		margin-bottom: 0px;
 		
+	}
+	.table .point-row td{
+		border:none;
+		line-height: 10px;
+	}
+	.table .point-row:nth-child(odd) {
+		background-color: #00110e
 	}
 	.btn-group .btn{
 		background: #000;	
@@ -26,24 +48,36 @@
 	    text-align: center;
 	}
 	.table thead th{
-		/*background:#ddd;*/
-	}
-	.tableHover{
-		position: relative;
-                         bottom: 20px;
+		color:#0cad8d;
 	}
 	.tableHover>thead>tr>th {
 		
 		 border-bottom:0; 
 	}
+	.content-title{
+		height: 50px;
+    	line-height: 50px;
+    	color: #fff;
+	}
+	.currentOption{
+		display: inline-block;
+		height: 25px;
+		/* float: left; */
+		left: 0px;
+		/* top: 33px; */
+		top: 0px;
+		width: 2px;
+		position: absolute;
+		background-color: #0cad8d;
+	}
 	.tableHover>tbody>tr:hover{
-	background: #1e2c39 !important;
+	background: #465753 !important;
 	}
 	.nav .nav-header-content{
 		    min-height: 50px;
 		    display: block;
 		    position: relative;
-		 
+		    border: 1px solid transparent;
 		    padding: 10px 15px;
 		    position: relative;
 		    display: -webkit-box;
@@ -52,6 +86,9 @@
 		    -webkit-box-align: center;
 		    -webkit-align-items: center;
 		    align-items: center;
+	}
+	.sequenceAction{
+		border: 1px solid #0cad8d !important;
 	}
 	.titlediv {
 		    -webkit-box-align: start;
@@ -68,11 +105,21 @@
 		    display: block;
 		     line-height: 18px;
 		}
+	.dicom_message{
+		position: absolute;
+    	left: 370px;
+    	top: 75px;
+    	/* width: 200px; */
+    	color: #fff;
+	}
+	.dicom_message span {
+		margin-left: 12px;
+	}
 	/*左面区域*/
 	.left_message{
 		position: absolute;
-		left:320px;
-		top:100px;
+		left:370px;
+		top:120px;
 	/*	width: 200px;*/
 		color:#fff;
 		
@@ -82,12 +129,20 @@
 	}
 	.title_right{
 		font-size: 10px;
-		 /* padding-bottom: 20px; */
+		 padding-left: 20px;
+	}
+	.nodeNumber{
+		display: inline-block;
+    height: 30px;
+    width: 60px;
+    text-align: center;
+    line-height: 27px;
 	}
 	.clear{clear:both;}
 	.left_message .left_message_top span{
 		display: inline-block;
-		border:1px solid #fff;
+		border:1px solid #0cad8d;
+		color: #0cad8d;
 		font-size: 12px;
 		/*padding:5px;*/
 		height:38px;
@@ -99,32 +154,39 @@
 	.title_hd span{
 		  /*width: 50%;  */
 		  text-align: center;
-		  height: 50%;    
+		  height: 40%;    
 		  margin: auto;  
 		  position: absolute;  
 		  top: 0; left: 0; bottom: 0; right: 0;   
 	}
-	.left_message .left_message_top span:nth-child(1){width:140px;}
-	.left_message .left_message_top span:nth-child(2){width:40px; margin-left: 15px;}
+	.boldFont{
+		font-size: 22px;
+    	position: relative;
+    	left: 41px;
+    	top: -2px;
+    	float: left;
+	}
+	.left_message .left_message_top span:nth-child(1){width:110px;}
+	.left_message .left_message_top span:nth-child(2){width:40px; margin-left: 15px;cursor: pointer;}
 	.nodelPointMessage{margin-top: 15px; }
-             .nodelPointMessage  .nodelPointMessageList{border:2px solid #fff;height:150px; position: relative;}
+             .nodelPointMessage  .nodelPointMessageList{border:1px solid #0cad8d;height:122px; position: relative;}
              .border-style{
 		width:25px;
 		height:25px;
 		
 		position: absolute;
 	}
-	.border-style1{top:-3px;left:-3px;border-top:4px solid #0cad8d;border-left:4px solid #0cad8d;}
-	.border-style2{top:-3px;right:-3px;border-top:4px solid #0cad8d;border-right:4px solid #0cad8d;}
-	.border-style3{bottom:-3px;left:-3px;border-bottom:4px solid #0cad8d;border-left:4px solid #0cad8d;}
-	.border-style4{bottom:-3px;right:-3px;border-bottom:4px solid #0cad8d;border-right:4px solid #0cad8d;}
+	.border-style1{top:-2px;left:-2px;border-top:3px solid #0cad8d;border-left:3px solid #0cad8d;}
+	.border-style2{top:-2px;right:-2px;border-top:3px solid #0cad8d;border-right:3px solid #0cad8d;}
+	.border-style3{bottom:-2px;left:-2px;border-bottom:3px solid #0cad8d;border-left:3px solid #0cad8d;}
+	.border-style4{bottom:-2px;right:-2px;border-bottom:3px solid #0cad8d;border-right:3px solid #0cad8d;}
 	.formlogintop{display:block;text-align: center;font-size:20px;color:#fff;margin:40px 0 28px;}
             .nodelPointMessageListTop{
             	width:100%;
-            	height:38px;
-            	line-height:38px;
+            	height:30px;
+            	line-height:30px;
             	text-align: center;
-            	border-bottom:1px solid #fff;
+            	border-bottom:1px solid #0cad8d;
             	position: relative;
             }
             /*.left_message_top span em{
@@ -132,8 +194,9 @@
             }*/
             #delete{position: absolute;right:0px; width: 25px;text-align: center;}
             .nodelPointMessageListBody span{
-		display: block;
-		margin: 5px 0 0 20px;
+				display: block;
+				margin: 1px 0 0 17px;
+				letter-spacing: 2px;
             }
             .nodelPointMessagePage{margin-top:10px;height:28px;line-height: 28px;text-align: center;}
             .nodelPointMessagePage span{width:98px; border:1px solid #fff; display:inline-block;}
@@ -158,28 +221,38 @@
 	/*右边区域*/
 	#dicomImage canvas{height:666px !important;}
             .right_button .btnImg{
-	    position: absolute;
-	    right: 25px;
 	    background: none;
-	    border: 2px solid #fff;
-	    color: #fff;
-	    font-size: 10px;
+	    border: 2px solid #0cad8d;
+	    color: #0cad8d;
+		font-size: 10px;
+		margin-top: 5px;
 	    width: 30px;
 	    height: 30px;
-	    line-height: 30px;
+	    line-height: 25px;
 	    text-align: center;
             }
              .right_button .btnRange{position: absolute;right:-80px;color: #fff;}
-            .right_button .btnRange:nth-child(1){top:210px;}
-            .right_button .btnImg:nth-child(2){top:345px;}
+			.right_button .btnRange:nth-child(1){top:250px;}
+			.right_button .btnImg:nth-child(2){
+				margin-bottom: 15px;
+			}
+            /* .right_button .btnImg:nth-child(2){top:345px;}
             .right_button .btnImg:nth-child(3){top:385px;}
             .right_button .btnImg:nth-child(4){top:425px;}
             .right_button .btnImg:nth-child(5){top:465px;}
-            .right_button .btnImg:nth-child(6){top:505px;}
+            .right_button .btnImg:nth-child(6){top:505px;} */
 
             /*拖拽条*/
-             input[type="range"] {display: block;-webkit-appearance: none;background-color: #bdc3c7;width: 100%;height: 1px;border-radius: 5px;margin: 0 auto;outline: 0;}
-	input[type="range"]::-webkit-slider-thumb {-webkit-appearance: none;background-color: #fff;width: 20px;height:8px;cursor: pointer;transition: 0.3s ease-in-out;}
+	input[type="range"] 
+	{display: block;-webkit-appearance: none;background-color: #0cad8d;width: 150%;height: 2px;border-radius: 5px;margin: 0 auto;outline: 0;}
+	input[type="range"]::-webkit-slider-thumb {
+		-webkit-appearance: none;
+		background-color: #0cad8d;
+		width: 25px;height:10px;
+		border-radius: 1px;
+		cursor: pointer;
+		transition: 0.3s ease-in-out;
+	}
 	.range{
 		position:relative;width:240px;margin:0 auto;
 		transform:rotate(90deg);
@@ -191,8 +264,13 @@
 	}
 	.btnRange .value{
 		position: absolute;
-		bottom: 125px;
-                         left: 110px;
+		bottom: 130px;
+		left: 80px;
+		width: 80px;
+		text-align: center;
+		font-size: 14px;
+		color:#0cad8d;
+		font-family: Verdana, Geneva, Tahoma, sans-serif
 	}
 
             /*进度条样式*/
@@ -230,11 +308,11 @@
            .checkProgress{
            	width:100%;
            	height:3px;
-           	background: #222;
+           	background: #353a3a;
            	z-index:888;
            }
            .checkProgressBar{
-           	background: #fff;
+           	background: #0cad8d;
            	height:100%;
              z-index:999;
            }

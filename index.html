@@ -51,7 +51,7 @@
 					<p class="sloganboxcontent2"><img src="img/tips.png" alt="" style="width:18px;height:18px;">目前仅支持肺部结合智能分析，请选择CT影像文件<br/>建议一个影响序列放置一个文件夹</p>
 					<form id="form1" enctype="multipart/form-data" method="post" action="http://127.0.0.1:10219/uploadFile">
 
-						<div class='btn btn-hero radius-2 margin-t10 no-decoration btn-file' style="background: #099a84;position:relative;font-size:14px;padding: 5px 15px;">
+						<div class='btn btn-hero radius-2 margin-t10 no-decoration btn-file greenGradient' style="position:relative;font-size:14px;padding: 5px 15px;">
 							<img src="img/files.png" alt="" style="width:18px;height:15px;vertical-align: text-top;">&nbsp;选择DICOM文件夹
 							<input type="file" id="file01" class="filesUploader" onchange="directorySelect(this)" webkitdirectory directory multiple data-type="directory"/>
 						</div>
@@ -78,13 +78,19 @@
 		<div class="changeDimension">
 			<div class="row-fluid">
 				<!-- 目录条 -->
-				<div class="dir-nav" id="jsdir"></div>
+				<!-- <div class="dir-nav" id="jsdir"></div> -->
 				<!-- nav  start -->
-				<div class="sidebar-nav"></div>
+				<div class="sidebar-nav">
+					<div class="content-title">
+						已上传影像列表
+					</div>
+				</div>
 				<!-- nav   end -->
 				<!-- section  start -->
 				<div class="demo ui-sortable">
-					<canvas   id="dicomImage" width="1200" height="800" style="margin-left:-150px;"></canvas>
+					<canvas   id="dicomImage" width="1200" height="800"></canvas>
+				</div>
+				<div class="dicom_message">
 				</div>
 				<div class="left_message" style="display:none;"></div>
 				<div class="right_button">
@@ -95,11 +101,13 @@
 						  <p class="rang_width"></p>
 						</div>
 					</div>
-					<button id="up" type="button" class="btnImg"><img src="img/uparrow.png" alt="" style="width:20px;"></button>
-					<button id="down" type="button" class="btnImg"><img src="img/downarrow.png" alt="" style="width:20px;"></button>
-					<button id="zoomin" type="button" class="btnImg"><img src="img/bigicon.png" alt="" style="width:20px;"></button>
-					<button id="zoomout" type="button" class="btnImg"><img src="img/smallicon.png" alt="" style="width:20px;"></button>
-					<button id="reset" type="button" class="btnImg">100%</button>
+					<div style="position: absolute;right: 25px;width: 30px;top: 520px;">
+						<button id="up" type="button" class="btnImg"><img src="img/uparrow.png" alt="" style="width:20px;"></button>
+						<button id="down" type="button" class="btnImg"><img src="img/downarrow.png" alt="" style="width:20px;"></button>
+						<button id="zoomin" type="button" class="btnImg"><img src="img/bigicon.png" alt="" style="width:20px;"></button>
+						<button id="zoomout" type="button" class="btnImg"><img src="img/smallicon.png" alt="" style="width:20px;"></button>
+						<button id="reset" type="button" class="btnImg">100%</button>
+					</div>
 				</div>
 				<!-- section   end -->
 			</div>
@@ -109,8 +117,6 @@
 <!-- imgdicom頁面 end -->
 </body>
 <script type="text/javascript" src="js/jquery-2.0.3.min.js"  charset="utf-8"></script>
-
-
 <!-- crc32 文件校验 -->
 <!--<script type="text/javascript" src="js/crc32.js" charset="utf-8"></script>-->
 <script type="text/javascript" src="js/bootstrap.min.js"  charset="utf-8"></script>
@@ -120,6 +126,7 @@
 <!-- rangeSlider -->
 <!-- <script src="http://apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js"  charset="utf-8"></script> -->
 <!-- 弹窗js -->
+
 <script type="text/javascript"  src="js/dicomParser.min.js" charset="utf-8"></script>
 <script type="text/javascript"  src="js/DICOMImage.js" charset="utf-8"></script>
 <script type="text/javascript"  src="js/DICOMViewer.js" charset="utf-8"></script>
@@ -137,6 +144,8 @@
 <script type="text/javascript"  src="js/prng4.js" charset="utf-8"></script>
 <script type="text/javascript"  src="js/rng.js" charset="utf-8"></script>
 <script type="text/javascript"  src="js/rsa.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/dataDicom.js" charset='utf-8'></script>
+<script src="js/imageOrientationParse.js"></script>
 <script type="text/javascript"  src="js/directorySelect.js" charset="utf-8"></script>
 <script type="text/javascript"  src="js/uploaderflies.js" charset="utf-8"></script>
 <!-- 进度条 -->
@@ -157,12 +166,13 @@
 	
 	var username = window.sessionStorage.getItem("username");
 
+
 	window.onload = function() {
 		obj = document.getElementById("username");
 		obj.innerHTML = username;
 	}
-
-
+	
+	
 </script>
 
 <!-- ================================================ imgdicom====================================================================== -->

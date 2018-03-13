@@ -92,7 +92,8 @@ class DICOMImage {
                 PatientAge,
                 PatientSex,
                 PersonName,
-                SeriesDate
+                SeriesDate,
+                dataSet
             }
         }
         catch(err)
@@ -114,7 +115,8 @@ class DICOMImage {
                 const {
                     imageData,
                     rows,
-                    columns
+                    columns,
+                    dataSet
                 } = dcmDetail;
                 dcmDetail.imageData = this.processImage(imageData,rows,columns);
                 dcmDetail.arrayBuffer = arrayBuffer;
@@ -135,7 +137,7 @@ class DICOMImage {
             datasets[SeriesInstanceUID].push(dcmDetail);
         }
         Object.keys(datasets).forEach(seriesID => [seriesID] = datasets[seriesID].sort((a, b) => b.imagePosition - a.imagePosition));
-        // console.log(datasets)
+        console.log(datasets)
         return datasets;
     }
 }

@@ -1,7 +1,8 @@
 .edit {
-	padding-top:40px;
+	padding-top:60px;
+	font-size: 12px;
 	padding-bottom: 40px;
-	margin-left:300px;
+	/* margin-left:300px; */
 	background: #000;
 	-webkit-transition: margin 500ms ease;
 	-moz-transition: margin 500ms ease;
@@ -34,7 +35,19 @@
 	box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.7);
 }
 
-.edit .demo { margin-left:0px; padding:0; /*border: 1px solid #DDDDDD;border-radius: 4px; */ position:relative; word-wrap: break-word;}
+.edit .demo { margin-left:95px; padding:0; /*border: 1px solid #DDDDDD;border-radius: 4px; */ position:relative; word-wrap: break-word;}
+.titleMessage{
+	margin-left: 10px;
+}
+.titleMessage li {
+	text-overflow: ellipsis;
+    word-wrap: break-word;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.leftSpacing{
+	margin-left:5px;
+}
 .dir-nav {
 	width: 100px;
 	position:fixed;
@@ -57,7 +70,7 @@
 .sidebar-nav {
 	position:fixed;
 	width:200px;
-	left:100px;
+	left:0px;
 	bottom:0;
 	top:52px;
 	background:#0f242a;
@@ -71,7 +84,7 @@
 .table-hover tbody tr:hover{
 	background:#ddd;
 }
-.sidebar-nav .nav-header { cursor:pointer; font-size:14px; color:#fff; text-shadow:0 1px 0 rgba(0, 0, 0, 0.3);}
+.sidebar-nav .nav-header { cursor:pointer; font-size:12px; color:#fff; text-shadow:0 1px 0 rgba(0, 0, 0, 0.3);}
 .sidebar-nav .nav-header span.label { font-size:10px; /*padding-bottom:0;*/ position:relative; top:-1px;}
 .sidebar-nav .nav-header i.icon-plus {}
 .sidebar-nav .nav-header .popover {color:#999; text-shadow:none;}

@@ -197,6 +197,8 @@ function uploadFile(files) {
     // console.log(getDcmDetail.BodyPartExamined);
     dicomImage.loadDicomFiles(files).then(function (seriesSets) {
         SeriesSets = seriesSets;
+        const dcmData = dataDicom(seriesSets.dataSet);
+        console.log(dcmData)
         // var dicomcheckResult = document.querySelector(".dicomcheckResult");
         // 请求接口调用
         loopRequest({
@@ -205,7 +207,6 @@ function uploadFile(files) {
                 seriesInstanceUid: Object.keys(SeriesSets)[0]
             },
             success: function () {
-                console.log(1);
                 dicomcheckResult.innerHTML = '<span class="complete">' + 3 + '个结节</span> ';
                 requestAISuccess(SeriesSets) 
             },
@@ -347,6 +348,7 @@ function requestAISuccess(seriesSets) {
         // uploaderprogress.innerHTML = '100%';
 
         var dicomViewer = new DICOMViewer(domCanvas);
+        console.log(seriesSets)
         var seriesID = Object.keys(seriesSets)[0];
         // console(seriesID);
         // 查看器点击事件 
@@ -371,11 +373,34 @@ function requestAISuccess(seriesSets) {
 /*canvasBtn 操作事件*/
 function bindEvent(dicomViewer, firstDcmNumber) {
     document.getElementById('up').addEventListener('click', function (e) {
+        var currentPage = document.querySelector('input[type="range"]')
+        if(currentPage.value <= 1) {
+            return 
+        }
+        if(currentPage.value > firstDcmNumber) {
+            currentPage.setAttribute('value', firstDcmNumber)
+            return
+        }
         dicomViewer.up();
-
+        dicomViewer.clearDraw()
+        currentPage.setAttribute('value', currentPage.value--)
+        jQuery('.value')[0].innerHTML = currentPage.value + '/' + firstDcmNumber
+        
     });
     document.getElementById('down').addEventListener('click', function (e) {
+        var currentPage = document.querySelector('input[type="range"]')
+        if(currentPage.value < 1) {
+            return
+        }
+        if(currentPage.value >= firstDcmNumber) {
+            currentPage.setAttribute('value', firstDcmNumber)
+            return
+        }
+        dicomViewer.clearDraw()
         dicomViewer.down();
+        currentPage.setAttribute('value', currentPage.value++)
+        
+        jQuery('.value')[0].innerHTML = currentPage.value + '/' + firstDcmNumber
     });
     document.getElementById('zoomin').addEventListener('click', function (e) {
         dicomViewer.zoomIn();
@@ -391,23 +416,24 @@ function bindEvent(dicomViewer, firstDcmNumber) {
     });
     initRangeSlider(dicomViewer, firstDcmNumber);
 }
+
 /** rangeSlider **/
 
 function initRangeSlider(dicomViewer, dcmNumber) {
     // debugger
     var elem = document.querySelector('input[type="range"]');
     elem.setAttribute("max", dcmNumber);
-
+    jQuery('.value')[0].innerHTML = elem.value + '/' + dcmNumber
     // elem.removeEventListener('input');
     var rangeValue = function () {
         // debugger;
-        var newValue = elem.value;
-        var target = document.querySelector('.value');
-        target.innerHTML = newValue + '/' + dcmNumber;
+        var newValue = Number(elem.value);
+        dicomViewer.forward(newValue);
+        dicomViewer.clearDraw()
+        elem.setAttribute('value', newValue)
+        jQuery('.value')[0].innerHTML = newValue+ '/' + dcmNumber
         var width = (91.3 / dcmNumber * newValue) + "%";
         document.querySelector('.rang_width').style.width = width;
-        dicomViewer.forward(newValue);
-
     };
 
     elem.oninput = rangeValue;
@@ -507,76 +533,97 @@ function loopRequest(options) {
 function filesDicom(SeriesSets, dicomViewer) {
     var seriesIDList = Object.keys(SeriesSets);
     console.log(seriesIDList);
-    var fileDicom = ' ';
+    var fileDicom = '';
     seriesIDList.forEach(function (seriesID) {
         var group = SeriesSets[seriesID];
-        console.log(group)
+        var dom = ''
         fileDicom += '<ul class="nav nav-list accordion-group" id="' + seriesID + '">';
-        fileDicom += '<li class="nav-header nav-header-content">';
-        fileDicom += ' <div class="title_hd">';
+        fileDicom += '<li class="nav-header nav-header-content sequenceAction">';
+        fileDicom += '<div class="title_hd">';
+        fileDicom += '<div style="width:68px;height:68px;background:rgba(12,173,141,0.4);position:absolute;"></div>'
         fileDicom += '     <img src="' + group[0].imageData + '" alt="" style="width:68px;margin-right:5px;display:block">';
         fileDicom += '               <span><em>' + group.length + '</em>张</span>';
         fileDicom += '  </div>';
-        fileDicom += ' <div class="titlediv">';
-        fileDicom += '    <span class="title">SX_001</span>';
-        fileDicom += '    <span class="">胸透CT ' + group[0].SeriesDate + '</span>';
-        fileDicom += '   <span class=""><em>' + group[0].PersonName + '</em><em>&nbsp;' + group[0].PatientSex + '</em><em>&nbsp;' + group[0].PatientAge + '</em></span>';
-        fileDicom += '  </div>';
-        fileDicom += '  <span class="title_right dicomcheckResult">结节检测中...</span>';
+        
+        fileDicom += ' <ul class="titleMessage">';
+        fileDicom += '    <li title="SX_001"><span>SX_001</span></li>';
+        fileDicom += '    <li title="胸部CT '+ group[0].SeriesDate +'"><span>胸透CT</span><span class="leftSpacing">' + group[0].SeriesDate + '</span></li>';
+        fileDicom += '    <li title="'+ group[0].PersonName + ' ' +group[0].PatientSex + ' ' + group[0].PatientAge +'"><span>' + group[0].PersonName + '</span><span class="leftSpacing">' + group[0].PatientSex + '</span><span class="leftSpacing">' + group[0].PatientAge + '</span></li>';
+        fileDicom += '  </ul>';
+
+        fileDicom += '  <div class="title_right dicomcheckResult"><span class="pingAnBtn greenGradient nodeNumber"><i style="font-size: 20px;font-style: normal;">8</i>个结节</span></div>';
         fileDicom += ' </li>';
         fileDicom += ' <li class="checkProgress" ><div class="checkProgressBar" style="width:0%;"></div></li>';
-        fileDicom += ' <li style="display: none;" class="boxes estRows">';
-        fileDicom += ' <div class="clear"></div>';
-        fileDicom += '   <table class="table tableHover">';
-        fileDicom += '     <thead>';
+        fileDicom += ' <li style="display:block;" class="boxes estRows">';
+        fileDicom += '   <table class="table tableHover" border="0">';
+        fileDicom += '     <thead>';    
         fileDicom += '       <tr><th>结节编号</th><th>直径/mm</th><th>层面</th><th>可能性</th></tr>';
         fileDicom += '     </thead>';
         fileDicom += '     <tbody>';
-        /**节点信息获取  start**/
-        fileDicom += pointsSet.map(function (point) {
-            var dom = '';
-            dom += ' <tr id="' + point.location + '"" class="point-row"> ';
-            dom += '<td>' + point["jpgImageKey"] + '</td><td>' + point["diameter"] + '</td><td>' + point["imageNo"] + '</td><td>' + point["probability"] + '</td><td>';
-            dom += ' </tr>  ';
-            return dom;
-        });
-
+        // console.log(pointsSet)
+        pointsSet.forEach(function(o,index){
+            dom += '<tr data-option="' + index + '"" class="point-row">'
+            dom += '<td style="position:relative"><i class="currentOption" style="display:none"></i>' + o.jpgImageKey + '</td><td>' + o.diameter + '</td><td>' + o.imageNo + '</td><td>' + o.probability + '</td><td>'
+            dom += '</tr>'
+        })  
+        fileDicom += dom
         /**节点信息获取  end**/
         fileDicom += ' </tbody>';
         fileDicom += '  </table>';
         fileDicom += ' </li>';
         fileDicom += ' </ul>';
     });
-    document.querySelector('.sidebar-nav').innerHTML = fileDicom;
+
+    document.querySelector('.sidebar-nav').innerHTML += fileDicom;
     /*节点操作控制*/
-    document.querySelectorAll('.point-row').forEach(function (tr) {
+    document.querySelectorAll('.point-row').forEach(function (tr,index) {
         tr.addEventListener('click', function (e) {
             // debugger
+            var allOption = jQuery('.currentOption')
+            for (var o in allOption) {
+                allOption.eq(o).css('display','none')
+            }
             var el = e.currentTarget;
-            var targetPoint = pointsSet.filter(function (point) {
-                return el.id === point.location;
-            })[0];
-            console.log(targetPoint);
-            pointRowMsg(targetPoint);
+            var currentOption = jQuery(el).children().eq(0).children().eq(0)
+            currentOption.css('display','block')
+            // var targetPoint = pointsSet.filter(function (point) {
+            //     return jQuery(el).attr('data-option') === point.location;
+            // })[0];
+            var targetPoint = pointsSet[jQuery(el).attr('data-option')]
+            pointRowMsg(targetPoint,index,dicomViewer);
+            if (dicomViewer.currentDcmInfo.imagePosition === Number(targetPoint.imageNo)) {
+            var drawCircle = {};
+            drawCircle.diameter = targetPoint.diameter;
+            drawCircle.x = targetPoint.location.slice(0,targetPoint.location.indexOf(','))
+            drawCircle.y = targetPoint.location.slice(targetPoint.location.indexOf(',') + 1)
+            //画节点
+            dicomViewer.draw(() => {dicomViewer.drawSinglepoint(drawCircle)});
+            }
             document.querySelector('.left_message').style.display = "block";
         })
     });
+   
     /*下拉菜单切换*/
-    document.querySelectorAll(".accordion-group").forEach(function (elem) {
+    document.querySelectorAll(".nav-header").forEach(function (elem) {
+        
         elem.addEventListener('click', function (e) {
+            if(!jQuery(this).hasClass('sequenceAction')){
+                jQuery(this).addClass('sequenceAction')
+            }else{
+                jQuery(this).removeClass('sequenceAction')
+            }
             var el = e.currentTarget;
-            console.log(el);
-            var seriesID = el.id;//获取当前Id
-            dicomViewer.setDcmSeriesInfo(SeriesSets[seriesID], []);//调取每组第一张图片
-            initRangeSlider(dicomViewer, SeriesSets[seriesID].length);//初始化当前组的滑动条
-            var targetList = el.querySelector('.estRows');
-            // debugger;
-            var pointMsgLists = document.querySelectorAll('.estRows');
-            var pointLi = document.querySelectorAll('.nav-header');
-            console.log(pointMsgLists);
-            pointMsgLists.forEach(function (ul) {
-                (ul === targetList) ? ul.style.display = 'block' : ul.style.display = 'none';
-            });
+            var pointLi = jQuery(el).next().next()
+            // var seriesID = el.id;//获取当前Id
+            // dicomViewer.setDcmSeriesInfo(SeriesSets[seriesID], []);//调取每组第一张图片
+            // initRangeSlider(dicomViewer, SeriesSets[seriesID].length);//初始化当前组的滑动条
+            // var pointLi = document.querySelectorAll('.nav-header');
+            var openStatus = jQuery(pointLi).css('display')
+            if (openStatus === 'none') {
+                jQuery(pointLi).slideDown()
+            } else {
+                jQuery(pointLi).slideUp()
+            }
             //   pointLi.forEach(function(ul) {
             //     debugger;
             //    (ul === pointLi) ? ul.style.border = '1px solid #fff' : ul.style.border ='none'; 
@@ -587,57 +634,96 @@ function filesDicom(SeriesSets, dicomViewer) {
 
 }
 
-function pointRowMsg(obj) {
-    console.log(obj);
+function pointRowMsg(obj,index,dicomViewer) {
+    _objLoction ='x:'+ obj.location
+    _objLoction = _objLoction.replace(/(,)/,' y:')
     var pointMsg = ' ';
-    pointMsg += ' <div class="left_message_top">';
-    pointMsg += '        <span><img src="img/nodepoint.png" alt="" style="width:23px;position:relative;right:10px;"><em>' + 3 + '</em>个节点</span>';
-    pointMsg += '        <span class="nodepoint" id="pointImg"><img src="img/checkpointhide.png" alt="" style="width:30px;" id="imgChange"></span>';
+    pointMsg += ' <div class="left_message_top" data-current="'+ index +'">';
+    pointMsg += '        <span><img src="img/nodepoint.png" alt="" style="width:23px;position:relative;right:22px;"><em class="boldFont">' + 3 + '</em>个节点</span>';
+    pointMsg += '        <span class="nodepoint" id="pointImg"><img src="img/checkpointhide.png" alt="" style="width:30px;position:relative;top:-2px;" id="imgChange"></span>';
     pointMsg += '</div>';
-    // pointMsg +='      <div class="clear"></div>';
-    pointMsg += '      <div class="nodelPointMessage">';
-    pointMsg += '<div class="nodelPointMessageList">';
-    pointMsg += '<div class="nodelPointMessageListTop"><span>结节' + obj.dicomImageKey + '</span><span id="delete" class="nodepoint">X</span></div>';
-    pointMsg += '<div class="nodelPointMessageListBody">';
-    pointMsg += '<span>直径：' + obj.diameter + '</span>';
-    pointMsg += '<span>密度：' + obj.jpgImageKey + '</span>';
-    pointMsg += '<span>可能性：' + obj.location + '</span>';
-    pointMsg += '<span>坐标：' + obj.probability + '</span>';
-    pointMsg += '</div>';
+    pointMsg += '<div class="nodelPointMessage">';
+    pointMsg += '  <div class="nodelPointMessageList">';
 
-    pointMsg += '<div class="border-style border-style1"></div>';
-    pointMsg += ' <div class="border-style border-style2"></div>';
-    pointMsg += ' <div class="border-style border-style3"></div>';
-    pointMsg += '<div class="border-style border-style4"></div>';
-    pointMsg += ' </div>';
-    //pointMsg +='   <div class="nodelPointMessagePage"><span class="nodePageActive upNode" id="upNode">上一个</span><span class="downNode" id="downNode">下一个</span></div>';
+    pointMsg += '   <div class="nodelPointMessageListTop"><span>结节' + obj.dicomImageKey + '</span><span id="delete" class="nodepoint" style="font-size:18px;cursor: pointer;z-index:1;line-height: 25px;">×</span></div>';
+
+    pointMsg += '   <div class="nodelPointMessageListBody">';
+    pointMsg += '    <span style="margin-top:10px;">直径：' + obj.diameter + 'mm</span>';
+    pointMsg += '    <span>密度：' + obj.jpgImageKey + 'Hu</span>';
+    pointMsg += '    <span>可能性：' + obj.probability + '%</span>';
+    pointMsg += '    <span>坐标：' + _objLoction + '</span>';
+    pointMsg += '   </div>';
+
+    pointMsg += '   <div class="border-style border-style1"></div>';
+    pointMsg += '   <div class="border-style border-style2"></div>';
+    pointMsg += '   <div class="border-style border-style3"></div>';
+    pointMsg += '   <div class="border-style border-style4"></div>';
+    pointMsg += '  </div>';
+    pointMsg += ' <div style="margin-top:15px;"><input type="button" class="upDownbtn" value="上一个" id="upNode"><input type="button" style="margin-left:10px;" class="upDownbtn" value="下一个" id="downNode"></div>'
+    pointMsg += '</div>'
     document.querySelector('.left_message').innerHTML = pointMsg;
-    document.getElementById("delete").addEventListener('click', function (e) {
-        document.querySelector('.nodelPointMessage').style.display = "none";
-    });
 
-    document.getElementById("pointImg").addEventListener('click', function (e) {
+    jQuery('#delete').click(function(){
+        showdiv()
+    })
+    jQuery('#pointImg').click(function(){
         showdiv();
-    });
-    // 上一个节点
-    // document.getElementById("upNode").addEventListener('click',function(e){
-
-    // });
-    // //下一个节点
-    // document.getElementById("downNode").addEventListener('click',function(e){
-
-    // });
+    })
+    var currentMessage = jQuery('.left_message_top').attr('data-current')
+    var allOption = jQuery('.currentOption')
+    jQuery('#upNode').click(function(){
+        if(currentMessage <= 0) {
+            return
+        }
+        currentMessage--
+        for (var o in allOption) {
+            allOption.eq(o).css('display','none')
+            allOption.eq(currentMessage).css('display','block')
+        }
+        pointRowMsg(pointsSet[currentMessage],currentMessage,dicomViewer)
+        console.log(dicomViewer.currentDcmInfo.imagePosition,obj.imageNo)
+        if (dicomViewer.currentDcmInfo.imagePosition === Number(obj.imageNo)) {
+            var drawCircle = {};
+            console.log(pointsSet[currentMessage])
+            drawCircle.diameter = pointsSet[currentMessage].diameter;
+            drawCircle.x = pointsSet[currentMessage].location.slice(0,pointsSet[currentMessage].location.indexOf(','))
+            drawCircle.y = pointsSet[currentMessage].location.slice(pointsSet[currentMessage].location.indexOf(',') + 1)
+            //画节点
+            dicomViewer.draw(() => {dicomViewer.drawSinglepoint(drawCircle)});
+        }
+        
+    })
+    jQuery('#downNode').click(function(){
+        if(currentMessage >= pointsSet.length-1) {
+            return
+        }
+        currentMessage++
+        for (var o in allOption) {
+            allOption.eq(o).css('display','none')
+            allOption.eq(currentMessage).css('display','block')
+        }
+        pointRowMsg(pointsSet[currentMessage],currentMessage,dicomViewer)
+        console.log(dicomViewer.currentDcmInfo.imagePosition,obj.imageNo)
+        if (dicomViewer.currentDcmInfo.imagePosition === Number(obj.imageNo)) {
+            var drawCircle = {};
+            drawCircle.diameter = pointsSet[currentMessage].diameter;
+            drawCircle.x = pointsSet[currentMessage].location.slice(0,pointsSet[currentMessage].location.indexOf(','))
+            drawCircle.y = pointsSet[currentMessage].location.slice(pointsSet[currentMessage].location.indexOf(',') + 1)
+            //画节点
+            dicomViewer.draw(() => {dicomViewer.drawSinglepoint(drawCircle)});
+        }
+    })
 }
 /**图片切换**/
 function showdiv() {
-    var target = document.querySelector('.nodelPointMessage');
-    var clicktext = document.getElementById('imgChange');
-    if (target.style.display == "block") {
-        target.style.display = "none";
-        clicktext.src = "img/checkpointshow.png";
+    var nodel = jQuery('.nodelPointMessage')
+    var eye = jQuery('.imgChange')
+    if(jQuery('.nodelPointMessage').css('display') === 'block') {
+        nodel.slideUp()
+        eye.src = "img/checkpointhide.png";
     } else {
-        target.style.display = "block";
-        clicktext.src = 'img/checkpointhide.png';
+        nodel.slideDown()
+        eye.src = 'img/checkpointshow.png';
     }
 }
 function preProcess(uri_path,data,isNeedEncode) {
@@ -758,4 +844,21 @@ function preProcess(uri_path,data,isNeedEncode) {
 }
 
 
+function dataDicomShow(data){
+    var direction = parseImageOrientation(data.imageOrientation)
+    for (o in data){
+        if(data[o] === undefined) {
+            data[o] = ''
+        }
+    }
+    var wl = data.wc.slice(0,data.wc.indexOf('\\'))
+    var ww = data.ww.slice(0,data.ww.indexOf('\\'))
+    var html = ''
+    html += '<ul>';
+    html += '<li>WL : '+ wl +'<span>WW : '+ ww +'</span><span>T : '+ data.sliceThickness +'MM</span></li>'
+    html += '<li>Se : '+ data.seriesNumber +'<span>'+ data.seriesDate +'</span><span>'+ data.seriesTime +'</span></li>'
+    html += '</ul>'
+    jQuery('.dicom_message')[0].innerHTML = html
+}
 
+ /*上下切换结节按钮*/

@@ -18,7 +18,8 @@ class DICOMViewer {
             num: dcmSet.length,
             pointVisible: true,
             currentPointLocationID: null,
-            loopNumber: 0
+            loopNumber: 0,
+            _drawfunclist: []
         };
         this.imgList = this.initImgList();
         this.points = this.getCurrentDcmPoints();
@@ -169,12 +170,14 @@ class DICOMViewer {
     drawPoints() {
         const {points} = this;
         if (!points.length) return;
-        points.forEach(point => this.drawPoint(point));
+        points.forEach(point => this.draSinglepoint(point));
     }
     drawPoint(point) {
         const {ctx,width,height,states,DcmWidth,DcmHeight} = this;
         const {loopNumber,currentPointLocationID} = states;
+        console.log(states)
         const { diameter,x,y,location:locationID } = point;
+        console.log(point)
         const highLight = currentPointLocationID === locationID;
         const radius = diameter/2;
         const a = (x - DcmWidth/2) > 0 ? 1 : -1;
@@ -203,6 +206,20 @@ class DICOMViewer {
         this.drawLabel(96,32,x + a * 100,y ,diameter + 'mm',highLight);
         ctx.restore();
     }
+    drawSinglepoint({x,y,diameter}) {
+        const {ctx,width,height,DcmWidth,DcmHeight} = this;
+        const radius = diameter/2;
+        // ,w = 120,h = 40,
+        // const px = a*(x + b),py = y - h/2;
+        ctx.save();
+        ctx.moveTo(x + radius,y);
+        ctx.beginPath();
+        ctx.arc(x,y,radius,0,2*Math.PI);
+        ctx.strokeStyle = 'rgb(255,0,0)';
+        ctx.stroke();
+        ctx.closePath();
+        ctx.restore();
+    }
     drawLabel(width,height,x,y ,content,highLight = false) {
         const {ctx} = this;
         ctx.save();
@@ -219,7 +236,7 @@ class DICOMViewer {
         ctx.restore();
     }
     // 绘图
-    draw(a){
+    _draw(a){
         const {ctx,imgList,width,height,DcmWidth,DcmHeight,states,pointSet} = this;
         const {current,scale,translate,pointVisible} = this.states;
         ctx.save();
@@ -235,7 +252,18 @@ class DICOMViewer {
         ctx.translate(-width/2+translate.x + (width - DcmWidth)/2,-height/2+translate.y + (height - DcmHeight)/2);
         ctx.drawImage(imgList[current],0,0,DcmWidth,DcmHeight); // 画dicom图片
         if (pointVisible) this.drawPoints();
+        states._drawfunclist.forEach(callback => callback());
         ctx.restore();
+        //画点
+    }
+    draw(callback) {
+        this.ctx.clearRect(0,0,this.width,this.height)
+        this.states._drawfunclist = []
+        this.states._drawfunclist.push(callback);
+    }
+    clearDraw(){
+        this.ctx.clearRect(0,0,this.width,this.height)
+        this.states._drawfunclist = []
     }
     stopRender() {
         if (!this.tid) return;
@@ -244,7 +272,7 @@ class DICOMViewer {
     }
     render() {
         let loop = () => {
-            this.draw();
+            this._draw();
             this.states.loopNumber++;
             this.tid = window.requestAnimationFrame(loop);
         }

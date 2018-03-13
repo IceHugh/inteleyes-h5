@@ -40,8 +40,11 @@ body{
     position: absolute;
     width: 100%;
     overflow: hidden;
-    top:  0px;
+    height: 30px;
+    left: 0px;
+    top: 0px;
     opacity: 0;
+    cursor: pointer;
 }
 
 div {
@@ -247,12 +250,12 @@ a.btn {
 .btn-hero {
 	color: #fff;
 	text-shadow: none; 
-  	background-color: #45d0c6;
+  	background-color: #0cad8d;
   	border: none;
 }
 .btn-hero:hover {
 	color:#fff;
-	background-color: #49c7be;
+	background-color: #0cad8d;
 }
 .radius-2
 {
