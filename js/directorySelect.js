@@ -21,6 +21,7 @@ function directorySelect(e) {
       }
     }
   }
+  uploadFile(dcmFileList)
   // console.log(pathList)
   // console.log(fileList)
   // console.log(dcmFileList);
@@ -41,6 +42,23 @@ function directorySelect(e) {
 //   dirDom.innerHTML = html;
 // }
 
+// async function showImages(dcmFileList) {
+//   var page1 = document.getElementById('page1')
+//   var page2 = document.getElementById('page2')
+//   page1.style.display = 'none';
+//   page2.style.display = 'block';
+//   var dicomImage = new DICOMImage();
+//   var SeriesSets = {};
+//   var lazyArr = [];
+//   lazyArr = dcmFiles.splice(30)
+//   const resData = await dicomImage.loadDicomFiles(dcmFiles).then(function (res) {
+//     var seriesId = Object.keys(res)[0];
+//     var dcmData = dataDicom(res[seriesId][0].dataSet);
+//     dataDicomShow(dcmData);
+//   })
+// }
+
+
 function showImages(dcmFiles) {
   var page1 = document.getElementById('page1')
   var page2 = document.getElementById('page2')
@@ -48,27 +66,57 @@ function showImages(dcmFiles) {
   page2.style.display = 'block';
   var dicomImage = new DICOMImage();
   var SeriesSets = {};
-  dicomImage.loadDicomFiles(dcmFiles).then(function (seriesSets) {
-    SeriesSets = seriesSets;
-    
-  }).then(function (res) {
-    var domCanvas = document.getElementById("dicomImage");
-    // uploaderprogress.innerHTML = '100%';
-    // console.log(SeriesSets)
-    var dicomViewer = new DICOMViewer(domCanvas);
-    var seriesID = Object.keys(SeriesSets)[0];
-    // console.log(SeriesSets[seriesID][0].dataSet)
-    const dcmData = dataDicom(SeriesSets[seriesID][0].dataSet);
-    dataDicomShow(dcmData);
-    console.log(SeriesSets[seriesID]);
-    // 查看器点击事件 
-    bindEvent(dicomViewer, SeriesSets[seriesID].length);
+  var lazyArr = [];
+  var domCanvas = document.getElementById("dicomImage");
+  var dicomViewer = new DICOMViewer(domCanvas);
 
-    var pointsSet = [];
-    dicomViewer.setDcmSeriesInfo(SeriesSets[seriesID], pointsSet);
-    filesDicom(SeriesSets, pointsSet, dicomViewer);
-  })
-}
+  lazyArr = dcmFiles.splice(30)
+    dicomImage.loadDicomFiles(dcmFiles).then(function (res) {
+      var seriesId = Object.keys(res)[0];
+      var dcmData = dataDicom(res[seriesId][0].dataSet);
+      dataDicomShow(dcmData);
+      bindEvent(dicomViewer, res[seriesId].length);
+      dicomViewer.setDcmSeriesInfo(res[seriesId], pointsSet);
+      filesDicom(res, pointsSet, dicomViewer);
+    })
+    // setTimeout(function(){
+    //   dicomImage.loadDicomFiles(lazyArr).then(function (res) {
+    //     var seriesId = Object.keys(res)[0];
+    //     var dcmData = dataDicom(res[seriesId][0].dataSet);
+    //     dataDicomShow(dcmData);
+    //     bindEvent(dicomViewer, res[seriesId].length);
+    //    dicomViewer.setDcmSeriesInfo(res[seriesId], pointsSet);
+    //    filesDicom(res, pointsSet, dicomViewer);
+    //   })
+    // },2000)
+
+    
+    // dicomImage.loadDicomFiles(lazyArr).then(function (res) {
+    //   var seriesId = Object.keys(res)[0];
+    //   var dcmData = dataDicom(res[seriesId][0].dataSet);
+    //   dataDicomShow(dcmData);
+    // })
+  }
+  
+//   .then(function (seriesSets) {
+//     SeriesSets = seriesSets;
+//     console.log(SeriesSets)
+//   }).then(function (res) {
+//     var domCanvas = document.getElementById("dicomImage");
+//     // uploaderprogress.innerHTML = '100%';
+//     // console.log(SeriesSets)
+//     var dicomViewer = new DICOMViewer(domCanvas);
+//     var seriesID = Object.keys(SeriesSets)[0];
+//     // console.log(SeriesSets[seriesID][0].dataSet)
+//     const dcmData = dataDicom(SeriesSets[seriesID][0].dataSet);
+//     dataDicomShow(dcmData);
+//     console.log(SeriesSets[seriesID]);
+//     // 查看器点击事件 
+//     bindEvent(dicomViewer, SeriesSets[seriesID].length);
+//     dicomViewer.setDcmSeriesInfo(SeriesSets[seriesID], pointsSet);
+//     filesDicom(SeriesSets, pointsSet, dicomViewer);
+//   })
+// }
 
 // function test(e) {
 //   console.log();

@@ -105,7 +105,6 @@ class DICOMImage {
     }
     loadDicomFile(DicomFile) {
         return new Promise(resolve => {
-            
             var reader = new FileReader();
             reader.onload = DicomFile => {
                 const arrayBuffer = reader.result;
@@ -137,7 +136,6 @@ class DICOMImage {
             datasets[SeriesInstanceUID].push(dcmDetail);
         }
         Object.keys(datasets).forEach(seriesID => [seriesID] = datasets[seriesID].sort((a, b) => b.imagePosition - a.imagePosition));
-        console.log(datasets)
         return datasets;
     }
 }

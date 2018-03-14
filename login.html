@@ -82,7 +82,7 @@
           var txtName =  $.trim($("#txtName").val());
         //   var txtPwd = $.md5($.trim($("#txtPwd").val()));//md5密码校验
           var txtPwd = $.trim($("#txtPwd").val());
-          if(txtName==""){       //验证用户名是否为空
+          if(txtName == ""){       //验证用户名是否为空
               $("#result").show().html("请输入用户名！");
               return false;
           }
@@ -91,7 +91,8 @@
               return false;
           }
 
-          var param="http://127.0.0.1:10219/api/login";//验证接口
+          var param="http://127.0.0.1:10219/login";//验证接口
+        //   var param="http://127.0.0.1:10219/api/login";//验证接口
           var successCode = '000000';
           if(txtName==""||txtPwd==""){
               $("#result").show().html("请输入用户和密码！");

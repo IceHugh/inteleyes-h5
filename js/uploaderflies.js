@@ -196,28 +196,28 @@ function uploadFile(files) {
 
     // console.log(getDcmDetail.BodyPartExamined);
     dicomImage.loadDicomFiles(files).then(function (seriesSets) {
-        SeriesSets = seriesSets;
-        const dcmData = dataDicom(seriesSets.dataSet);
-        console.log(dcmData)
-        // var dicomcheckResult = document.querySelector(".dicomcheckResult");
+        var seriesId = Object.keys(seriesSets)[0];
+        var dcmData = dataDicom(seriesSets[seriesId][0].dataSet);
+        var dicomcheckResult = document.querySelector(".greenGradient");
         // 请求接口调用
         loopRequest({
             url: 'http://127.0.0.1:10219/api/ai/requestAIResult',
             data: {
                 seriesInstanceUid: Object.keys(SeriesSets)[0]
             },
-            success: function () {
-                dicomcheckResult.innerHTML = '<span class="complete">' + 3 + '个结节</span> ';
-                requestAISuccess(SeriesSets) 
-            },
-            // success: function (data) {
-            //     console.log("请求AI分析结果-成功");
-            //     console.log(data);
-            //     if (data.aiCode === '000000') {
-            //         dicomcheckResult.innerHTML = '<span class="complete">' + data.aiResults.length + '个结节</span> ';
-            //         requestAISuccess(SeriesSets, data.aiResults);
-            //     }
+            // success: function () {
+            //     dicomcheckResult.innerHTML = '<span class="complete">' + 3 + '个结节</span> ';
+            //     requestAISuccess(SeriesSets) 
             // },
+            success: function (data) {
+                console.log("请求AI分析结果-成功");
+                console.log(data);
+                if (data.aiCode === '000000') {
+                    dicomcheckResult.innerHTML = '<i style="font-size: 20px;font-style: normal;">'+ data.aiResults.length +'</i>个结节'
+                    // dicomcheckResult.innerHTML = '<span class="complete">' + data.aiResults.length + '个结节</span> ';
+                    requestAISuccess(SeriesSets, data.aiResults);
+                }
+            },
             loading: function () {
                 console.log("请求AI分析结果-分析中")
                 function setProcess() {
@@ -228,11 +228,11 @@ function uploadFile(files) {
                     checkProgressBarWidth = parseInt(checkProgressBar.style.width) + 10 + "%";
                 }
                 var time = setInterval(function () { setProcess(); }, 5000)
-                dicomcheckResult.innerHTML = '<span class="checking">结节检测中...</span>';
+                // dicomcheckResult.innerHTML = '<span class="checking">结节检测中...</span>';
             },
             error: function () {
                 console.log("请求AI分析结果-出现错误");
-                dicomcheckResult.innerHTML = '<span class="checkError"><span>出现错误</span><span onclick="requestResult(this);">重新检测</span></span>';
+                // dicomcheckResult.innerHTML = '<span class="checkError"><span>出现错误</span><span onclick="requestResult(this);">重新检测</span></span>';
                 
             }
         });
@@ -435,7 +435,7 @@ function initRangeSlider(dicomViewer, dcmNumber) {
     var rangeValue = function () {
         // debugger;
         var newValue = Number(elem.value);
-        dicomViewer.forward(newValue);
+        dicomViewer.forward(newValue -1);
         dicomViewer.clearDraw()
         elem.setAttribute('value', newValue)
         jQuery('.value')[0].innerHTML = newValue+ '/' + dcmNumber
@@ -567,7 +567,7 @@ function filesDicom(SeriesSets, pointsSet, dicomViewer) {
         fileDicom += '       <tr><th>结节编号</th><th>直径/mm</th><th>层面</th><th>可能性</th></tr>';
         fileDicom += '     </thead>';
         fileDicom += '     <tbody>';
-        // console.log(pointsSet)
+        console.log(pointsSet)
         pointsSet.forEach(function(o,index){
             dom += '<tr data-option="' + index + '"" class="point-row">'
             dom += '<td style="position:relative"><i class="currentOption" style="display:none"></i>' + o.jpgImageKey + '</td><td>' + o.diameter + '</td><td>' + o.imageNo + '</td><td>' + o.probability + '</td><td>'
