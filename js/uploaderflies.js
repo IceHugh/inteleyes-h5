@@ -203,7 +203,7 @@ function uploadFile(files) {
         loopRequest({
             url: 'http://127.0.0.1:10219/api/ai/requestAIResult',
             data: {
-                seriesInstanceUid: Object.keys(SeriesSets)[0]
+                seriesInstanceUid: seriesId
             },
             // success: function () {
             //     dicomcheckResult.innerHTML = '<span class="complete">' + 3 + '个结节</span> ';
@@ -543,9 +543,10 @@ function filesDicom(SeriesSets, pointsSet, dicomViewer) {
     var fileDicom = '';
     seriesIDList.forEach(function (seriesID) {
         var group = SeriesSets[seriesID];
+        console.log(seriesID)
         var dom = ''
         fileDicom += '<ul class="nav nav-list accordion-group" id="' + seriesID + '">';
-        fileDicom += '<li class="nav-header nav-header-content sequenceAction">';
+        fileDicom += '<li class="nav-header nav-header-content sequenceAction" title="'+ seriesID +'">';
         fileDicom += '<div class="title_hd">';
         fileDicom += '<div style="width:68px;height:68px;background:rgba(12,173,141,0.4);position:absolute;"></div>'
         fileDicom += '     <img src="' + group[0].imageData + '" alt="" style="width:68px;margin-right:5px;display:block">';

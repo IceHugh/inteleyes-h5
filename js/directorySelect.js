@@ -79,18 +79,13 @@ function showImages(dcmFiles) {
       dicomViewer.setDcmSeriesInfo(res[seriesId], pointsSet);
       filesDicom(res, pointsSet, dicomViewer);
     })
-    // setTimeout(function(){
-    //   dicomImage.loadDicomFiles(lazyArr).then(function (res) {
-    //     var seriesId = Object.keys(res)[0];
-    //     var dcmData = dataDicom(res[seriesId][0].dataSet);
-    //     dataDicomShow(dcmData);
-    //     bindEvent(dicomViewer, res[seriesId].length);
-    //    dicomViewer.setDcmSeriesInfo(res[seriesId], pointsSet);
-    //    filesDicom(res, pointsSet, dicomViewer);
-    //   })
-    // },2000)
-
-    
+      dicomImage.loadDicomFiles(lazyArr).then(function (res) {
+        var seriesId = Object.keys(res)[0];
+        var dcmData = dataDicom(res[seriesId][0].dataSet);
+        bindEvent(dicomViewer, res[seriesId].length);
+        dicomViewer.setDcmSeriesInfo(res[seriesId], pointsSet);
+      //  filesDicom(res, pointsSet, dicomViewer);
+      })
     // dicomImage.loadDicomFiles(lazyArr).then(function (res) {
     //   var seriesId = Object.keys(res)[0];
     //   var dcmData = dataDicom(res[seriesId][0].dataSet);
