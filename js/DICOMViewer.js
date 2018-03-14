@@ -6,6 +6,7 @@ class DICOMViewer {
         this.bindEvent();
     }
     setDcmSeriesInfo(dcmSet,pointSet) {
+        console.log(dcmSet)
         this.stopRender();
         this.dcmSet = dcmSet;
         this.pointSet = pointSet;

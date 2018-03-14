@@ -21,10 +21,9 @@ function directorySelect(e) {
       }
     }
   }
-  uploadFile(dcmFileList)
   // console.log(pathList)
   // console.log(fileList)
-  // console.log(dcmFileList);
+  console.log(dcmFileList);
   //showDir(pathList);
   showImages(dcmFileList);
 }
@@ -42,57 +41,56 @@ function directorySelect(e) {
 //   dirDom.innerHTML = html;
 // }
 
-// async function showImages(dcmFileList) {
-//   var page1 = document.getElementById('page1')
-//   var page2 = document.getElementById('page2')
-//   page1.style.display = 'none';
-//   page2.style.display = 'block';
-//   var dicomImage = new DICOMImage();
-//   var SeriesSets = {};
-//   var lazyArr = [];
-//   lazyArr = dcmFiles.splice(30)
-//   const resData = await dicomImage.loadDicomFiles(dcmFiles).then(function (res) {
-//     var seriesId = Object.keys(res)[0];
-//     var dcmData = dataDicom(res[seriesId][0].dataSet);
-//     dataDicomShow(dcmData);
-//   })
-// }
-
-
 function showImages(dcmFiles) {
   var page1 = document.getElementById('page1')
   var page2 = document.getElementById('page2')
   page1.style.display = 'none';
   page2.style.display = 'block';
-  var dicomImage = new DICOMImage();
-  var SeriesSets = {};
-  var lazyArr = [];
   var domCanvas = document.getElementById("dicomImage");
   var dicomViewer = new DICOMViewer(domCanvas);
+  var lazyArr = [];
+  var lazyData = [];
+  var dicomImage = new DICOMImage();
+  var SeriesSets = {};
+  var seriesId = ''
 
-  lazyArr = dcmFiles.splice(30)
-    dicomImage.loadDicomFiles(dcmFiles).then(function (res) {
-      var seriesId = Object.keys(res)[0];
-      var dcmData = dataDicom(res[seriesId][0].dataSet);
-      dataDicomShow(dcmData);
-      bindEvent(dicomViewer, res[seriesId].length);
-      dicomViewer.setDcmSeriesInfo(res[seriesId], pointsSet);
-      filesDicom(res, pointsSet, dicomViewer);
-    })
-      dicomImage.loadDicomFiles(lazyArr).then(function (res) {
-        var seriesId = Object.keys(res)[0];
-        var dcmData = dataDicom(res[seriesId][0].dataSet);
-        bindEvent(dicomViewer, res[seriesId].length);
-        dicomViewer.setDcmSeriesInfo(res[seriesId], pointsSet);
-      //  filesDicom(res, pointsSet, dicomViewer);
-      })
-    // dicomImage.loadDicomFiles(lazyArr).then(function (res) {
-    //   var seriesId = Object.keys(res)[0];
-    //   var dcmData = dataDicom(res[seriesId][0].dataSet);
-    //   dataDicomShow(dcmData);
-    // })
+  if(dcmFiles.length > 20) {
+    lazyArr = dcmFiles.splice(20)
   }
   
+  dicomImage.loadDicomFiles(dcmFiles).then(function (res) {
+    seriesId = Object.keys(res)[0];
+    lazyData = res[seriesId]
+    var dcmData = dataDicom(res[seriesId][0].dataSet);
+    dataDicomShow(dcmData);
+    bindEvent(dicomViewer, res[seriesId].length);
+    dicomViewer.setDcmSeriesInfo(res[seriesId], pointsSet);
+    filesDicom(res, pointsSet, dicomViewer);
+    closureDicom(lazyArr,dicomImage,lazyData,seriesId,dicomViewer)
+  })
+}
+function closureDicom(arr,dicomImage,lazyData,seriesId,dicomViewer) {
+  console.log(lazyData)
+  if(arr.length > 20) {
+    var closureArr = arr.splice(20)
+    console.log(dicomImage)
+    dicomImage.loadDicomFiles(arr).then(function (res) {
+      lazyData = lazyData.concat(res[seriesId])
+      bindEvent(dicomViewer, lazyData.length);
+      dicomViewer.setDcmSeriesInfo(lazyData, pointsSet);
+      closureDicom(closureArr,dicomImage,lazyData,seriesId,dicomViewer)
+    })
+  } else {
+    dicomImage.loadDicomFiles(arr).then(function (res) {
+      lazyData = lazyData.concat(res[seriesId])
+      bindEvent(dicomViewer, lazyData.length);
+      dicomViewer.setDcmSeriesInfo(lazyData, pointsSet);
+    })
+  }
+}
+async function imageLoading(dcmFiles) {
+
+}
 //   .then(function (seriesSets) {
 //     SeriesSets = seriesSets;
 //     console.log(SeriesSets)
@@ -108,6 +106,8 @@ function showImages(dcmFiles) {
 //     console.log(SeriesSets[seriesID]);
 //     // 查看器点击事件 
 //     bindEvent(dicomViewer, SeriesSets[seriesID].length);
+
+//     //var pointsSet = [];
 //     dicomViewer.setDcmSeriesInfo(SeriesSets[seriesID], pointsSet);
 //     filesDicom(SeriesSets, pointsSet, dicomViewer);
 //   })
