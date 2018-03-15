@@ -90,8 +90,8 @@
               $("#result").show().html("请输入密码！");
               return false;
           }
-
-          var param="http://127.0.0.1:10219/api/login";//验证接口
+          var param="http://127.0.0.1:10219/login";//验证接口
+        //   var param="http://127.0.0.1:10219/api/login";//验证接口
           var successCode = '000000';
           if(txtName==""||txtPwd==""){
               $("#result").show().html("请输入用户和密码！");

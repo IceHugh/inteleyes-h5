@@ -2,7 +2,6 @@ var pathList = [];
 var fileList = [];
 function directorySelect(e) {
   var files = e.files;
-  console.log(files);
   pathList = [];
   fileList = [];
   var dcmFileList = []; // 过滤其他非dcm后缀的文件
@@ -21,9 +20,9 @@ function directorySelect(e) {
       }
     }
   }
+  uploadFile(dcmFileList)
   // console.log(pathList)
   // console.log(fileList)
-  console.log(dcmFileList);
   //showDir(pathList);
   showImages(dcmFileList);
 }
@@ -48,70 +47,36 @@ function showImages(dcmFiles) {
   page2.style.display = 'block';
   var domCanvas = document.getElementById("dicomImage");
   var dicomViewer = new DICOMViewer(domCanvas);
-  var lazyArr = [];
-  var lazyData = [];
+  var arr = [];
+  analyticLazyArr = []
   var dicomImage = new DICOMImage();
   var SeriesSets = {};
   var seriesId = ''
 
-  if(dcmFiles.length > 20) {
-    lazyArr = dcmFiles.splice(20)
+  if (dcmFiles.length > 20) {
+    arr = dcmFiles.splice(20)
+    dicomImage.loadDicomFiles(dcmFiles).then(function (res) {
+      seriesId = Object.keys(res)[0];
+      analyticLazyArr = analyticLazyArr.concat(res[seriesId])
+      dataDicomShow(dataDicom(res[seriesId][0].dataSet));
+      bindEvent(dicomViewer, res[seriesId].length);
+      dicomViewer.setDcmSeriesInfo(res[seriesId], pointsSet);
+      filesDicom(res, pointsSet, dicomViewer);
+
+      drawDicomData(arr,dicomImage).then(res => {
+        analyticLazyArr = analyticLazyArr.concat(res[seriesId])
+        console.log(analyticLazyArr)
+      })
+    })
   }
-  
-  dicomImage.loadDicomFiles(dcmFiles).then(function (res) {
-    seriesId = Object.keys(res)[0];
-    lazyData = res[seriesId]
-    var dcmData = dataDicom(res[seriesId][0].dataSet);
-    dataDicomShow(dcmData);
-    bindEvent(dicomViewer, res[seriesId].length);
-    dicomViewer.setDcmSeriesInfo(res[seriesId], pointsSet);
-    filesDicom(res, pointsSet, dicomViewer);
-    closureDicom(lazyArr,dicomImage,lazyData,seriesId,dicomViewer)
+}
+async function drawDicomData(dcmFiles,dicomImage) {
+  var analyticData = [];
+  await dicomImage.loadDicomFiles(dcmFiles).then(res => {
+    analyticData = res
   })
+  return analyticData
 }
-function closureDicom(arr,dicomImage,lazyData,seriesId,dicomViewer) {
-  console.log(lazyData)
-  if(arr.length > 20) {
-    var closureArr = arr.splice(20)
-    console.log(dicomImage)
-    dicomImage.loadDicomFiles(arr).then(function (res) {
-      lazyData = lazyData.concat(res[seriesId])
-      bindEvent(dicomViewer, lazyData.length);
-      dicomViewer.setDcmSeriesInfo(lazyData, pointsSet);
-      closureDicom(closureArr,dicomImage,lazyData,seriesId,dicomViewer)
-    })
-  } else {
-    dicomImage.loadDicomFiles(arr).then(function (res) {
-      lazyData = lazyData.concat(res[seriesId])
-      bindEvent(dicomViewer, lazyData.length);
-      dicomViewer.setDcmSeriesInfo(lazyData, pointsSet);
-    })
-  }
-}
-async function imageLoading(dcmFiles) {
-
-}
-//   .then(function (seriesSets) {
-//     SeriesSets = seriesSets;
-//     console.log(SeriesSets)
-//   }).then(function (res) {
-//     var domCanvas = document.getElementById("dicomImage");
-//     // uploaderprogress.innerHTML = '100%';
-//     // console.log(SeriesSets)
-//     var dicomViewer = new DICOMViewer(domCanvas);
-//     var seriesID = Object.keys(SeriesSets)[0];
-//     // console.log(SeriesSets[seriesID][0].dataSet)
-//     const dcmData = dataDicom(SeriesSets[seriesID][0].dataSet);
-//     dataDicomShow(dcmData);
-//     console.log(SeriesSets[seriesID]);
-//     // 查看器点击事件 
-//     bindEvent(dicomViewer, SeriesSets[seriesID].length);
-
-//     //var pointsSet = [];
-//     dicomViewer.setDcmSeriesInfo(SeriesSets[seriesID], pointsSet);
-//     filesDicom(SeriesSets, pointsSet, dicomViewer);
-//   })
-// }
 
 // function test(e) {
 //   console.log();

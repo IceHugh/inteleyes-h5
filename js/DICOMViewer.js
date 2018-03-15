@@ -4,11 +4,11 @@ class DICOMViewer {
         this.width = canvas.width, this.height = canvas.height;
         this.ctx = canvas.getContext('2d');
         this.bindEvent();
+        this.dcmSet= []
     }
     setDcmSeriesInfo(dcmSet,pointSet) {
-        console.log(dcmSet)
         this.stopRender();
-        this.dcmSet = dcmSet;
+        this.dcmSet = this.dcmSet.concat(dcmSet);
         this.pointSet = pointSet;
         this.states = {
             current: 0,
@@ -85,11 +85,11 @@ class DICOMViewer {
     }
     // 放大
     zoomIn() {
-        this.states.scale *= 1.25;
+        this.states.scale *= 1.0;
     }
     // 缩小
     zoomOut() {
-        this.states.scale *= 0.8;
+        this.states.scale *= 0.9;
     }
     // 重置
     reset() {

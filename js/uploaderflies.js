@@ -213,7 +213,7 @@ function uploadFile(files) {
                 console.log("请求AI分析结果-成功");
                 console.log(data);
                 if (data.aiCode === '000000') {
-                    dicomcheckResult.innerHTML = '<i style="font-size: 20px;font-style: normal;">'+ data.aiResults.length +'</i>个结节'
+                    dicomcheckResult.innerHTML = '<i style="font-size: 20px;font-style: normal;" title="'+ data.aiResults.length + '个结节">'+ data.aiResults.length +'</i>个结节'
                     // dicomcheckResult.innerHTML = '<span class="complete">' + data.aiResults.length + '个结节</span> ';
                     requestAISuccess(SeriesSets, data.aiResults);
                 }
@@ -390,6 +390,7 @@ function bindEvent(dicomViewer, firstDcmNumber) {
         }
         dicomViewer.up();
         dicomViewer.clearDraw()
+        dicomViewer.reset()
         currentPage.setAttribute('value', currentPage.value--)
         jQuery('.value')[0].innerHTML = currentPage.value + '/' + firstDcmNumber
         
@@ -403,8 +404,10 @@ function bindEvent(dicomViewer, firstDcmNumber) {
             currentPage.setAttribute('value', firstDcmNumber)
             return
         }
+        if(currentPage.value === firstDcmNumber-5) {}
         dicomViewer.clearDraw()
         dicomViewer.down();
+        dicomViewer.reset()
         currentPage.setAttribute('value', currentPage.value++)
         
         jQuery('.value')[0].innerHTML = currentPage.value + '/' + firstDcmNumber
@@ -437,6 +440,7 @@ function initRangeSlider(dicomViewer, dcmNumber) {
         var newValue = Number(elem.value);
         dicomViewer.forward(newValue -1);
         dicomViewer.clearDraw()
+        dicomViewer.reset()
         elem.setAttribute('value', newValue)
         jQuery('.value')[0].innerHTML = newValue+ '/' + dcmNumber
         var width = (91.3 / dcmNumber * newValue) + "%";
@@ -559,7 +563,7 @@ function filesDicom(SeriesSets, pointsSet, dicomViewer) {
         fileDicom += '    <li title="'+ group[0].PersonName + ' ' +group[0].PatientSex + ' ' + group[0].PatientAge +'"><span>' + group[0].PersonName + '</span><span class="leftSpacing">' + group[0].PatientSex + '</span><span class="leftSpacing">' + group[0].PatientAge + '</span></li>';
         fileDicom += '  </ul>';
 
-        fileDicom += '  <div class="title_right dicomcheckResult"><span class="pingAnBtn greenGradient nodeNumber"><i style="font-size: 20px;font-style: normal;">8</i>个结节</span></div>';
+        fileDicom += '  <div class="title_right dicomcheckResult"><span class="pingAnBtn greenGradient nodeNumber"><i style="font-size: 20px;font-style: normal;" title="8321321321个结节">8321312321</i>个结节</span></div>';
         fileDicom += ' </li>';
         fileDicom += ' <li class="checkProgress" ><div class="checkProgressBar" style="width:0%;"></div></li>';
         fileDicom += ' <li style="display:block;" class="boxes estRows">';
