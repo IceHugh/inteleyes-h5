@@ -1,145 +1,158 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
-	<title>慧眼-欢迎登录</title>
-	<!-- <link type="text/css" rel="stylesheet" href="css/bootstrap.css"> -->
-	<link type="text/css" rel="stylesheet" href="css/login.css">
+    <title>慧眼-欢迎登录</title>
+    <!-- <link type="text/css" rel="stylesheet" href="css/bootstrap.css"> -->
+    <link type="text/css" rel="stylesheet" href="css/login.css">
     <script src="js/CookieHelper.js"></script>
 </head>
+
 <body>
-<div class="page">
-	<header>
-	    <div  class="w">
-		    <div id="logo">
-		        <a href="javascript:;">
-		            <img src="img/logo.png" alt="logo" height="30">
-		        </a>
-		    </div>
-	    </div>
-	</header>
-	<div class="clear"></div>
-	<section>
-	<div class="login-wrap">
-		<div class="w">
-			<div class="login-form">
-				<div class="login-box" style="display: block; visibility: visible;">
-                    <div class="mc">
-                        <div class="form">
-                            <form id="form1" method="post" onsubmit="return false;">
-                               <span class="formlogintop">用户登录</span>
-                                <div class="item item-fore1">
-                                    <label for="loginname" class="login-label name-label">
-                                    	<img src="img/phone.png" alt="userName" style="width:20px;position:relative;top:5px;left:8px;">
-                                    </label>
-                                    <input name="txtName" type="text" id="txtName" placeholder="邮箱/用户名/已验证手机" class="itxt" maxlength="100" autofocus required>
-                                </div>			
-                                <div id="entry" class="item item-fore2" style="visibility: visible;">
-                                                <label class="login-label pwd-label" for="nloginpwd">
-                                                    <img src="img/password.png" alt="userName" style="width:20px;position:relative;top:5px;left:8px;">
-                                                </label>
-                                                <input name="txtPwd" type="password" id="txtPwd" placeholder="密码" class="itxt itxt-error" maxlength="20" required>
-                                </div>
-                                <div id="result"></div>
-                                <div class="item item-fore3">
-                                    <div class="login-btn">
-                                        <a href="javaScript:;" class="btn-img btn-entry" id="loginsubmit">登&nbsp;&nbsp;&nbsp;&nbsp;录</a>
-                                    </div>
-                                    <div class="noregister">暂不支持注册</div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+    <div class="page">
+        <header>
+            <div class="w">
+                <div id="logo">
+                    <a href="javascript:;">
+                        <img src="img/logo.png" alt="logo" height="30">
+                    </a>
                 </div>
-                <!-- 四个角标 -->
-                <div class="border-style border-style1"></div>
-                <div class="border-style border-style2"></div>
-                <div class="border-style border-style3"></div>
-                <div class="border-style border-style4"></div>
-			</div>
+            </div>
+        </header>
+        <div class="clear"></div>
+        <section>
+            <div class="login-wrap">
+                <div class="w">
+                    <div class="login-form">
+                        <div class="login-box" style="display: block; visibility: visible;">
+                            <div class="mc">
+                                <div class="form">
+                                    <form id="form1" method="post" onsubmit="return false;">
+                                        <span class="formlogintop">用户登录</span>
+                                        <div class="item item-fore1">
+                                            <label for="loginname" class="login-label name-label">
+                                                <img src="img/phone.png" alt="userName" style="width:20px;position:relative;top:5px;left:8px;">
+                                            </label>
+                                            <input name="txtName" type="text" id="txtName" placeholder="邮箱/用户名/已验证手机" class="itxt" maxlength="100" autofocus required>
+                                        </div>
+                                        <div id="entry" class="item item-fore2" style="visibility: visible;">
+                                            <label class="login-label pwd-label" for="nloginpwd">
+                                                <img src="img/password.png" alt="userName" style="width:20px;position:relative;top:5px;left:8px;">
+                                            </label>
+                                            <input name="txtPwd" type="password" id="txtPwd" placeholder="密码" class="itxt itxt-error" maxlength="20" required onpaste="return false"
+                                                oncontextmenu="return false" oncopy="return false" oncut="return false">
+                                        </div>
+                                        <div id="result"></div>
+                                        <div class="item item-fore3">
+                                            <div class="login-btn">
+                                                <a href="javaScript:;" class="btn-img btn-entry" id="loginsubmit">登&nbsp;&nbsp;&nbsp;&nbsp;录</a>
+                                            </div>
+                                            <div class="noregister">暂不支持注册</div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 四个角标 -->
+                        <div class="border-style border-style1"></div>
+                        <div class="border-style border-style2"></div>
+                        <div class="border-style border-style3"></div>
+                        <div class="border-style border-style4"></div>
+                    </div>
 
-		</div>
-	</div>
-	</section>
-	<div class="clear"></div>
+                </div>
+            </div>
+        </section>
+        <div class="clear"></div>
 
-</div>
-  <footer class="w">
-          <div class="copyright">
-              版权所有&nbsp;©&nbsp;中国平安科技&nbsp;(深圳)&nbsp;有限公司未经许可不得复制、转载或摘编&nbsp;违者必究
-          </div>
-  </footer>
+    </div>
+    <footer class="w">
+        <div class="copyright">
+            版权所有&nbsp;©&nbsp;中国平安科技&nbsp;(深圳)&nbsp;有限公司未经许可不得复制、转载或摘编&nbsp;违者必究
+        </div>
+    </footer>
 
 </body>
 <script src="js/jquery-2.0.3.min.js" type="text/javascript"></script>
+<script src="js/myCookie.js"></script>
 <script src="js/md5.js" type="text/javascript"></script>
 <!-- <script src="js/CookieHelper.js" type="text/javascript"></script> -->
- <script type="text/javascript">
+<script type="text/javascript">
 
-  $(function(){
-      $('#loginsubmit').click(function(){
-          var txtName =  $.trim($("#txtName").val());
+    $(function () {
+        $('#loginsubmit').click(function () {
+            submit()
+        })
+        $("body").keydown(function () {
+            if (event.keyCode == "13") {//keyCode=13是回车键
+                $('#loginsubmit').click();
+            }
+        });
+    })
+    function submit() {
+        var txtName = $.trim($("#txtName").val());
         //   var txtPwd = $.md5($.trim($("#txtPwd").val()));//md5密码校验
-          var txtPwd = $.trim($("#txtPwd").val());
-          if(txtName == ""){       //验证用户名是否为空
-              $("#result").show().html("请输入用户名！");
-              return false;
-          }
-          if(txtPwd==""){       //验证密码是否为空
-              $("#result").show().html("请输入密码！");
-              return false;
-          }
-          //var param="http://10.180.99.244:10219/login";//验证接口
-          var param="http://10.180.99.244:10219/api/login";//验证接口
-          var successCode = '000000';
-          if(txtName==""||txtPwd==""){
-              $("#result").show().html("请输入用户和密码！");
-              return false;
-          }else{
-              $.ajax({
-                  url:param,
-                  type:"GET",
-                  dataType:"json",
-                  data: {"username": txtName, "password":txtPwd},
-                  beforeSend: function () {
-                      $(this).css("background", "#06bc99");
-                  },
-                  success:function(data) {
-                      console.log(data);
-                      if (data === undefined) {
+        var txtPwd = $.trim($("#txtPwd").val());
+        var userData = txtName+','+txtPwd;
+        if (txtName == "") {       //验证用户名是否为空
+            $("#result").show().html("请输入用户名！");
+            return false;
+        }
+        if (txtPwd == "") {       //验证密码是否为空
+            $("#result").show().html("请输入密码！");
+            return false;
+        }
+        //var param="http://10.180.99.244:10219/login";//验证接口
+        var param = "http://127.0.0.1:10219/login";//验证接口
+        var successCode = '000000';
+        if (txtName == "" || txtPwd == "") {
+            $("#result").show().html("请输入用户和密码！");
+            return false;
+        } else {
+            $.ajax({
+                url: param,
+                type: "GET",
+                dataType: "json",
+                data: { "username": txtName, "password": txtPwd },
+                beforeSend: function () {
+                    $(this).css("background", "#06bc99");
+                },
+                success: function (data) {
+                    console.log(data);
+                    if (data === undefined) {
                         $("#result").show().html("未知错误！");
-                          return false;
-                      }
-                      if(data.code !== successCode) {
-                          $("#result").show().html("请您输入正确的用户名或密码！");
-                          return false;
-                      } else {
+                        return false;
+                    }
+                    if (data.code !== successCode) {
+                        $("#result").show().html("请您输入正确的用户名或密码！");
+                        return false;
+                    } else {
                         //   if(data.username=="zhujunming"|| data.password=="123456"){
                         //       debugger;
-                              window.sessionStorage.setItem("username", txtName);
-                              window.location.href = "index.html";//跳转到主页
-                          // //  cookie存储
-                          // if(CookieHelper.Get("username")&&CookieHelper.Get("password")){
-                          //   txtName = CookieHelper.Get("username");
-                          //   txtPwd = CookieHelper.Get("password");
-                          // }
+                        window.sessionStorage.setItem("username", txtName);
+                		setCookie('userMessage', userData,'7');
+                        window.location.href = "index.html";//跳转到主页
+                        // //  cookie存储
+                        // if(CookieHelper.Get("username")&&CookieHelper.Get("password")){
+                        //   txtName = CookieHelper.Get("username");
+                        //   txtPwd = CookieHelper.Get("password");
+                        // }
                         //   }
 
-                      }
-                  },
-                  error: function(XMLHttpRequest, textStatus, errorThrown) {
-                      $("#result").show().html("登录失败，请检查网络是否畅通！");
-                  },
-                  complete: function (data) {
-                      $(this).css("background", "#f0f");
-                  }
-              });
-          }
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $("#result").show().html("登录失败，请检查网络是否畅通！");
+                },
+                complete: function (data) {
+                    $(this).css("background", "#f0f");
+                }
+            });
+        }
+    }
 
-      })
-  })
+</script>
 
-
- </script>
 </html>

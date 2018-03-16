@@ -32,7 +32,7 @@
 		<ul class="nav mainhead-nav">
 			<li id="username"></li>
 			<li class="spacer"></li>
-			<li onclick="window.location.href='login.html';">安全退出</li>
+			<li onclick="exit()">安全退出</li>
 		</ul>
 
 	</div>
@@ -49,7 +49,7 @@
 				<div class='col-xs-8 col-xs-offset-2 center'>
 					<p class="sloganboxcontent1">选择DICOM文件</p>
 					<p class="sloganboxcontent2"><img src="img/tips.png" alt="" style="width:18px;height:18px;">目前仅支持肺部结合智能分析，请选择CT影像文件<br/>建议一个影响序列放置一个文件夹</p>
-					<form id="form1" enctype="multipart/form-data" method="post" action="http://10.180.99.244:10219/uploadFile">
+					<form id="form1" enctype="multipart/form-data" method="post" action="http://127.0.0.1:10219/uploadFile">
 
 						<div class='btn btn-hero radius-2 margin-t10 no-decoration btn-file greenGradient' style="position:relative;font-size:14px;padding: 5px 15px;">
 							<img src="img/files.png" alt="" style="width:18px;height:15px;vertical-align: text-top;">&nbsp;选择DICOM文件夹
@@ -146,6 +146,7 @@
 <script type="text/javascript"  src="js/rsa.js" charset="utf-8"></script>
 <script type="text/javascript" src="js/dataDicom.js" charset='utf-8'></script>
 <script src="js/imageOrientationParse.js"></script>
+<script type="text/javascript" src="js/myCookie.js" charset="utf-8"></script>
 <script type="text/javascript"  src="js/directorySelect.js" charset="utf-8"></script>
 <script type="text/javascript"  src="js/uploaderflies.js" charset="utf-8"></script>
 <!-- 进度条 -->
@@ -153,26 +154,23 @@
 
 
 <script>
-    var pointsSet = [
-        {"diameter":"30","density":"600","dicomImageKey":"22","probability":"90.1","imageNo":"-360.5","location":"90,43","jpgImageKey":"22"},
-        {"diameter":"15","density":"400","dicomImageKey":"11","probability":"98.9","imageNo":"-360.5","location":"100,234","jpgImageKey":"11"},
-        {"diameter":"15","density":"400","dicomImageKey":"11","probability":"98.9","imageNo":"-196.5","location":"100,234","jpgImageKey":"11"},
-        {"diameter":"26","density":"400","dicomImageKey":"11","probability":"98.9","imageNo":"-196.5","location":"250,450","jpgImageKey":"11"},
-        {"diameter":"27","density":"400","dicomImageKey":"11","probability":"98.9","imageNo":"-196.5","location":"250,450","jpgImageKey":"11"},
-        {"diameter":"28","density":"400","dicomImageKey":"11","probability":"98.9","imageNo":"-196.5","location":"250,450","jpgImageKey":"11"},
-        {"diameter":"29","density":"400","dicomImageKey":"11","probability":"98.9","imageNo":"-196.5","location":"250,450","jpgImageKey":"11"},
-        {"diameter":"30","density":"400","dicomImageKey":"11","probability":"98.9","imageNo":"-196.5","location":"250,450","jpgImageKey":"11"},
-	];
-	
-	var username = window.sessionStorage.getItem("username");
-
+	(function(){
+		if(document.cookie){
+			return
+		}else{
+			window.location.href='login.html';
+		}
+	})()
 
 	window.onload = function() {
 		obj = document.getElementById("username");
-		obj.innerHTML = username;
+		obj.innerHTML = window.sessionStorage.getItem("username");
 	}
 	
-	
+	function exit(){
+		clearCookie('userMessage');
+		window.location.href='login.html';
+	}
 </script>
 
 <!-- ================================================ imgdicom====================================================================== -->

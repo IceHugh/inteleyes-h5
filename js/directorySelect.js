@@ -50,7 +50,7 @@ function showImages(dcmFiles) {
   var dicomImage = new DICOMImage();
   var SeriesSets = {};
   var seriesId = ''
-
+  var pointsSet = []
   if (dcmFiles.length > 20) {
     dcmFiles.splice(20)
     dicomImage.loadDicomFiles(dcmFiles).then(function (res) {

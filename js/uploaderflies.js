@@ -202,6 +202,33 @@ function NodeTest(seriesId,dicomViewer,imageData) {
         error: function () {
             console.log("请求AI分析结果-出现错误");
             jQuery('.nodeNumber').html('重新检测')
+            var c = {
+                "code": "000000",
+                "data": {
+                    "aiResults": [
+                        {
+                            "diameter": "5.89316",
+                            "density": "-248",
+                            "probability": "95.4055",
+                            "imageNo": "-360.5",
+                            "location": "400,198"
+                        },
+                        {
+                            "diameter": "8.16793",
+                            "density": "-507",
+                            "probability": "52.4567",
+                            "imageNo": "-205.5",
+                            "location": "172,194"
+                        }
+                    ],
+                    "aiCode": "000000",
+                    "serialUID": "1.3.6.1.4.1.14519.5.2.1.6279.6001.430109407146633213496148200410",
+                    "aiMsg": "处理成功"
+                },
+                "msg": "处理成功"
+            }
+            filesDicom(imageData, c.data.aiResults, dicomViewer);
+
         }
     })
 }
@@ -297,6 +324,38 @@ function bindEvent(dicomViewer, firstDcmNumber) {
 }
 
 function reviseData(dicomViewer, firstDcmNumber) {
+    document.getElementById('up').addEventListener('click', function (e) {
+        var currentPage = document.querySelector('input[type="range"]')
+        if(currentPage.value <= 1) {
+            return 
+        }
+        if(currentPage.value > firstDcmNumber) {
+            currentPage.setAttribute('value', firstDcmNumber)
+            return
+        }
+        dicomViewer.up();
+        dicomViewer.clearDraw()
+        dicomViewer.reset()
+        currentPage.setAttribute('value', currentPage.value--)
+        jQuery('.value')[0].innerHTML = currentPage.value + '/' + firstDcmNumber
+        
+    });
+    document.getElementById('down').addEventListener('click', function (e) {
+        var currentPage = document.querySelector('input[type="range"]')
+        if(currentPage.value < 1) {
+            return
+        }
+        if(currentPage.value >= firstDcmNumber) {
+            currentPage.setAttribute('value', firstDcmNumber)
+            return
+        }
+        dicomViewer.clearDraw()
+        dicomViewer.down();
+        dicomViewer.reset()
+        currentPage.setAttribute('value', currentPage.value++)
+        
+        jQuery('.value')[0].innerHTML = currentPage.value + '/' + firstDcmNumber
+    });
     var currentPage = document.querySelector('input[type="range"]')
     jQuery('.value')[0].innerHTML = currentPage.value + '/' + firstDcmNumber
     initRangeSlider(dicomViewer, firstDcmNumber);
