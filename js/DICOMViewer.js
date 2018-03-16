@@ -8,7 +8,7 @@ class DICOMViewer {
     }
     setDcmSeriesInfo(dcmSet,pointSet) {
         this.stopRender();
-        this.dcmSet = this.dcmSet.concat(dcmSet);
+        this.dcmSet = dcmSet
         this.pointSet = pointSet;
         this.states = {
             current: 0,
@@ -16,7 +16,7 @@ class DICOMViewer {
             scale: 0.7,
             translate: { x:0, y:0},
             preTranslate: { x:0, y:0},
-            num: dcmSet.length,
+            num: this.dcmSet.length,
             pointVisible: true,
             currentPointLocationID: null,
             loopNumber: 0,
@@ -85,7 +85,7 @@ class DICOMViewer {
     }
     // 放大
     zoomIn() {
-        this.states.scale *= 1.0;
+        this.states.scale *= 1.10;
     }
     // 缩小
     zoomOut() {

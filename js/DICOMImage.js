@@ -128,7 +128,11 @@ class DICOMImage {
     }
     async loadDicomFiles(DicomFileList,ctx,width,height) {
         let datasets = {};
+        console.log(DicomFileList)
         for (let file of DicomFileList) {
+            if(file.size == 0) {
+                continue
+            }
             const dcmDetail = await this.loadDicomFile(file);
             dcmDetail.file = file;
             const {SeriesInstanceUID} = dcmDetail;

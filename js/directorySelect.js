@@ -20,7 +20,6 @@ function directorySelect(e) {
       }
     }
   }
-  uploadFile(dcmFileList)
   // console.log(pathList)
   // console.log(fileList)
   //showDir(pathList);
@@ -41,31 +40,29 @@ function directorySelect(e) {
 // }
 
 function showImages(dcmFiles) {
+  var _dcmFiles = dcmFiles.slice(0)
   var page1 = document.getElementById('page1')
   var page2 = document.getElementById('page2')
   page1.style.display = 'none';
   page2.style.display = 'block';
   var domCanvas = document.getElementById("dicomImage");
   var dicomViewer = new DICOMViewer(domCanvas);
-  var arr = [];
-  analyticLazyArr = []
   var dicomImage = new DICOMImage();
   var SeriesSets = {};
   var seriesId = ''
 
   if (dcmFiles.length > 20) {
-    arr = dcmFiles.splice(20)
+    dcmFiles.splice(20)
     dicomImage.loadDicomFiles(dcmFiles).then(function (res) {
       seriesId = Object.keys(res)[0];
-      analyticLazyArr = analyticLazyArr.concat(res[seriesId])
+      NodeTest(seriesId,dicomViewer,res)
       dataDicomShow(dataDicom(res[seriesId][0].dataSet));
       bindEvent(dicomViewer, res[seriesId].length);
       dicomViewer.setDcmSeriesInfo(res[seriesId], pointsSet);
-      filesDicom(res, pointsSet, dicomViewer);
 
-      drawDicomData(arr,dicomImage).then(res => {
-        analyticLazyArr = analyticLazyArr.concat(res[seriesId])
-        console.log(analyticLazyArr)
+      drawDicomData(_dcmFiles,dicomImage).then(res => {
+        dicomViewer.setDcmSeriesInfo(res[seriesId], pointsSet)
+        reviseData(dicomViewer, res[seriesId].length)
       })
     })
   }

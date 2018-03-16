@@ -172,54 +172,23 @@ function fileSelected(e) {
     //     fileArray[id] = file
     // }
 }
-
-function uploadFile(files) {
-    //定义表单变量    
-    // var files = document.getElementById('fileToUpload').files;
-    console.log(files);
-    // var progress = document.getElementById('prog');
-    // var title2 = "上传进度条";
-    // var upPregress = ' ';
-    // upPregress += '<div class="upload-progress"><span class="upload-son" id="uploaderprogress">DICOM文件上传中……</span></div>';
-    // upPregress += '<div class="progress progressStyle">';
-    // upPregress += '<div id="progressbar" class="progress-bar" style="width:0%;" role="progressbar" >0%</div>';
-    // upPregress += '</div>';
-    // // upPregress+='<span class=" layui-layer-close layui-layer-close1 closeBtn" >取&nbsp;&nbsp;消</span>';
-
-    // // //  上传文件弹窗
-    // dislog1(title2, upPregress);
-    var SeriesSets = {};
-    if (!files.length) return;
-    var dicomImage = new DICOMImage();
-
-    //  var getDcmDetail = dicomImage.getDcmDetail();
-
-    // console.log(getDcmDetail.BodyPartExamined);
-    dicomImage.loadDicomFiles(files).then(function (seriesSets) {
-        var seriesId = Object.keys(seriesSets)[0];
-        var dcmData = dataDicom(seriesSets[seriesId][0].dataSet);
-        var dicomcheckResult = document.querySelector(".greenGradient");
-        // 请求接口调用
-        loopRequest({
-            url: 'http://127.0.0.1:10219/api/ai/requestAIResult',
-            data: {
-                seriesInstanceUid: seriesId
-            },
-            // success: function () {
-            //     dicomcheckResult.innerHTML = '<span class="complete">' + 3 + '个结节</span> ';
-            //     requestAISuccess(SeriesSets) 
-            // },
-            success: function (data) {
-                console.log("请求AI分析结果-成功");
-                console.log(data);
-                if (data.aiCode === '000000') {
-                    dicomcheckResult.innerHTML = '<i style="font-size: 20px;font-style: normal;" title="'+ data.aiResults.length + '个结节">'+ data.aiResults.length +'</i>个结节'
-                    // dicomcheckResult.innerHTML = '<span class="complete">' + data.aiResults.length + '个结节</span> ';
-                    requestAISuccess(SeriesSets, data.aiResults);
-                }
-            },
-            loading: function () {
-                console.log("请求AI分析结果-分析中")
+function NodeTest(seriesId,dicomViewer,imageData) {
+    console.log(seriesId)
+    loopRequest({
+        url:'http://127.0.0.1:10219/api/ai/requestAIResult',
+        // url: 'http://10.180.99.244:10219/api/ai/requestAIResult',
+        data: {
+            serialInstanceUid :seriesId
+        },
+        success: function(data) {
+            console.log("请求AI分析结果-成功");
+            if(data.aiCode === "000000") {
+                jQuery('.nodeNumber').html('<i style="font-size: 20px;font-style: normal;" title="'+ data.aiResults.length + '个结节">'+ data.aiResults.length +'</i>个结节')
+            }
+            filesDicom(imageData, data.data.aiResults, dicomViewer);
+        },
+        loading: function(){
+            console.log("请求AI分析结果-分析中")
                 function setProcess() {
                     var checkProgress = document.querySelector(".checkProgress");
                     // if (checkProgressBar.style.width == "90%") return;
@@ -228,114 +197,18 @@ function uploadFile(files) {
                     checkProgressBarWidth = parseInt(checkProgressBar.style.width) + 10 + "%";
                 }
                 var time = setInterval(function () { setProcess(); }, 5000)
-                // dicomcheckResult.innerHTML = '<span class="checking">结节检测中...</span>';
-            },
-            error: function () {
-                console.log("请求AI分析结果-出现错误");
-                // dicomcheckResult.innerHTML = '<span class="checkError"><span>出现错误</span><span onclick="requestResult(this);">重新检测</span></span>';
-                
-            }
-        });
-        console.log(seriesSets);
-        // var progressbar = document.getElementById('progressbar');
-        // debugger;
-        // var dicomUploader = new DICOMUploader(seriesSets, {
-        //     url: 'http://127.0.0.1:10219/fileupload/file',
-        //     progress: function (step, res) {
-        //         var percent = Math.floor(step * 100) + '%';
-        //         console.log(percent);
-        //         progressbar.style.width = percent;
-        //         progressbar.innerHTML = percent;
-        //     }
-        // });
-        // return dicomUploader.send();
-        // return true
+                jQuery('.nodeNumber').html('结点检测中...')
+        },
+        error: function () {
+            console.log("请求AI分析结果-出现错误");
+            jQuery('.nodeNumber').html('重新检测')
+        }
     })
-    // .then(function (res) {
-    //     /************************************************************************1判断是否为肺部影像**********************************************************************/
-    //     // var seriesID = Object.keys(SeriesSets)[0];
-    //     //  for(var i=0;i<= SeriesSets[seriesID].length;i++){
-    //     //      var k=SeriesSets[seriesID][i] ;
-    //     //      for(var j=0;j<=k;j++){
-
-    //     //      }
-    //     //     }
-
-
-    //     if (false) {
-    //         //k['BodyPartExamined']!== "CHEST"
-    //         var dicomcheck = "您上传的文件非胸部CT，目前仅支持智能识别肺结节，请重新上传";
-    //         layer.open({
-    //             type: 1
-    //             , content: dicomcheck
-    //             , area: ['640px', '320px']
-    //             , btn: '确定'
-    //             , btnAlign: 'c' //按钮居中
-    //             , shade: 0 //不显示遮罩
-    //             , yes: function (index) {
-    //                 // layer.closeAll();
-    //             }
-    //         });
-    //     } else {
-
-    //         var domCanvas = document.getElementById("dicomImage");
-    //         // uploaderprogress.innerHTML = '100%';
-
-    //         var dicomViewer = new DICOMViewer(domCanvas);
-    //         var seriesID = Object.keys(SeriesSets)[0];
-    //         // console(seriesID);
-    //         // 查看器点击事件 
-    //         bindEvent(dicomViewer, SeriesSets[seriesID].length);
-    //         // var dicomUploader1 = new DICOMUploader(datasets);
-    //         //  console.log(dicomUploader1);
-    //         // 点击列表项按钮
-    //         // 获取seriesID
-    //         // 请求结点数据
-    //         var pointsSet = [
-    //             { "diameter": "30", "density": "600", "dicomImageKey": "22", "probability": "90.1", "imageNo": "-360.5", "location": "180,303", "jpgImageKey": "22" },
-    //             { "diameter": "15", "density": "400", "dicomImageKey": "11", "probability": "98.9", "imageNo": "-360.5", "location": "100,234", "jpgImageKey": "11" },
-    //             { "diameter": "30", "density": "300", "dicomImageKey": "22", "probability": "90.1", "imageNo": "-360.5", "location": "280,83", "jpgImageKey": "22" },
-    //             { "diameter": "15", "density": "500", "dicomImageKey": "11", "probability": "98.9", "imageNo": "-360.5", "location": "300,134", "jpgImageKey": "11" },
-    //             { "diameter": "15", "density": "400", "dicomImageKey": "11", "probability": "98.9", "imageNo": "-196.5", "location": "100,234", "jpgImageKey": "11" },
-    //             { "diameter": "25", "density": "400", "dicomImageKey": "11", "probability": "98.9", "imageNo": "-196.5", "location": "250,450", "jpgImageKey": "11" }
-    //         ];
-    //         dicomViewer.setDcmSeriesInfo(SeriesSets[seriesID], pointsSet);
-    //         filesDicom(SeriesSets, dicomViewer);
-    //         Object.keys(SeriesSets).forEach(function(seriesID) {
-    //             requestResult({
-    //                 url: 'http://127.0.0.1:10219/api/ai/requestAIResult',
-    //                 handleResponse: requestAI_handleResponse,
-    //                 data: {
-    //                     serialInstanceUid: seriesID
-    //                 }
-    //             });
-    //         });
-    //         // dislog('','上传成功');
-    //         var page1 = document.getElementById("page1");
-    //         var page2 = document.getElementById("page2");
-    //         page1.style.display = "none";
-    //         page2.style.display = "block";
-    //         // layer.closeAll();
-    //     }
-    // }).catch(function (err) {
-    //     console.log(err || '失败')
-    //     var offline = "<div class=\"offline\">网络中断，待网络正常后继续上传</div>";
-    //     // layer.close();
-    //     layer.open({
-    //         type: 1
-    //         , content: offline
-    //         , area: ['640px', '320px']
-    //         , btn: '确定'
-    //         , btnAlign: 'c' //按钮居中
-    //         , shade: 0 //不显示遮罩
-    //         , yes: function (index) {
-    //             // layer.close(index);
-    //         }
-    //     });
-    // });
 }
+
 function requestAISuccess(seriesSets, pointsSet) {
     // var dicomcheckResult = document.querySelector(".dicomcheckResult");
+    console.log(seriesSets)
     if (seriesSets == undefined) {
         //k['BodyPartExamined']!== "CHEST"
         var dicomcheck = "您上传的文件非胸部CT，目前仅支持智能识别肺结节，请重新上传";
@@ -404,7 +277,6 @@ function bindEvent(dicomViewer, firstDcmNumber) {
             currentPage.setAttribute('value', firstDcmNumber)
             return
         }
-        if(currentPage.value === firstDcmNumber-5) {}
         dicomViewer.clearDraw()
         dicomViewer.down();
         dicomViewer.reset()
@@ -421,12 +293,14 @@ function bindEvent(dicomViewer, firstDcmNumber) {
     document.getElementById('reset').addEventListener('click', function (e) {
         dicomViewer.reset();
     });
-    dicomViewer.setPointEvent(function (point) {
-
-    });
     initRangeSlider(dicomViewer, firstDcmNumber);
 }
 
+function reviseData(dicomViewer, firstDcmNumber) {
+    var currentPage = document.querySelector('input[type="range"]')
+    jQuery('.value')[0].innerHTML = currentPage.value + '/' + firstDcmNumber
+    initRangeSlider(dicomViewer, firstDcmNumber);
+}
 /** rangeSlider **/
 
 function initRangeSlider(dicomViewer, dcmNumber) {
@@ -459,8 +333,7 @@ function requestResultGetResult(options) {
     xhr.onreadystatechange = function() {
         options.handleResponse(xhr,options);
     }
-
-    xhr.open("GET", url + "?seriesInstanceUid=" + options.data.seriesInstanceUid);
+    xhr.open("GET", url + "?seriesInstanceUid=" + options.data.serialInstanceUid);
     xhr.send(null);
 }
 
@@ -481,7 +354,7 @@ function requestAI_handleResponse(xhr,options) {
     var dicomcheckResult = document.querySelector(".dicomcheckResult");
     if (xhr.readyState == 4 && xhr.status == 200) {
         var requestAIRes =JSON.stringify(xhr.responseText);
-        var url = "http://127.0.0.1:10219/api/ai/requestAIResult"
+        var url = "http://10.180.99.244:10219/api/ai/requestAIResult"
         // var data = { seriesInstanceUid: seriesInstanceUid };
         if(requestAIRes.code !== "000000") return;
         loopRequest({
@@ -511,6 +384,7 @@ function requestAI_handleResponse(xhr,options) {
 }
 /*请求成功时，轮询*/
 function loopRequest(options) {
+    console.log(options)
     requestResultGetResult({
         url: options.url,
         data: options.data,
@@ -543,11 +417,9 @@ function loopRequest(options) {
 /*creat_group_list*/
 function filesDicom(SeriesSets, pointsSet, dicomViewer) {
     var seriesIDList = Object.keys(SeriesSets);
-    console.log(seriesIDList);
     var fileDicom = '';
     seriesIDList.forEach(function (seriesID) {
         var group = SeriesSets[seriesID];
-        console.log(seriesID)
         var dom = ''
         fileDicom += '<ul class="nav nav-list accordion-group" id="' + seriesID + '">';
         fileDicom += '<li class="nav-header nav-header-content sequenceAction" title="'+ seriesID +'">';
@@ -563,7 +435,7 @@ function filesDicom(SeriesSets, pointsSet, dicomViewer) {
         fileDicom += '    <li title="'+ group[0].PersonName + ' ' +group[0].PatientSex + ' ' + group[0].PatientAge +'"><span>' + group[0].PersonName + '</span><span class="leftSpacing">' + group[0].PatientSex + '</span><span class="leftSpacing">' + group[0].PatientAge + '</span></li>';
         fileDicom += '  </ul>';
 
-        fileDicom += '  <div class="title_right dicomcheckResult"><span class="pingAnBtn greenGradient nodeNumber"><i style="font-size: 20px;font-style: normal;" title="8321321321个结节">8321312321</i>个结节</span></div>';
+        fileDicom += '  <div class="title_right dicomcheckResult"><span id="cccddd" class="pingAnBtn greenGradient nodeNumber"><i style="font-size: 20px;font-style: normal;" title=0个结节">0</i>个结节</span></div>';
         fileDicom += ' </li>';
         fileDicom += ' <li class="checkProgress" ><div class="checkProgressBar" style="width:0%;"></div></li>';
         fileDicom += ' <li style="display:block;" class="boxes estRows">';
@@ -572,10 +444,9 @@ function filesDicom(SeriesSets, pointsSet, dicomViewer) {
         fileDicom += '       <tr><th>结节编号</th><th>直径/mm</th><th>层面</th><th>可能性</th></tr>';
         fileDicom += '     </thead>';
         fileDicom += '     <tbody>';
-        console.log(pointsSet)
         pointsSet.forEach(function(o,index){
             dom += '<tr data-option="' + index + '"" class="point-row">'
-            dom += '<td style="position:relative"><i class="currentOption" style="display:none"></i>' + o.jpgImageKey + '</td><td>' + o.diameter + '</td><td>' + o.imageNo + '</td><td>' + o.probability + '</td><td>'
+            dom += '<td style="position:relative"><i class="currentOption" style="display:none"></i>' + (index+1) + '</td><td>' + Number(o.diameter).toFixed(1) + '</td><td>' + Number(o.imageNo).toFixed(1) + '</td><td>' + Number(o.probability).toFixed(1) + '</td><td>'
             dom += '</tr>'
         })  
         fileDicom += dom
@@ -602,7 +473,7 @@ function filesDicom(SeriesSets, pointsSet, dicomViewer) {
             //     return jQuery(el).attr('data-option') === point.location;
             // })[0];
             var targetPoint = pointsSet[jQuery(el).attr('data-option')]
-            pointRowMsg(targetPoint,index,dicomViewer);
+            pointRowMsg(targetPoint,index,dicomViewer,pointsSet);
             if (dicomViewer.currentDcmInfo.imagePosition === Number(targetPoint.imageNo)) {
             var drawCircle = {};
             drawCircle.diameter = targetPoint.diameter;
@@ -646,23 +517,24 @@ function filesDicom(SeriesSets, pointsSet, dicomViewer) {
 
 }
 
-function pointRowMsg(obj,index,dicomViewer) {
+function pointRowMsg(obj,index,dicomViewer,pointsSet) {
+    console.log(obj)
     _objLoction ='x:'+ obj.location
     _objLoction = _objLoction.replace(/(,)/,' y:')
     var pointMsg = ' ';
     pointMsg += ' <div class="left_message_top" data-current="'+ index +'">';
-    pointMsg += '        <span><img src="img/nodepoint.png" alt="" style="width:23px;position:relative;right:22px;"><em class="boldFont">' + 3 + '</em>个节点</span>';
+    pointMsg += '        <span><img src="img/nodepoint.png" alt="" style="width:23px;position:relative;right:22px;"><em class="boldFont">' + pointsSet.length + '</em>个节点</span>';
     pointMsg += '        <span class="nodepoint" id="pointImg"><img src="img/checkpointhide.png" alt="" style="width:30px;position:relative;top:-2px;" id="imgChange"></span>';
     pointMsg += '</div>';
     pointMsg += '<div class="nodelPointMessage">';
     pointMsg += '  <div class="nodelPointMessageList">';
 
-    pointMsg += '   <div class="nodelPointMessageListTop"><span>结节' + obj.dicomImageKey + '</span><span id="delete" class="nodepoint" style="font-size:18px;cursor: pointer;z-index:1;line-height: 25px;">×</span></div>';
+    pointMsg += '   <div class="nodelPointMessageListTop"><span>结节 ' + (index+1) + '</span><span id="delete" class="nodepoint" style="font-size:18px;cursor: pointer;z-index:1;line-height: 25px;">×</span></div>';
 
     pointMsg += '   <div class="nodelPointMessageListBody">';
-    pointMsg += '    <span style="margin-top:10px;">直径：' + obj.diameter + 'mm</span>';
-    pointMsg += '    <span>密度：' + obj.jpgImageKey + 'Hu</span>';
-    pointMsg += '    <span>可能性：' + obj.probability + '%</span>';
+    pointMsg += '    <span style="margin-top:10px;">直径：' + Number(obj.diameter).toFixed(1) + 'mm</span>';
+    pointMsg += '    <span>密度：' + obj.density + 'Hu</span>';
+    pointMsg += '    <span>可能性：' + Number(obj.probability).toFixed(1) + '%</span>';
     pointMsg += '    <span>坐标：' + _objLoction + '</span>';
     pointMsg += '   </div>';
 
@@ -692,7 +564,7 @@ function pointRowMsg(obj,index,dicomViewer) {
             allOption.eq(o).css('display','none')
             allOption.eq(currentMessage).css('display','block')
         }
-        pointRowMsg(pointsSet[currentMessage],currentMessage,dicomViewer)
+        pointRowMsg(pointsSet[currentMessage],currentMessage,dicomViewer,pointsSet)
         console.log(dicomViewer.currentDcmInfo.imagePosition,obj.imageNo)
         if (dicomViewer.currentDcmInfo.imagePosition === Number(obj.imageNo)) {
             var drawCircle = {};
@@ -714,7 +586,7 @@ function pointRowMsg(obj,index,dicomViewer) {
             allOption.eq(o).css('display','none')
             allOption.eq(currentMessage).css('display','block')
         }
-        pointRowMsg(pointsSet[currentMessage],currentMessage,dicomViewer)
+        pointRowMsg(pointsSet[currentMessage],currentMessage,dicomViewer,pointsSet)
         console.log(dicomViewer.currentDcmInfo.imagePosition,obj.imageNo)
         if (dicomViewer.currentDcmInfo.imagePosition === Number(obj.imageNo)) {
             var drawCircle = {};
