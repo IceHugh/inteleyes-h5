@@ -156,6 +156,8 @@
 <script>
 	(function(){
 		if(document.cookie){
+			obj = document.getElementById("username");
+			obj.innerHTML = document.cookie.substring(12)
 			return
 		}else{
 			window.location.href='login.html';

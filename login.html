@@ -95,7 +95,7 @@
         var txtName = $.trim($("#txtName").val());
         //   var txtPwd = $.md5($.trim($("#txtPwd").val()));//md5密码校验
         var txtPwd = $.trim($("#txtPwd").val());
-        var userData = txtName+','+txtPwd;
+        var userData = txtName
         if (txtName == "") {       //验证用户名是否为空
             $("#result").show().html("请输入用户名！");
             return false;

@@ -133,14 +133,14 @@
 	}
 	.nodeNumber{
 		display: inline-block;
-    height: 30px;
-    width: 60px;
-    text-align: center;
-	line-height: 27px;
-	text-overflow: ellipsis;
-    word-wrap: break-word;
-    white-space: nowrap;
-    overflow: hidden;
+		height: 30px;
+		width: 60px;
+		text-align: center;
+		line-height: 30px;
+		text-overflow: ellipsis;
+		word-wrap: break-word;
+		white-space: nowrap;
+		overflow: hidden;
 	}
 	.clear{clear:both;}
 	.left_message .left_message_top span{

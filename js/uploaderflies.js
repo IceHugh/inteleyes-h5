@@ -257,22 +257,7 @@ function requestAISuccess(seriesSets, pointsSet) {
         var dicomViewer = new DICOMViewer(domCanvas);
         console.log(seriesSets)
         var seriesID = Object.keys(seriesSets)[0];
-        // console(seriesID);
-        // 查看器点击事件 
         bindEvent(dicomViewer, seriesSets[seriesID].length);
-        // var dicomUploader1 = new DICOMUploader(datasets);
-        //  console.log(dicomUploader1);
-        // 点击列表项按钮
-        // 获取seriesID
-        // 请求结点数据
-        // var pointsSet = [
-        //     { "diameter": "30", "density": "600", "dicomImageKey": "22", "probability": "90.1", "imageNo": "-360.5", "location": "180,303", "jpgImageKey": "22" },
-        //     { "diameter": "15", "density": "400", "dicomImageKey": "11", "probability": "98.9", "imageNo": "-360.5", "location": "100,234", "jpgImageKey": "11" },
-        //     { "diameter": "30", "density": "300", "dicomImageKey": "22", "probability": "90.1", "imageNo": "-360.5", "location": "280,83", "jpgImageKey": "22" },
-        //     { "diameter": "15", "density": "500", "dicomImageKey": "11", "probability": "98.9", "imageNo": "-360.5", "location": "300,134", "jpgImageKey": "11" },
-        //     { "diameter": "15", "density": "400", "dicomImageKey": "11", "probability": "98.9", "imageNo": "-196.5", "location": "100,234", "jpgImageKey": "11" },
-        //     { "diameter": "25", "density": "400", "dicomImageKey": "11", "probability": "98.9", "imageNo": "-196.5", "location": "250,450", "jpgImageKey": "11" }
-        // ];
         dicomViewer.setDcmSeriesInfo(seriesSets[seriesID], pointsSet);
         filesDicom(seriesSets, pointsSet, dicomViewer);
     }
@@ -357,6 +342,7 @@ function reviseData(dicomViewer, firstDcmNumber) {
         jQuery('.value')[0].innerHTML = currentPage.value + '/' + firstDcmNumber
     });
     var currentPage = document.querySelector('input[type="range"]')
+    var sxDicomLength = jQuery('[data-sx]').eq(0).html(firstDcmNumber)
     jQuery('.value')[0].innerHTML = currentPage.value + '/' + firstDcmNumber
     initRangeSlider(dicomViewer, firstDcmNumber);
 }
@@ -396,51 +382,51 @@ function requestResultGetResult(options) {
     xhr.send(null);
 }
 
-function requestResult(options) {
-    var xhr = new XMLHttpRequest();
-    var url = options.url;
-    /************************************************************************3没有做数据处理**********************************************************************/
-    xhr.onreadystatechange = function() {
-        options.handleResponse(xhr,options);
-    }
-    var processRes = preProcess(url,options.data,true);
-    xhr.open("POST", options.url, true);
-     // 请求头部信息设置
-    xhr.setRequestHeader('Authorization',  processRes.authorization);
-    xhr.send(JSON.stringify(processRes.body));
-}
-function requestAI_handleResponse(xhr,options) {
-    var dicomcheckResult = document.querySelector(".dicomcheckResult");
-    if (xhr.readyState == 4 && xhr.status == 200) {
-        var requestAIRes =JSON.stringify(xhr.responseText);
-        var url = "http://10.180.99.244:10219/api/ai/requestAIResult"
-        // var data = { seriesInstanceUid: seriesInstanceUid };
-        if(requestAIRes.code !== "000000") return;
-        loopRequest({
-            url: url,
-            data: options.data,
-            success: function () {
-                dicomcheckResult.innerHTML = '<span class="complete">' + 3 + '个结节</span> ';
-            },
-            loading: function () {
-                function setProcess() {
-                    // debugger;
-                    var checkProgress = document.querySelector(".checkProgress");
-                    // if (checkProgressBar.style.width == "90%") return;
-                    var checkProgressBar = document.querySelector(".checkProgressBar");
-                    var checkProgressBarWidth = checkProgressBar.style.width;
-                    checkProgressBarWidth = parseInt(checkProgressBar.style.width) + 10 + "%";;
-                }
-                var time = setInterval(function () { setProcess(); }, 5000)
-                dicomcheckResult.innerHTML = '<span class="checking">结节检测中...</span>';
-            },
-            error: function () {
-                dicomcheckResult.innerHTML = '<span class="checkError"><span>出现错误</span><span onclick="requestResult(this);">重新检测</span></span>';
+// function requestResult(options) {
+//     var xhr = new XMLHttpRequest();
+//     var url = options.url;
+//     /************************************************************************3没有做数据处理**********************************************************************/
+//     xhr.onreadystatechange = function() {
+//         options.handleResponse(xhr,options);
+//     }
+//     var processRes = preProcess(url,options.data,true);
+//     xhr.open("POST", options.url, true);
+//      // 请求头部信息设置
+//     xhr.setRequestHeader('Authorization',  processRes.authorization);
+//     xhr.send(JSON.stringify(processRes.body));
+// }
+// function requestAI_handleResponse(xhr,options) {
+//     var dicomcheckResult = document.querySelector(".dicomcheckResult");
+//     if (xhr.readyState == 4 && xhr.status == 200) {
+//         var requestAIRes =JSON.stringify(xhr.responseText);
+//         var url = "http://10.180.99.244:10219/api/ai/requestAIResult"
+//         // var data = { seriesInstanceUid: seriesInstanceUid };
+//         if(requestAIRes.code !== "000000") return;
+//         loopRequest({
+//             url: url,
+//             data: options.data,
+//             success: function () {
+//                 dicomcheckResult.innerHTML = '<span class="complete">' + 3 + '个结节</span> ';
+//             },
+//             loading: function () {
+//                 function setProcess() {
+//                     // debugger;
+//                     var checkProgress = document.querySelector(".checkProgress");
+//                     // if (checkProgressBar.style.width == "90%") return;
+//                     var checkProgressBar = document.querySelector(".checkProgressBar");
+//                     var checkProgressBarWidth = checkProgressBar.style.width;
+//                     checkProgressBarWidth = parseInt(checkProgressBar.style.width) + 10 + "%";;
+//                 }
+//                 var time = setInterval(function () { setProcess(); }, 5000)
+//                 dicomcheckResult.innerHTML = '<span class="checking">结节检测中...</span>';
+//             },
+//             error: function () {
+//                 dicomcheckResult.innerHTML = '<span class="checkError"><span>出现错误</span><span onclick="requestResult(this);">重新检测</span></span>';
 
-            }
-        });
-    }
-}
+//             }
+//         });
+//     }
+// }
 /*请求成功时，轮询*/
 function loopRequest(options) {
     console.log(options)
@@ -477,7 +463,7 @@ function loopRequest(options) {
 function filesDicom(SeriesSets, pointsSet, dicomViewer) {
     var seriesIDList = Object.keys(SeriesSets);
     var fileDicom = '';
-    seriesIDList.forEach(function (seriesID) {
+    seriesIDList.forEach(function (seriesID,index) {
         var group = SeriesSets[seriesID];
         var dom = ''
         fileDicom += '<ul class="nav nav-list accordion-group" id="' + seriesID + '">';
@@ -485,7 +471,7 @@ function filesDicom(SeriesSets, pointsSet, dicomViewer) {
         fileDicom += '<div class="title_hd">';
         fileDicom += '<div style="width:68px;height:68px;background:rgba(12,173,141,0.4);position:absolute;"></div>'
         fileDicom += '     <img src="' + group[0].imageData + '" alt="" style="width:68px;margin-right:5px;display:block">';
-        fileDicom += '               <span><em>' + group.length + '</em>张</span>';
+        fileDicom += '               <span><em data-sx="'+index+'">' + group.length + '</em>张</span>';
         fileDicom += '  </div>';
         
         fileDicom += ' <ul class="titleMessage">';
@@ -624,7 +610,6 @@ function pointRowMsg(obj,index,dicomViewer,pointsSet) {
             allOption.eq(currentMessage).css('display','block')
         }
         pointRowMsg(pointsSet[currentMessage],currentMessage,dicomViewer,pointsSet)
-        console.log(dicomViewer.currentDcmInfo.imagePosition,obj.imageNo)
         if (dicomViewer.currentDcmInfo.imagePosition === Number(obj.imageNo)) {
             var drawCircle = {};
             console.log(pointsSet[currentMessage])
@@ -646,7 +631,6 @@ function pointRowMsg(obj,index,dicomViewer,pointsSet) {
             allOption.eq(currentMessage).css('display','block')
         }
         pointRowMsg(pointsSet[currentMessage],currentMessage,dicomViewer,pointsSet)
-        console.log(dicomViewer.currentDcmInfo.imagePosition,obj.imageNo)
         if (dicomViewer.currentDcmInfo.imagePosition === Number(obj.imageNo)) {
             var drawCircle = {};
             drawCircle.diameter = pointsSet[currentMessage].diameter;
