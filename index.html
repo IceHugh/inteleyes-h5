@@ -13,6 +13,7 @@
 	<link href="css/imgdicom.css" rel="stylesheet">
 	<!-- 弹窗样式 -->
 	<link rel="stylesheet" type="text/css" href="./css/layui.css"/>
+	<link rel="stylesheet" href="./css/loading.css">
 </head>
 
 <body>
@@ -53,7 +54,7 @@
 
 						<div class='btn btn-hero radius-2 margin-t10 no-decoration btn-file greenGradient' style="position:relative;font-size:14px;padding: 5px 15px;">
 							<img src="img/files.png" alt="" style="width:18px;height:15px;vertical-align: text-top;">&nbsp;选择DICOM文件夹
-							<input type="file" id="file01" class="filesUploader" onchange="directorySelect(this)" webkitdirectory directory multiple data-type="directory"/>
+							<input type="file" id="file01" class="filesUploader" title="已选择目录文件" onchange="directorySelect(this)" webkitdirectory directory multiple data-type="directory"/>
 						</div>
 						<!-- <a href='javaScript;;' class='btn radius-2 margin-t10 no-decoration btn-file'  style="border:1px solid #0db392;color:#fff;position:relative;font-size:14px;padding: 4px 15px;">
 							<span><img src="img/file.png" alt="" style="width:15px;vertical-align: text-bottom;">&nbsp;选择DICOM文件</span>
@@ -114,6 +115,20 @@
 		</div>
 	</div>
 </div>
+<div class="box-loading" style="display:none">
+    <div class="loader-loading">
+        <div class="loading-3">
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>     
+		</div>
+    </div>      
+</div>
 <!-- imgdicom頁面 end -->
 </body>
 <script type="text/javascript" src="js/jquery-2.0.3.min.js"  charset="utf-8"></script>
@@ -164,10 +179,10 @@
 		}
 	})()
 
-	window.onload = function() {
-		obj = document.getElementById("username");
-		obj.innerHTML = window.sessionStorage.getItem("username");
-	}
+	// window.onload = function() {
+	// 	obj = document.getElementById("username");
+	// 	obj.innerHTML = window.sessionStorage.getItem("username");
+	// }
 	
 	function exit(){
 		clearCookie('userMessage');

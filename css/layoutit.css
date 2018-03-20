@@ -104,7 +104,8 @@
 .sidebar-nav .remove,
 .sidebar-nav .configuration { display: none; }
 
-.sidebar-nav .boxes { display:none;}
+.sidebar-nav .boxes { display:none;overflow: scroll;
+    max-height: 293px;}
 
 .demo .preview { display: none; }
 .demo .box .view { display: block; padding-top:30px;}

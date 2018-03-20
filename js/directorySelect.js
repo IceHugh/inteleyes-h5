@@ -1,5 +1,8 @@
 var pathList = [];
 var fileList = [];
+var nodeMessage = [];
+var nodeIndex = [];
+var fileObj = {}
 function directorySelect(e) {
   var files = e.files;
   pathList = [];
@@ -8,7 +11,7 @@ function directorySelect(e) {
   for (const key in files) {
     if (files.hasOwnProperty(key)) {
       var val = files[key];
-      if(val.name.match(/\.dcm/)) {
+      if (val.name.match(/\.dcm/)) {
         dcmFileList.push(val);
         const { webkitRelativePath } = val;
         const pathArr = webkitRelativePath.split('\/');
@@ -16,14 +19,21 @@ function directorySelect(e) {
         if (pathList.indexOf(relativePath) < 0) {
           pathList.push(relativePath);
         }
+        if (!fileObj[relativePath]) {
+          fileObj[relativePath] = [val];
+        } else {
+          fileObj[relativePath].push(val)
+        }
         fileList.push(val);
       }
     }
   }
-  // console.log(pathList)
+  console.log(fileObj)
   // console.log(fileList)
   //showDir(pathList);
-  showImages(dcmFileList);
+  for (var item in fileObj) {
+    showImages(fileObj[item])
+  }
 }
 
 // function showDir(list) {
@@ -55,21 +65,57 @@ function showImages(dcmFiles) {
     dcmFiles.splice(20)
     dicomImage.loadDicomFiles(dcmFiles).then(function (res) {
       seriesId = Object.keys(res)[0];
-      NodeTest(seriesId,dicomViewer,res)
+      NodeTest(seriesId, dicomViewer, res)
       dataDicomShow(dataDicom(res[seriesId][0].dataSet));
+      filesDicom(res, dicomViewer)
+      bindEvent(dicomViewer, res[seriesId].length);
+      dicomViewer.setDcmSeriesInfo(res[seriesId], pointsSet);
+      //第2次请求
+      // drawDicomData(_dcmFiles, dicomImage).then(res => {
+      //   dicomViewer.setDcmSeriesInfo(res.item, pointsSet)
+      //   reviseData(dicomViewer, res.item.length)
+      //   nodeFilter(res.item)
+      //   if (jQuery('.box-loading').css('display') !== "none") {
+      //     jQuery('.box-loading').hide()
+      //   }
+      // })
+    })
+  } else {
+    dicomImage.loadDicomFiles(dcmFiles).then(function (res) {
+      seriesId = Object.keys(res)[0];
+      NodeTest(seriesId, dicomViewer, res)
+      dataDicomShow(dataDicom(res[seriesId][0].dataSet));
+      filesDicom(res, dicomViewer)
       bindEvent(dicomViewer, res[seriesId].length);
       dicomViewer.setDcmSeriesInfo(res[seriesId], pointsSet);
 
-      drawDicomData(_dcmFiles,dicomImage).then(res => {
-        dicomViewer.setDcmSeriesInfo(res[seriesId], pointsSet)
-        reviseData(dicomViewer, res[seriesId].length)
-      })
+      // drawDicomData(_dcmFiles, dicomImage).then(res => {
+      //   dicomViewer.setDcmSeriesInfo(res[seriesId], pointsSet)
+      //   reviseData(dicomViewer, res[seriesId].length)
+      //   nodeFilter(res[seriesId])
+      //   if (jQuery('.box-loading').css('display') !== "none") {
+      //     jQuery('.box-loading').hide()
+      //   }
+      // })
     })
   }
 }
-async function drawDicomData(dcmFiles,dicomImage) {
+function nodeFilter(imgdata) {
+  console.log(nodeMessage)
+  if (nodeMessage.length) {
+    nodeMessage[0].forEach(c => {
+      imgdata.map((item, index) => {
+        if (item.imageNo == c.imageNo) {
+          nodeIndex.push(index)
+        }
+      })
+    })
+  };
+}
+async function drawDicomData(dcmFiles, dicomImage) {
   var analyticData = [];
   await dicomImage.loadDicomFiles(dcmFiles).then(res => {
+
     analyticData = res
   })
   return analyticData

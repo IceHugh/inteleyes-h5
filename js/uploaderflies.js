@@ -50,7 +50,7 @@ var ctheader = $("ctheader"),
     fileArray = [],
     fileSplitSize = 1024 * 10000;
 
-function directorySelected (e){
+function directorySelected(e) {
     const files = document.querySelector('#file01').files;
     console.log(files);
 }
@@ -95,7 +95,7 @@ function fileSelected(e) {
         if (stuff != "dcm") {
             alert("请选择正确文件");
             return false;
-           
+
         }
 
         //名称截取
@@ -111,16 +111,6 @@ function fileSelected(e) {
             }
         }
 
-        // if (size > 1024 * 2) {
-        //     id = Math.random();
-        //     debugger
-        //     console.log(id);
-        //     alert("文件过大");
-        // } else {
-
-        //         shtml += "<tr><td>" + name + "</td><td>" + type + "</td><td>" + size + "</td><td>" +data + "</td></tr>";
-
-        // }
         shtml += "<tr><td>" + name + "</td><td>" + stuff + "</td><td>" + size + "</td><td>" + data + "</td></tr>";
 
         total += files[i].size;
@@ -138,7 +128,7 @@ function fileSelected(e) {
     btnShtml += "</div>";
     var btn = btnShtml;
     console.log(btn);
-    
+
     var txt = shtml;
     var title1 = "检测出待上传DICOM文件";
     dislog(title1, txt, btn);
@@ -148,128 +138,80 @@ function fileSelected(e) {
 
         document.getElementById("totalFiles1").style.display = "block";
         form2.addEventListener("submit", function (event) {
-            // debugger;
-            // alert(555);
             event.preventDefault();
-            // uploadFile();
         });
     }
     else {
         document.getElementById("totalFiles1").style.display = "none";
         form2.addEventListener("submit", function (event) {
-            //  debugger;
-            // alert(55115);
             event.preventDefault();
             uploadFile(files);
             layer.close();
         });
     }
-    // 文件去重处理
-    // if(fileArray.indexOf(id) != -1){
-    //       console.log(fileArray.indexOf(id) != -1);
-    // }else{
-    //    fileArray.push(id);
-    //     fileArray[id] = file
-    // }
 }
-function NodeTest(seriesId,dicomViewer,imageData) {
-    console.log(seriesId)
-    loopRequest({
-        url:'http://127.0.0.1:10219/api/ai/requestAIResult',
-        // url: 'http://10.180.99.244:10219/api/ai/requestAIResult',
-        data: {
-            serialInstanceUid :seriesId
-        },
-        success: function(data) {
-            console.log("请求AI分析结果-成功");
-            if(data.aiCode === "000000") {
-                jQuery('.nodeNumber').html('<i style="font-size: 20px;font-style: normal;" title="'+ data.aiResults.length + '个结节">'+ data.aiResults.length +'</i>个结节')
-            }
-            filesDicom(imageData, data.data.aiResults, dicomViewer);
-        },
-        loading: function(){
-            console.log("请求AI分析结果-分析中")
-                function setProcess() {
-                    var checkProgress = document.querySelector(".checkProgress");
-                    // if (checkProgressBar.style.width == "90%") return;
-                    var checkProgressBar = document.querySelector(".checkProgressBar");
-                    var checkProgressBarWidth = checkProgressBar.style.width;
-                    checkProgressBarWidth = parseInt(checkProgressBar.style.width) + 10 + "%";
+
+
+
+function NodeTest(seriesId, dicomViewer, imageData) {
+    jQuery.ajax({
+        url: 'http://127.0.0.1:10219/api/ai/requestAIResult',
+        data: { seriesInstanceUid: seriesId },
+        success: function (data) {
+            data = JSON.parse(data)
+            data = data.data
+            if (data.aiCode == "000000") {
+                if (data.aiResults.length == '0') {
+                    jQuery('.nodeList').html(nodeList(data.aiResults))
+                    jQuery('.nodeNumber').html('<i style="font-size: 20px;font-style: normal;" title="' + data.aiResults.length + '个结节">' + data.aiResults.length + '</i>个结节')
+                    jQuery('.nodeNumber').removeClass('greenGradient')
+                } else {
+                    jQuery('.nodeList').html(nodeList(data.aiResults))
+                    bindNodeList(data.aiResults,dicomViewer)
+                    jQuery('.nodeNumber').html('<i style="font-size: 20px;font-style: normal;" title="' + data.aiResults.length + '个结节">' + data.aiResults.length + '</i>个结节')
+                    nodeMessage.push(data.aiResults)
                 }
-                var time = setInterval(function () { setProcess(); }, 5000)
+            } else if (data.aiCode == '003006' || data.aiCode == '003005') {
+                console.log("请求AI分析结果-分析中")
+                jQuery('.nodeList').html(nodeList(data.aiResults))
                 jQuery('.nodeNumber').html('结点检测中...')
+                jQuery('.nodeNumber').removeClass('greenGradient')
+                jQuery('.nodeNumber').removeClass('redGradient')
+                setTimeout(() => {
+                    NodeTest(seriesId, dicomViewer, imageData)
+                },5000)
+            } else {
+                console.log("请求AI分析结果-出现错误");
+                jQuery('.nodeList').html(nodeList(data.aiResults))
+                jQuery('.nodeNumber').removeClass('greenGradient')
+                jQuery('.nodeNumber').addClass('redGradient')
+                jQuery('.nodeNumber').html('重新检测')
+                proxyRequests = function () {
+                    NodeTest(seriesId, dicomViewer, imageData)
+                }
+            }
         },
         error: function () {
-            console.log("请求AI分析结果-出现错误");
+            console.log("请求AI分析结果-出现连接错误");
+            jQuery('.nodeNumber').removeClass('greenGradient')
+            jQuery('.nodeNumber').addClass('redGradient')
             jQuery('.nodeNumber').html('重新检测')
-            var c = {
-                "code": "000000",
-                "data": {
-                    "aiResults": [
-                        {
-                            "diameter": "5.89316",
-                            "density": "-248",
-                            "probability": "95.4055",
-                            "imageNo": "-360.5",
-                            "location": "400,198"
-                        },
-                        {
-                            "diameter": "8.16793",
-                            "density": "-507",
-                            "probability": "52.4567",
-                            "imageNo": "-205.5",
-                            "location": "172,194"
-                        }
-                    ],
-                    "aiCode": "000000",
-                    "serialUID": "1.3.6.1.4.1.14519.5.2.1.6279.6001.430109407146633213496148200410",
-                    "aiMsg": "处理成功"
-                },
-                "msg": "处理成功"
-            }
-            filesDicom(imageData, c.data.aiResults, dicomViewer);
-
+            jQuery('.nodeNumber').click(function (e) {
+                e.stopPropagation();
+                NodeTest(seriesId, dicomViewer, imageData)
+            })
         }
     })
 }
 
-function requestAISuccess(seriesSets, pointsSet) {
-    // var dicomcheckResult = document.querySelector(".dicomcheckResult");
-    console.log(seriesSets)
-    if (seriesSets == undefined) {
-        //k['BodyPartExamined']!== "CHEST"
-        var dicomcheck = "您上传的文件非胸部CT，目前仅支持智能识别肺结节，请重新上传";
-        layer.open({
-            type: 1
-            , content: dicomcheck
-            , area: ['640px', '320px']
-            , btn: '确定'
-            , btnAlign: 'c' //按钮居中
-            , shade: 0 //不显示遮罩
-            , yes: function (index) {
-                // layer.closeAll();
-            }
-        });
-    } else {
-        var domCanvas = document.getElementById("dicomImage");
-        // uploaderprogress.innerHTML = '100%';
-
-        var dicomViewer = new DICOMViewer(domCanvas);
-        console.log(seriesSets)
-        var seriesID = Object.keys(seriesSets)[0];
-        bindEvent(dicomViewer, seriesSets[seriesID].length);
-        dicomViewer.setDcmSeriesInfo(seriesSets[seriesID], pointsSet);
-        filesDicom(seriesSets, pointsSet, dicomViewer);
-    }
-}
 /*canvasBtn 操作事件*/
 function bindEvent(dicomViewer, firstDcmNumber) {
     document.getElementById('up').addEventListener('click', function (e) {
         var currentPage = document.querySelector('input[type="range"]')
-        if(currentPage.value <= 1) {
-            return 
+        if (currentPage.value <= 1) {
+            return
         }
-        if(currentPage.value > firstDcmNumber) {
+        if (currentPage.value > firstDcmNumber) {
             currentPage.setAttribute('value', firstDcmNumber)
             return
         }
@@ -278,14 +220,14 @@ function bindEvent(dicomViewer, firstDcmNumber) {
         dicomViewer.reset()
         currentPage.setAttribute('value', currentPage.value--)
         jQuery('.value')[0].innerHTML = currentPage.value + '/' + firstDcmNumber
-        
+
     });
     document.getElementById('down').addEventListener('click', function (e) {
         var currentPage = document.querySelector('input[type="range"]')
-        if(currentPage.value < 1) {
+        if (currentPage.value < 1) {
             return
         }
-        if(currentPage.value >= firstDcmNumber) {
+        if (currentPage.value >= firstDcmNumber) {
             currentPage.setAttribute('value', firstDcmNumber)
             return
         }
@@ -293,7 +235,7 @@ function bindEvent(dicomViewer, firstDcmNumber) {
         dicomViewer.down();
         dicomViewer.reset()
         currentPage.setAttribute('value', currentPage.value++)
-        
+
         jQuery('.value')[0].innerHTML = currentPage.value + '/' + firstDcmNumber
     });
     document.getElementById('zoomin').addEventListener('click', function (e) {
@@ -311,10 +253,10 @@ function bindEvent(dicomViewer, firstDcmNumber) {
 function reviseData(dicomViewer, firstDcmNumber) {
     document.getElementById('up').addEventListener('click', function (e) {
         var currentPage = document.querySelector('input[type="range"]')
-        if(currentPage.value <= 1) {
-            return 
+        if (currentPage.value <= 1) {
+            return
         }
-        if(currentPage.value > firstDcmNumber) {
+        if (currentPage.value > firstDcmNumber) {
             currentPage.setAttribute('value', firstDcmNumber)
             return
         }
@@ -323,14 +265,14 @@ function reviseData(dicomViewer, firstDcmNumber) {
         dicomViewer.reset()
         currentPage.setAttribute('value', currentPage.value--)
         jQuery('.value')[0].innerHTML = currentPage.value + '/' + firstDcmNumber
-        
+
     });
     document.getElementById('down').addEventListener('click', function (e) {
         var currentPage = document.querySelector('input[type="range"]')
-        if(currentPage.value < 1) {
+        if (currentPage.value < 1) {
             return
         }
-        if(currentPage.value >= firstDcmNumber) {
+        if (currentPage.value >= firstDcmNumber) {
             currentPage.setAttribute('value', firstDcmNumber)
             return
         }
@@ -338,7 +280,7 @@ function reviseData(dicomViewer, firstDcmNumber) {
         dicomViewer.down();
         dicomViewer.reset()
         currentPage.setAttribute('value', currentPage.value++)
-        
+
         jQuery('.value')[0].innerHTML = currentPage.value + '/' + firstDcmNumber
     });
     var currentPage = document.querySelector('input[type="range"]')
@@ -357,11 +299,11 @@ function initRangeSlider(dicomViewer, dcmNumber) {
     var rangeValue = function () {
         // debugger;
         var newValue = Number(elem.value);
-        dicomViewer.forward(newValue -1);
+        dicomViewer.forward(newValue - 1);
         dicomViewer.clearDraw()
         dicomViewer.reset()
         elem.setAttribute('value', newValue)
-        jQuery('.value')[0].innerHTML = newValue+ '/' + dcmNumber
+        jQuery('.value')[0].innerHTML = newValue + '/' + dcmNumber
         var width = (91.3 / dcmNumber * newValue) + "%";
         document.querySelector('.rang_width').style.width = width;
     };
@@ -375,61 +317,15 @@ function requestResultGetResult(options) {
     var xhr = new XMLHttpRequest();
     var url = options.url;
 
-    xhr.onreadystatechange = function() {
-        options.handleResponse(xhr,options);
+    xhr.onreadystatechange = function () {
+        options.handleResponse(xhr, options);
     }
     xhr.open("GET", url + "?seriesInstanceUid=" + options.data.serialInstanceUid);
     xhr.send(null);
 }
 
-// function requestResult(options) {
-//     var xhr = new XMLHttpRequest();
-//     var url = options.url;
-//     /************************************************************************3没有做数据处理**********************************************************************/
-//     xhr.onreadystatechange = function() {
-//         options.handleResponse(xhr,options);
-//     }
-//     var processRes = preProcess(url,options.data,true);
-//     xhr.open("POST", options.url, true);
-//      // 请求头部信息设置
-//     xhr.setRequestHeader('Authorization',  processRes.authorization);
-//     xhr.send(JSON.stringify(processRes.body));
-// }
-// function requestAI_handleResponse(xhr,options) {
-//     var dicomcheckResult = document.querySelector(".dicomcheckResult");
-//     if (xhr.readyState == 4 && xhr.status == 200) {
-//         var requestAIRes =JSON.stringify(xhr.responseText);
-//         var url = "http://10.180.99.244:10219/api/ai/requestAIResult"
-//         // var data = { seriesInstanceUid: seriesInstanceUid };
-//         if(requestAIRes.code !== "000000") return;
-//         loopRequest({
-//             url: url,
-//             data: options.data,
-//             success: function () {
-//                 dicomcheckResult.innerHTML = '<span class="complete">' + 3 + '个结节</span> ';
-//             },
-//             loading: function () {
-//                 function setProcess() {
-//                     // debugger;
-//                     var checkProgress = document.querySelector(".checkProgress");
-//                     // if (checkProgressBar.style.width == "90%") return;
-//                     var checkProgressBar = document.querySelector(".checkProgressBar");
-//                     var checkProgressBarWidth = checkProgressBar.style.width;
-//                     checkProgressBarWidth = parseInt(checkProgressBar.style.width) + 10 + "%";;
-//                 }
-//                 var time = setInterval(function () { setProcess(); }, 5000)
-//                 dicomcheckResult.innerHTML = '<span class="checking">结节检测中...</span>';
-//             },
-//             error: function () {
-//                 dicomcheckResult.innerHTML = '<span class="checkError"><span>出现错误</span><span onclick="requestResult(this);">重新检测</span></span>';
-
-//             }
-//         });
-//     }
-// }
 /*请求成功时，轮询*/
 function loopRequest(options) {
-    console.log(options)
     requestResultGetResult({
         url: options.url,
         data: options.data,
@@ -442,15 +338,14 @@ function loopRequest(options) {
             var res = xhr.responseText;
             if (res) {
                 res = JSON.parse(res);
-                if (res["code"] == "000000") {
+                if (res["code"] == "000000" || res["code"] == "003103") {
                     options.success(res.data);
                 } else if (res["code"] == "003005" || res["code"] == "003006") {
                     options.loading();
-                    setTimeout(function () { loopRequest(options); }, 30000);
+                    return
                 } else {
                     options.error();
                 }
-
             } else {
                 options.error();
             }
@@ -459,25 +354,86 @@ function loopRequest(options) {
         };
     }
 }
+function nodeList(pointsSet){
+    var dom = ''
+    if(!pointsSet){
+        return
+    }
+    pointsSet.forEach(function (o, index) {
+        dom += '<tr data-option="' + index + '"" class="point-row">'
+        dom += '<td style="position:relative"><i class="currentOption" style="display:none"></i>' + (index + 1) + '</td><td>' + Number(o.diameter).toFixed(1) + '</td><td>' + Number(o.imageNo).toFixed(1) + '</td><td>' + Number(o.probability).toFixed(1) + '</td><td>'
+        dom += '</tr>'
+    })
+    return dom
+}
+
+function bindNodeList(pointsSet,dicomViewer){
+    document.querySelectorAll('.point-row').forEach(function (tr, index) {
+        tr.addEventListener('click', function (e) {
+            // debugger
+            if (dicomViewer.dcmSet.length <= 20) {
+                jQuery('.box-loading').show()
+                return
+            }
+            var allOption = jQuery('.currentOption')
+            for (var o in allOption) {
+                allOption.eq(o).css('display', 'none')
+            }
+            var el = e.currentTarget;
+            var currentOption = jQuery(el).children().eq(0).children().eq(0)
+            currentOption.css('display', 'block')
+
+            var targetPoint = pointsSet[jQuery(el).attr('data-option')]
+            pointRowMsg(targetPoint, index, dicomViewer, pointsSet);
+            scrollNode(nodeIndex[index], dicomViewer.dcmSet.length, dicomViewer)
+            if (dicomViewer.currentDcmInfo.imagePosition === Number(targetPoint.imageNo)) {
+                var drawCircle = {};
+                drawCircle.diameter = targetPoint.diameter;
+                drawCircle.x = targetPoint.location.slice(0, targetPoint.location.indexOf(','))
+                drawCircle.y = targetPoint.location.slice(targetPoint.location.indexOf(',') + 1)
+                //画节点
+                dicomViewer.draw(() => { dicomViewer.drawSinglepoint(drawCircle) });
+            }
+            document.querySelector('.left_message').style.display = "block";
+        })
+    });/*下拉菜单切换*/
+    document.querySelectorAll(".nav-header").forEach(function (elem) {
+
+        elem.addEventListener('click', function (e) {
+            if (!jQuery(this).hasClass('sequenceAction')) {
+                jQuery(this).addClass('sequenceAction')
+            } else {
+                jQuery(this).removeClass('sequenceAction')
+            }
+            var el = e.currentTarget;
+            var pointLi = jQuery(el).next().next()
+            var openStatus = jQuery(pointLi).css('display')
+            if (openStatus === 'none') {
+                jQuery(pointLi).slideDown()
+            } else {
+                jQuery(pointLi).slideUp()
+            }
+        });
+    });
+}
 /*creat_group_list*/
-function filesDicom(SeriesSets, pointsSet, dicomViewer) {
+function filesDicom(SeriesSets, dicomViewer) {
     var seriesIDList = Object.keys(SeriesSets);
     var fileDicom = '';
-    seriesIDList.forEach(function (seriesID,index) {
+    seriesIDList.forEach(function (seriesID, index) {
         var group = SeriesSets[seriesID];
-        var dom = ''
-        fileDicom += '<ul class="nav nav-list accordion-group" id="' + seriesID + '">';
-        fileDicom += '<li class="nav-header nav-header-content sequenceAction" title="'+ seriesID +'">';
+        fileDicom += '<ul class="nav nav-list accordion-group">';
+        fileDicom += '<li class="nav-header nav-header-content sequenceAction" title="' + seriesID + '">';
         fileDicom += '<div class="title_hd">';
         fileDicom += '<div style="width:68px;height:68px;background:rgba(12,173,141,0.4);position:absolute;"></div>'
         fileDicom += '     <img src="' + group[0].imageData + '" alt="" style="width:68px;margin-right:5px;display:block">';
-        fileDicom += '               <span><em data-sx="'+index+'">' + group.length + '</em>张</span>';
+        fileDicom += '               <span><em data-sx="' + index + '">' + group.length + '</em>张</span>';
         fileDicom += '  </div>';
-        
+
         fileDicom += ' <ul class="titleMessage">';
         fileDicom += '    <li title="SX_001"><span>SX_001</span></li>';
-        fileDicom += '    <li title="胸部CT '+ group[0].SeriesDate +'"><span>胸透CT</span><span class="leftSpacing">' + group[0].SeriesDate + '</span></li>';
-        fileDicom += '    <li title="'+ group[0].PersonName + ' ' +group[0].PatientSex + ' ' + group[0].PatientAge +'"><span>' + group[0].PersonName + '</span><span class="leftSpacing">' + group[0].PatientSex + '</span><span class="leftSpacing">' + group[0].PatientAge + '</span></li>';
+        fileDicom += '    <li title="胸部CT ' + group[0].SeriesDate + '"><span>胸透CT</span><span class="leftSpacing">' + group[0].SeriesDate + '</span></li>';
+        fileDicom += '    <li title="' + group[0].PersonName + ' ' + group[0].PatientSex + ' ' + group[0].PatientAge + '"><span>' + group[0].PersonName + '</span><span class="leftSpacing">' + group[0].PatientSex + '</span><span class="leftSpacing">' + group[0].PatientAge + '</span></li>';
         fileDicom += '  </ul>';
 
         fileDicom += '  <div class="title_right dicomcheckResult"><span id="cccddd" class="pingAnBtn greenGradient nodeNumber"><i style="font-size: 20px;font-style: normal;" title=0个结节">0</i>个结节</span></div>';
@@ -485,16 +441,10 @@ function filesDicom(SeriesSets, pointsSet, dicomViewer) {
         fileDicom += ' <li class="checkProgress" ><div class="checkProgressBar" style="width:0%;"></div></li>';
         fileDicom += ' <li style="display:block;" class="boxes estRows">';
         fileDicom += '   <table class="table tableHover" border="0">';
-        fileDicom += '     <thead>';    
+        fileDicom += '     <thead>';
         fileDicom += '       <tr><th>结节编号</th><th>直径/mm</th><th>层面</th><th>可能性</th></tr>';
         fileDicom += '     </thead>';
-        fileDicom += '     <tbody>';
-        pointsSet.forEach(function(o,index){
-            dom += '<tr data-option="' + index + '"" class="point-row">'
-            dom += '<td style="position:relative"><i class="currentOption" style="display:none"></i>' + (index+1) + '</td><td>' + Number(o.diameter).toFixed(1) + '</td><td>' + Number(o.imageNo).toFixed(1) + '</td><td>' + Number(o.probability).toFixed(1) + '</td><td>'
-            dom += '</tr>'
-        })  
-        fileDicom += dom
+        fileDicom += '     <tbody class="nodeList">';
         /**节点信息获取  end**/
         fileDicom += ' </tbody>';
         fileDicom += '  </table>';
@@ -504,77 +454,68 @@ function filesDicom(SeriesSets, pointsSet, dicomViewer) {
 
     document.querySelector('.sidebar-nav').innerHTML += fileDicom;
     /*节点操作控制*/
-    document.querySelectorAll('.point-row').forEach(function (tr,index) {
+    document.querySelectorAll('.point-row').forEach(function (tr, index) {
         tr.addEventListener('click', function (e) {
             // debugger
+            if (dicomViewer.dcmSet.length <= 20) {
+                jQuery('.box-loading').show()
+                return
+            }
             var allOption = jQuery('.currentOption')
             for (var o in allOption) {
-                allOption.eq(o).css('display','none')
+                allOption.eq(o).css('display', 'none')
             }
             var el = e.currentTarget;
             var currentOption = jQuery(el).children().eq(0).children().eq(0)
-            currentOption.css('display','block')
-            // var targetPoint = pointsSet.filter(function (point) {
-            //     return jQuery(el).attr('data-option') === point.location;
-            // })[0];
+            currentOption.css('display', 'block')
+
             var targetPoint = pointsSet[jQuery(el).attr('data-option')]
-            pointRowMsg(targetPoint,index,dicomViewer,pointsSet);
+            pointRowMsg(targetPoint, index, dicomViewer, pointsSet);
+            scrollNode(nodeIndex[index], dicomViewer.dcmSet.length, dicomViewer)
             if (dicomViewer.currentDcmInfo.imagePosition === Number(targetPoint.imageNo)) {
-            var drawCircle = {};
-            drawCircle.diameter = targetPoint.diameter;
-            drawCircle.x = targetPoint.location.slice(0,targetPoint.location.indexOf(','))
-            drawCircle.y = targetPoint.location.slice(targetPoint.location.indexOf(',') + 1)
-            //画节点
-            dicomViewer.draw(() => {dicomViewer.drawSinglepoint(drawCircle)});
+                var drawCircle = {};
+                drawCircle.diameter = targetPoint.diameter;
+                drawCircle.x = targetPoint.location.slice(0, targetPoint.location.indexOf(','))
+                drawCircle.y = targetPoint.location.slice(targetPoint.location.indexOf(',') + 1)
+                //画节点
+                dicomViewer.draw(() => { dicomViewer.drawSinglepoint(drawCircle) });
             }
             document.querySelector('.left_message').style.display = "block";
         })
     });
-   
-    /*下拉菜单切换*/
-    document.querySelectorAll(".nav-header").forEach(function (elem) {
-        
-        elem.addEventListener('click', function (e) {
-            if(!jQuery(this).hasClass('sequenceAction')){
-                jQuery(this).addClass('sequenceAction')
-            }else{
-                jQuery(this).removeClass('sequenceAction')
-            }
-            var el = e.currentTarget;
-            var pointLi = jQuery(el).next().next()
-            // var seriesID = el.id;//获取当前Id
-            // dicomViewer.setDcmSeriesInfo(SeriesSets[seriesID], []);//调取每组第一张图片
-            // initRangeSlider(dicomViewer, SeriesSets[seriesID].length);//初始化当前组的滑动条
-            // var pointLi = document.querySelectorAll('.nav-header');
-            var openStatus = jQuery(pointLi).css('display')
-            if (openStatus === 'none') {
-                jQuery(pointLi).slideDown()
-            } else {
-                jQuery(pointLi).slideUp()
-            }
-            //   pointLi.forEach(function(ul) {
-            //     debugger;
-            //    (ul === pointLi) ? ul.style.border = '1px solid #fff' : ul.style.border ='none'; 
-            // });
+    jQuery(".nodeNumber").click(function (e) {
+        e.stopPropagation()
+        if (jQuery(".nodeNumber").html() == '重新检测') {
+            proxyRequests()
+        }
+    })
 
-        });
-    });
+    
 
 }
 
-function pointRowMsg(obj,index,dicomViewer,pointsSet) {
-    console.log(obj)
-    _objLoction ='x:'+ obj.location
-    _objLoction = _objLoction.replace(/(,)/,' y:')
+function scrollNode(index, dcmNumber, dicomViewer) {
+    dicomViewer.forward(index)
+    dicomViewer.clearDraw()
+    dicomViewer.reset()
+    jQuery('.value').html(index + '/' + dcmNumber)
+    jQuery('.rang_width').width((91.3 / dcmNumber * index) + "%")
+    jQuery('input[type="range"]').attr('value', index)
+}
+
+function pointRowMsg(obj, index, dicomViewer, pointsSet) {
+    console.log(obj, index)
+    _objLoction = 'x:' + obj.location
+    _objLoction = _objLoction.replace(/(,)/, ' y:')
     var pointMsg = ' ';
-    pointMsg += ' <div class="left_message_top" data-current="'+ index +'">';
+    pointMsg += ' <div class="left_message_top" data-current="' + index + '">';
     pointMsg += '        <span><img src="img/nodepoint.png" alt="" style="width:23px;position:relative;right:22px;"><em class="boldFont">' + pointsSet.length + '</em>个节点</span>';
-    pointMsg += '        <span class="nodepoint" id="pointImg"><img src="img/checkpointhide.png" alt="" style="width:30px;position:relative;top:-2px;" id="imgChange"></span>';
+    pointMsg += '        <span class="nodepoint" id="pointImg"><img src="img/checkpointhide.png" alt="" style="width:30px;position:relative;top:-2px;" class="imgChange"></span>';
     pointMsg += '</div>';
     pointMsg += '<div class="nodelPointMessage">';
     pointMsg += '  <div class="nodelPointMessageList">';
 
-    pointMsg += '   <div class="nodelPointMessageListTop"><span>结节 ' + (index+1) + '</span><span id="delete" class="nodepoint" style="font-size:18px;cursor: pointer;z-index:1;line-height: 25px;">×</span></div>';
+    pointMsg += '   <div class="nodelPointMessageListTop"><span>结节 ' + (index + 1) + '</span><span id="delete" class="nodepoint" style="font-size:18px;cursor: pointer;z-index:1;line-height: 25px;">×</span></div>';
 
     pointMsg += '   <div class="nodelPointMessageListBody">';
     pointMsg += '    <span style="margin-top:10px;">直径：' + Number(obj.diameter).toFixed(1) + 'mm</span>';
@@ -592,71 +533,68 @@ function pointRowMsg(obj,index,dicomViewer,pointsSet) {
     pointMsg += '</div>'
     document.querySelector('.left_message').innerHTML = pointMsg;
 
-    jQuery('#delete').click(function(){
+    jQuery('#delete').click(function () {
         showdiv()
     })
-    jQuery('#pointImg').click(function(){
+    jQuery('#pointImg').click(function () {
         showdiv();
     })
     var currentMessage = jQuery('.left_message_top').attr('data-current')
     var allOption = jQuery('.currentOption')
-    jQuery('#upNode').click(function(){
-        if(currentMessage <= 0) {
+    jQuery('#upNode').click(function () {
+        console.log(currentMessage)
+        if (currentMessage <= 0) {
             return
         }
         currentMessage--
         for (var o in allOption) {
-            allOption.eq(o).css('display','none')
-            allOption.eq(currentMessage).css('display','block')
+            allOption.eq(o).css('display', 'none')
+            allOption.eq(currentMessage).css('display', 'block')
         }
-        pointRowMsg(pointsSet[currentMessage],currentMessage,dicomViewer,pointsSet)
-        if (dicomViewer.currentDcmInfo.imagePosition === Number(obj.imageNo)) {
-            var drawCircle = {};
-            console.log(pointsSet[currentMessage])
-            drawCircle.diameter = pointsSet[currentMessage].diameter;
-            drawCircle.x = pointsSet[currentMessage].location.slice(0,pointsSet[currentMessage].location.indexOf(','))
-            drawCircle.y = pointsSet[currentMessage].location.slice(pointsSet[currentMessage].location.indexOf(',') + 1)
-            //画节点
-            dicomViewer.draw(() => {dicomViewer.drawSinglepoint(drawCircle)});
-        }
-        
+        pointRowMsg(pointsSet[currentMessage], currentMessage, dicomViewer, pointsSet)
+        scrollNode(nodeIndex[currentMessage], dicomViewer.dcmSet.length, dicomViewer)
+        var drawCircle = {};
+        drawCircle.diameter = pointsSet[currentMessage].diameter;
+        drawCircle.x = pointsSet[currentMessage].location.slice(0, pointsSet[currentMessage].location.indexOf(','))
+        drawCircle.y = pointsSet[currentMessage].location.slice(pointsSet[currentMessage].location.indexOf(',') + 1)
+        //画节点
+        dicomViewer.draw(() => { dicomViewer.drawSinglepoint(drawCircle) });
     })
-    jQuery('#downNode').click(function(){
-        if(currentMessage >= pointsSet.length-1) {
+    jQuery('#downNode').click(function () {
+        if (currentMessage >= pointsSet.length - 1) {
             return
         }
         currentMessage++
         for (var o in allOption) {
-            allOption.eq(o).css('display','none')
-            allOption.eq(currentMessage).css('display','block')
+            allOption.eq(o).css('display', 'none')
+            allOption.eq(currentMessage).css('display', 'block')
         }
-        pointRowMsg(pointsSet[currentMessage],currentMessage,dicomViewer,pointsSet)
-        if (dicomViewer.currentDcmInfo.imagePosition === Number(obj.imageNo)) {
-            var drawCircle = {};
-            drawCircle.diameter = pointsSet[currentMessage].diameter;
-            drawCircle.x = pointsSet[currentMessage].location.slice(0,pointsSet[currentMessage].location.indexOf(','))
-            drawCircle.y = pointsSet[currentMessage].location.slice(pointsSet[currentMessage].location.indexOf(',') + 1)
-            //画节点
-            dicomViewer.draw(() => {dicomViewer.drawSinglepoint(drawCircle)});
-        }
+        pointRowMsg(pointsSet[currentMessage], currentMessage, dicomViewer, pointsSet)
+        scrollNode(nodeIndex[currentMessage], dicomViewer.dcmSet.length, dicomViewer)
+        var drawCircle = {};
+        drawCircle.diameter = pointsSet[currentMessage].diameter;
+        drawCircle.x = pointsSet[currentMessage].location.slice(0, pointsSet[currentMessage].location.indexOf(','))
+        drawCircle.y = pointsSet[currentMessage].location.slice(pointsSet[currentMessage].location.indexOf(',') + 1)
+        //画节点
+        dicomViewer.draw(() => { dicomViewer.drawSinglepoint(drawCircle) });
     })
 }
 /**图片切换**/
 function showdiv() {
     var nodel = jQuery('.nodelPointMessage')
     var eye = jQuery('.imgChange')
-    if(jQuery('.nodelPointMessage').css('display') === 'block') {
+    if (jQuery('.nodelPointMessage').css('display') === 'block') {
         nodel.slideUp()
-        eye.src = "img/checkpointhide.png";
+        eye.attr('src', 'img/checkpointshow.png');
     } else {
         nodel.slideDown()
-        eye.src = 'img/checkpointshow.png';
+        eye.attr('src', 'img/checkpointhide.png');
     }
 }
-function preProcess(uri_path,data,isNeedEncode) {
+function preProcess(uri_path, data, isNeedEncode) {
     /*************************加密加签入参格式**********************************/
-    var AK="K8-olPawFfwd9i3Ryc4xEgJxipRS1baU3oViSTrzEetSMLFLF5P0AVPQr3Ye0i89WsKfdjNMhF7qmfL7eyWCExj0R2B3BKkoWaDCUlpT63RdpXABwH-WrBaWum5d3jR4k-QUxjAcSWxDDFqgIDDMurPIk0-vpRiAJ8TFwxuayHs";
-    var SK="Ky3x7Syyj2qzeB4MxK2pgfogFy9Z-Jpjl-l-HxnMp7oRJTh1YkyW2BQHG8jSxS744zAGFX1juAakmQZUrIjaLQJxnLyBSwpy9vSpQJSAZtX3QdJ5igC3U1YVD-iDOOCWg9pmu-dW0IxsyNJ5lI16n7odVG3QgDrfwjbHW2jppX0";
+    var AK = "K8-olPawFfwd9i3Ryc4xEgJxipRS1baU3oViSTrzEetSMLFLF5P0AVPQr3Ye0i89WsKfdjNMhF7qmfL7eyWCExj0R2B3BKkoWaDCUlpT63RdpXABwH-WrBaWum5d3jR4k-QUxjAcSWxDDFqgIDDMurPIk0-vpRiAJ8TFwxuayHs";
+    var SK = "Ky3x7Syyj2qzeB4MxK2pgfogFy9Z-Jpjl-l-HxnMp7oRJTh1YkyW2BQHG8jSxS744zAGFX1juAakmQZUrIjaLQJxnLyBSwpy9vSpQJSAZtX3QdJ5igC3U1YVD-iDOOCWg9pmu-dW0IxsyNJ5lI16n7odVG3QgDrfwjbHW2jppX0";
     // 时间戳(时区GMT+8)
     var timestamp = new Date().getTime() + 28800;
     /***************签名字符串******************/
@@ -680,9 +618,9 @@ function preProcess(uri_path,data,isNeedEncode) {
     }
     var randomString16 = randomWord(false, 16); // 一般key为一个字符串 
     // rsa加密
-    var RSA=new RSAKey();
+    var RSA = new RSAKey();
     var exponent = "10001";
-    RSA.setPublic(publicKey,exponent);
+    RSA.setPublic(publicKey, exponent);
     var encodeKey = RSA.encrypt(randomString16);
     // 入参格式
     var outputData = {
@@ -697,20 +635,20 @@ function preProcess(uri_path,data,isNeedEncode) {
         "deviceId": "30BB7E0A5E2D",
         "deviceIp": "10.0.0.1",
     }
-    if (isNeedEncode) outputData.encryptedData =  AESencrypt(randomString16,data);
+    if (isNeedEncode) outputData.encryptedData = AESencrypt(randomString16, data);
     else outputData.data = data;
     var outputArray = [];
-    processObj(outputData,outputArray);
-    var resParams =trim(outputArray.sort().join('&'));
+    processObj(outputData, outputArray);
+    var resParams = trim(outputArray.sort().join('&'));
     //删除字符串中的空格
-    function trim(str){
-        return str.replace(/\s/g,"");
+    function trim(str) {
+        return str.replace(/\s/g, "");
     }
     //客户端加密数据生成的摘要
     var content_sign = sha256_digest(resParams).toUpperCase();
     outputData.sign = content_sign;
 
-    var stringToSign =( uri_path + "," + http_verb + "," + content_sign + "," + timestamp).toString();
+    var stringToSign = (uri_path + "," + http_verb + "," + content_sign + "," + timestamp).toString();
     console.log(stringToSign);
     // 2   根据颁发的SK计算签名字符串signature
     var signature = CryptoJS.HmacSHA1(CryptoJS.enc.Utf8.parse(stringToSign), SK);
@@ -720,31 +658,31 @@ function preProcess(uri_path,data,isNeedEncode) {
     var authorization = once + ":" + timestamp + ":" + AK + ":" + signature;
     // debugger;
     // base64转码
-    var authorization_base64 = CryptoJS.enc.Base64.stringify( CryptoJS.enc.Utf8.parse(authorization));
+    var authorization_base64 = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(authorization));
     // hash的算法
-    function hashCode(str){
+    function hashCode(str) {
         var hash = 0;
         if (str.length == 0) return hash;
         for (i = 0; i < str.length; i++) {
             char = str.charCodeAt(i);
-            hash = ((hash<<5)-hash)+char;
+            hash = ((hash << 5) - hash) + char;
             hash = hash & hash; // Convert to 32bit integer
         }
         return hash;
     }
     // aes加密
-    function AESencrypt(AESKey,word) {
+    function AESencrypt(AESKey, word) {
         var key = CryptoJS.enc.Utf8.parse(AESKey);  // AESKey
         var iv = CryptoJS.enc.Utf8.parse(AESKey);   //iv和AESKey保持一致
         var encrypted = '';
-        if (typeof(word) == 'string') {
+        if (typeof (word) == 'string') {
             var srcs = CryptoJS.enc.Utf8.parse(word);
             encrypted = CryptoJS.AES.encrypt(srcs, key, {
                 iv: iv,
                 mode: CryptoJS.mode.CBC,
                 padding: CryptoJS.pad.Pkcs7
             });
-        } else if (typeof(word) == 'object') {//对象格式的转成json字符串
+        } else if (typeof (word) == 'object') {//对象格式的转成json字符串
             data = JSON.stringify(word);
             var srcs = CryptoJS.enc.Utf8.parse(data);
             encrypted = CryptoJS.AES.encrypt(srcs, key, {
@@ -755,10 +693,10 @@ function preProcess(uri_path,data,isNeedEncode) {
         }
         return encrypted.ciphertext.toString();
     }
-    function processObj(val,outputArray,name) {
+    function processObj(val, outputArray, name) {
         if (typeof val !== 'object') outputArray.push(name + '=' + val);
-        else Object.keys(val).forEach(function(key){
-            processObj(val[key],outputArray,key);
+        else Object.keys(val).forEach(function (key) {
+            processObj(val[key], outputArray, key);
         })
     }
 
@@ -771,19 +709,19 @@ function preProcess(uri_path,data,isNeedEncode) {
 }
 
 
-function dataDicomShow(data){
+function dataDicomShow(data) {
     var direction = parseImageOrientation(data.imageOrientation)
-    for (o in data){
-        if(data[o] === undefined) {
+    for (o in data) {
+        if (data[o] === undefined) {
             data[o] = ''
         }
     }
-    var wl = data.wc.slice(0,data.wc.indexOf('\\'))
-    var ww = data.ww.slice(0,data.ww.indexOf('\\'))
+    var wl = data.wc.slice(0, data.wc.indexOf('\\'))
+    var ww = data.ww.slice(0, data.ww.indexOf('\\'))
     var html = ''
     html += '<ul>';
-    html += '<li>WL : '+ wl +'<span>WW : '+ ww +'</span><span>T : '+ data.sliceThickness +'MM</span></li>'
-    html += '<li>Se : '+ data.seriesNumber +'<span>'+ data.seriesDate +'</span><span>'+ data.seriesTime +'</span></li>'
+    html += '<li>WL : ' + wl + '<span>WW : ' + ww + '</span><span>T : ' + data.sliceThickness + 'MM</span></li>'
+    html += '<li>Se : ' + data.seriesNumber + '<span>' + data.seriesDate + '</span><span>' + data.seriesTime + '</span></li>'
     html += '</ul>'
     jQuery('.dicom_message')[0].innerHTML = html
 }
