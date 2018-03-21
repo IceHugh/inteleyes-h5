@@ -127,7 +127,6 @@ class DICOMImage {
         })
     }
     async loadDicomFiles(DicomFileList,ctx,width,height) {
-        console.log(DicomFileList)
         let datasets = {};
         for (let file of DicomFileList) {
             if(file.size == 0) {
@@ -140,7 +139,6 @@ class DICOMImage {
             datasets[SeriesInstanceUID].push(dcmDetail);
         }
         Object.keys(datasets).forEach(seriesID => [seriesID] = datasets[seriesID].sort((a, b) => b.imagePosition - a.imagePosition));
-        console.log(datasets)
         return datasets;
     }
 }

@@ -2,7 +2,8 @@ var pathList = [];
 var fileList = [];
 var nodeMessage = [];
 var nodeIndex = [];
-var fileObj = {}
+var fileObj = {};
+var clickDraw = []
 function directorySelect(e) {
   var files = e.files;
   pathList = [];
@@ -21,8 +22,10 @@ function directorySelect(e) {
         }
         if (!fileObj[relativePath]) {
           fileObj[relativePath] = [val];
+          nodeIndex[relativePath] =[val]
         } else {
           fileObj[relativePath].push(val)
+          nodeIndex[relativePath] =[]
         }
         fileList.push(val);
       }
@@ -38,7 +41,7 @@ function directorySelect(e) {
 
 // function showDir(list) {
 //   var page1 = document.getElementById("page1");
-//   var page2 = document.getElementById("page2");
+//   var page2 = document.getElementById("page2");  
 //   page1.style.display = "none";
 //   page2.style.display = "block";
 //   var html = '';
@@ -71,14 +74,16 @@ function showImages(dcmFiles) {
       bindEvent(dicomViewer, res[seriesId].length);
       dicomViewer.setDcmSeriesInfo(res[seriesId], pointsSet);
       //第2次请求
-      // drawDicomData(_dcmFiles, dicomImage).then(res => {
-      //   dicomViewer.setDcmSeriesInfo(res.item, pointsSet)
-      //   reviseData(dicomViewer, res.item.length)
-      //   nodeFilter(res.item)
-      //   if (jQuery('.box-loading').css('display') !== "none") {
-      //     jQuery('.box-loading').hide()
-      //   }
-      // })
+      drawDicomData(_dcmFiles, dicomImage).then(res => {
+        fileObj[seriesId] = res[seriesId]
+        nodeFilter(seriesId,res[seriesId])
+        // dicomViewer.setDcmSeriesInfo(res.item, pointsSet)
+        // reviseData(dicomViewer, res.item.length)
+        // nodeFilter(res.item)
+        if (jQuery('.box-loading').css('display') !== "none") {
+          jQuery('.box-loading').hide()
+        }
+      })
     })
   } else {
     dicomImage.loadDicomFiles(dcmFiles).then(function (res) {
@@ -100,13 +105,13 @@ function showImages(dcmFiles) {
     })
   }
 }
-function nodeFilter(imgdata) {
+function nodeFilter(seriesId,imgdata) {
   console.log(nodeMessage)
-  if (nodeMessage.length) {
-    nodeMessage[0].forEach(c => {
+  if (nodeMessage[seriesId].length) {
+    nodeMessage[seriesId].forEach(c => {
       imgdata.map((item, index) => {
         if (item.imageNo == c.imageNo) {
-          nodeIndex.push(index)
+          nodeIndex[seriesId].push(index)
         }
       })
     })
