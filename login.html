@@ -15,7 +15,7 @@
         <header>
             <div class="w">
                 <div id="logo">
-                    <a href="javascript:;">
+                    <a href="javascript:;" tabindex="-1">
                         <img src="img/logo.png" alt="logo" height="30">
                     </a>
                 </div>
@@ -35,19 +35,19 @@
                                             <label for="loginname" class="login-label name-label">
                                                 <img src="img/phone.png" alt="userName" style="width:20px;position:relative;top:5px;left:8px;">
                                             </label>
-                                            <input name="txtName" type="text" id="txtName" placeholder="邮箱/用户名/已验证手机" class="itxt" maxlength="100" autofocus required>
+                                            <input name="txtName" tabindex="1" type="text" id="txtName" placeholder="邮箱/用户名/已验证手机" class="itxt" maxlength="100" autofocus required>
                                         </div>
                                         <div id="entry" class="item item-fore2" style="visibility: visible;">
                                             <label class="login-label pwd-label" for="nloginpwd">
                                                 <img src="img/password.png" alt="userName" style="width:20px;position:relative;top:5px;left:8px;">
                                             </label>
-                                            <input name="txtPwd" type="password" id="txtPwd" placeholder="密码" class="itxt itxt-error" maxlength="20" required onpaste="return false"
+                                            <input name="txtPwd" tabindex="2" type="password" id="txtPwd" placeholder="密码" class="itxt itxt-error" maxlength="20" required onpaste="return false"
                                                 oncontextmenu="return false" oncopy="return false" oncut="return false">
                                         </div>
                                         <div id="result"></div>
                                         <div class="item item-fore3">
                                             <div class="login-btn">
-                                                <a href="javaScript:;" class="btn-img btn-entry" id="loginsubmit">登&nbsp;&nbsp;&nbsp;&nbsp;录</a>
+                                                <a href="javaScript:;" tabindex="3" class="btn-img btn-entry" id="loginsubmit">登&nbsp;&nbsp;&nbsp;&nbsp;录</a>
                                             </div>
                                             <div class="noregister">暂不支持注册</div>
                                         </div>

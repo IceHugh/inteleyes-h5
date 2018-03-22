@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<meta charset="utf-8" />
 	<title>慧眼-平安影像</title>
@@ -12,129 +13,140 @@
 	<link href="css/cornerstone.css" rel="stylesheet">
 	<link href="css/imgdicom.css" rel="stylesheet">
 	<!-- 弹窗样式 -->
-	<link rel="stylesheet" type="text/css" href="./css/layui.css"/>
+	<link rel="stylesheet" type="text/css" href="./css/layui.css" />
 	<link rel="stylesheet" href="./css/loading.css">
 </head>
 
 <body>
-<!-- 公共頭部  start-->
-<div class="navbar navbar-default navbar-fixed-top mainhead-navbox" role="navigation">
-	<div class="contentPublic">
-		<div class="navbar-header">
-			<div class='navbar-brand'>
-				<div class="praise">
-					<span id="praise">
-						<img src="img/logo.png" id="praise-img" />
-						<span style="position:relative;top:3px;left:10px;">智能影像体验平台</span>
-                    </span>
+	<!-- 公共頭部  start-->
+	<div class="navbar navbar-default navbar-fixed-top mainhead-navbox" role="navigation">
+		<div class="contentPublic">
+			<div class="navbar-header">
+				<div class='navbar-brand'>
+					<div class="praise">
+						<span id="praise">
+							<img src="img/logo.png" id="praise-img" />
+							<span style="position:relative;top:3px;left:10px;">智能影像体验平台</span>
+						</span>
+					</div>
 				</div>
 			</div>
+			<ul class="nav mainhead-nav">
+				<li id="username"></li>
+				<li class="spacer"></li>
+				<li onclick="exit()">安全退出</li>
+			</ul>
+
 		</div>
-		<ul class="nav mainhead-nav">
-			<li id="username"></li>
-			<li class="spacer"></li>
-			<li onclick="exit()">安全退出</li>
-		</ul>
-
 	</div>
-</div>
-<!-- 公共頭部  end-->
-<!-- 文件上傳頁面 start-->
-<div class="page" id="page1">
-	<div class='mainhead clearfix bg-white padding-b20'>
-		<div class="container container1">
-			<div class='clearfix center logbox'>
-				<img src="img/common/logo1.png" width="100" height="60" alt="logo">
-			</div>
-			<div class='row sloganbox'>
-				<div class='col-xs-8 col-xs-offset-2 center'>
-					<p class="sloganboxcontent1">选择DICOM文件</p>
-					<p class="sloganboxcontent2"><img src="img/tips.png" alt="" style="width:18px;height:18px;">目前仅支持肺部结合智能分析，请选择CT影像文件<br/>建议一个影响序列放置一个文件夹</p>
-					<form id="form1" enctype="multipart/form-data" method="post" action="http://127.0.0.1:10219/uploadFile">
+	<!-- 公共頭部  end-->
+	<!-- 文件上傳頁面 start-->
+	<div class="page" id="page1">
+		<div class='mainhead clearfix bg-white padding-b20'>
+			<div class="container container1">
+				<div class='clearfix center logbox'>
+					<img src="img/common/logo1.png" width="100" height="60" alt="logo">
+				</div>
+				<div class='row sloganbox'>
+					<div class='col-xs-8 col-xs-offset-2 center'>
+						<p class="sloganboxcontent1">选择DICOM文件</p>
+						<p class="sloganboxcontent2">
+							<img src="img/tips.png" alt="" style="width:18px;height:18px;">目前仅支持肺部结合智能分析，请选择CT影像文件
+							<br/>建议一个影响序列放置一个文件夹</p>
+						<form id="form1" enctype="multipart/form-data" method="post" action="http://127.0.0.1:10219/uploadFile">
 
-						<div class='btn btn-hero radius-2 margin-t10 no-decoration btn-file greenGradient' style="position:relative;font-size:14px;padding: 5px 15px;">
-							<img src="img/files.png" alt="" style="width:18px;height:15px;vertical-align: text-top;">&nbsp;选择DICOM文件夹
-							<input type="file" id="file01" class="filesUploader" title="已选择目录文件" onchange="directorySelect(this)" webkitdirectory directory multiple data-type="directory"/>
-						</div>
-						<!-- <a href='javaScript;;' class='btn radius-2 margin-t10 no-decoration btn-file'  style="border:1px solid #0db392;color:#fff;position:relative;font-size:14px;padding: 4px 15px;">
+							<div class='btn btn-hero radius-2 margin-t10 no-decoration btn-file greenGradient' style="position:relative;font-size:14px;padding: 5px 15px;">
+								<img src="img/files.png" alt="" style="width:18px;height:15px;vertical-align: text-top;">&nbsp;选择DICOM文件夹
+								<input type="file" id="file01" class="filesUploader" title="已选择目录文件" onchange="directorySelect(this)" webkitdirectory directory
+								 multiple data-type="directory"/>
+							</div>
+							<!-- <a href='javaScript;;' class='btn radius-2 margin-t10 no-decoration btn-file'  style="border:1px solid #0db392;color:#fff;position:relative;font-size:14px;padding: 4px 15px;">
 							<span><img src="img/file.png" alt="" style="width:15px;vertical-align: text-bottom;">&nbsp;选择DICOM文件</span>
 							<input type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected(this);" multiple class="filesUploader" data-type="file" style="height:40px;"/>
 						</a> -->
 
-					</form>
+						</form>
+					</div>
 				</div>
 			</div>
 		</div>
+		<div class="mainfoot center">
+			<p>
+				版权所有&nbsp;©&nbsp;中国平安科技&nbsp;(深圳)&nbsp;有限公司未经许可不得复制、转载或摘编&nbsp;违者必究
+			</p>
+		</div>
 	</div>
-	<div class="mainfoot center">
-		<p>
-			版权所有&nbsp;©&nbsp;中国平安科技&nbsp;(深圳)&nbsp;有限公司未经许可不得复制、转载或摘编&nbsp;违者必究
-		</p>
-	</div>
-</div>
-<!-- 文件上傳頁面 start-->
-<!-- imgdicom頁面 start -->
-<div class="page edit" style="display:none;"  id="page2">
-	<div class="pageContainer container-fluid container">
-		<div class="changeDimension">
-			<div class="row-fluid">
-				<!-- 目录条 -->
-				<!-- <div class="dir-nav" id="jsdir"></div> -->
-				<!-- nav  start -->
-				<div class="sidebar-nav">
-					<div class="content-title">
-						已上传影像列表
-					</div>
-				</div>
-				<!-- nav   end -->
-				<!-- section  start -->
-				<div class="demo ui-sortable">
-					<canvas   id="dicomImage" width="1200" height="800"></canvas>
-				</div>
-				<div class="dicom_message">
-				</div>
-				<div class="left_message" style="display:none;"></div>
-				<div class="right_button">
-					<div class="btnImg1 btnRange">
-						<div class="value"></div>
-						<div class="range">
-						  <input type="range" min="1" max="99" step="1" value="1">
-						  <p class="rang_width"></p>
+	<!-- 文件上傳頁面 start-->
+	<!-- imgdicom頁面 start -->
+	<div class="page edit" style="display:none;" id="page2">
+		<div class="pageContainer container-fluid container">
+			<div class="changeDimension">
+				<div class="row-fluid">
+					<!-- 目录条 -->
+					<!-- <div class="dir-nav" id="jsdir"></div> -->
+					<!-- nav  start -->
+					<div class="sidebar-nav">
+						<div class="content-title">
+							已上传影像列表
 						</div>
 					</div>
-					<div style="position: absolute;right: 25px;width: 30px;top: 520px;">
-						<button id="up" type="button" class="btnImg"><img src="img/uparrow.png" alt="" style="width:20px;"></button>
-						<button id="down" type="button" class="btnImg"><img src="img/downarrow.png" alt="" style="width:20px;"></button>
-						<button id="zoomin" type="button" class="btnImg"><img src="img/bigicon.png" alt="" style="width:20px;"></button>
-						<button id="zoomout" type="button" class="btnImg"><img src="img/smallicon.png" alt="" style="width:20px;"></button>
-						<button id="reset" type="button" class="btnImg">100%</button>
+					<!-- nav   end -->
+					<!-- section  start -->
+					<div class="demo ui-sortable">
+						<canvas id="dicomImage" width="1200" height="800"></canvas>
 					</div>
+					<div class="dicom_message">
+					</div>
+					<div class="left_message" style="display:none;"></div>
+					<div class="right_button">
+						<div class="btnImg1 btnRange">
+							<div class="value"></div>
+							<div class="range">
+								<input type="range" min="1" max="99" step="1" value="1">
+								<p class="rang_width"></p>
+							</div>
+						</div>
+						<div style="position: absolute;right: 25px;width: 30px;top: 520px;">
+							<button id="up" type="button" class="btnImg">
+								<img src="img/uparrow.png" alt="" style="width:20px;">
+							</button>
+							<button id="down" type="button" class="btnImg">
+								<img src="img/downarrow.png" alt="" style="width:20px;">
+							</button>
+							<button id="zoomin" type="button" class="btnImg">
+								<img src="img/bigicon.png" alt="" style="width:20px;">
+							</button>
+							<button id="zoomout" type="button" class="btnImg">
+								<img src="img/smallicon.png" alt="" style="width:20px;">
+							</button>
+							<button id="reset" type="button" class="btnImg">100%</button>
+						</div>
+					</div>
+					<!-- section   end -->
 				</div>
-				<!-- section   end -->
 			</div>
 		</div>
 	</div>
-</div>
-<div class="box-loading" style="display:none">
-    <div class="loader-loading">
-        <div class="loading-3">
-            <i></i>
-            <i></i>
-            <i></i>
-            <i></i>
-            <i></i>
-            <i></i>
-            <i></i>
-            <i></i>     
+	<div class="box-loading" style="display:none">
+		<div class="loader-loading">
+			<div class="loading-3">
+				<i></i>
+				<i></i>
+				<i></i>
+				<i></i>
+				<i></i>
+				<i></i>
+				<i></i>
+				<i></i>
+			</div>
 		</div>
-    </div>      
-</div>
-<!-- imgdicom頁面 end -->
+	</div>
+	<!-- imgdicom頁面 end -->
 </body>
-<script type="text/javascript" src="js/jquery-2.0.3.min.js"  charset="utf-8"></script>
+<script type="text/javascript" src="js/jquery-2.0.3.min.js" charset="utf-8"></script>
 <!-- crc32 文件校验 -->
 <!--<script type="text/javascript" src="js/crc32.js" charset="utf-8"></script>-->
-<script type="text/javascript" src="js/bootstrap.min.js"  charset="utf-8"></script>
+<script type="text/javascript" src="js/bootstrap.min.js" charset="utf-8"></script>
 <!-- discom解析js -->
 <!--<script type="text/javascript" src="js/cornerstone.min.js"  charset="utf-8"></script>-->
 <!--<script src="js/exampleImageIdLoader.js"  charset="utf-8"></script>-->
@@ -142,40 +154,46 @@
 <!-- <script src="http://apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js"  charset="utf-8"></script> -->
 <!-- 弹窗js -->
 
-<script type="text/javascript"  src="js/dicomParser.min.js" charset="utf-8"></script>
-<script type="text/javascript"  src="js/DICOMImage.js" charset="utf-8"></script>
-<script type="text/javascript"  src="js/DICOMViewer.js" charset="utf-8"></script>
-<script type="text/javascript"  src="js/DICOMUploader.js"></script>
-<script type="text/javascript"  src="layer/layer.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/dicomParser.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/DICOMImage.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/DICOMViewer.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/DICOMUploader.js"></script>
+<script type="text/javascript" src="layer/layer.js" charset="utf-8"></script>
 <!-- 加密价签算法js -->
-<script type="text/javascript"  src="js/core.js" charset="utf-8"></script>
-<script type="text/javascript"  src="js/cipher-core.js" charset="utf-8"></script>
-<script type="text/javascript"  src="js/aes.js" charset="utf-8"></script>
-<script type="text/javascript"  src="js/hmac.js" charset="utf-8"></script>
-<script type="text/javascript"  src="js/sha1.js" charset="utf-8"></script>
-<script type="text/javascript"  src="js/sha256.js" charset="utf-8"></script>
-<script type="text/javascript"  src="js/enc-base64.js" charset="utf-8"></script>
-<script type="text/javascript"  src="js/jsbn.js" charset="utf-8"></script>
-<script type="text/javascript"  src="js/prng4.js" charset="utf-8"></script>
-<script type="text/javascript"  src="js/rng.js" charset="utf-8"></script>
-<script type="text/javascript"  src="js/rsa.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/core.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/cipher-core.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/aes.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/hmac.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/sha1.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/sha256.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/enc-base64.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/jsbn.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/prng4.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/rng.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/rsa.js" charset="utf-8"></script>
 <script type="text/javascript" src="js/dataDicom.js" charset='utf-8'></script>
 <script src="js/imageOrientationParse.js"></script>
 <script type="text/javascript" src="js/myCookie.js" charset="utf-8"></script>
-<script type="text/javascript"  src="js/directorySelect.js" charset="utf-8"></script>
-<script type="text/javascript"  src="js/uploaderflies.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/directorySelect.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/uploaderflies.js" charset="utf-8"></script>
 <!-- 进度条 -->
 
 
 
 <script>
-	(function(){
-		if(document.cookie){
+	jQuery("body").keydown(function (e) {
+		if (event.keyCode == "13") {//keyCode=13是回车键
+			e.stopPropagation()
+			jQuery('#file01').click();
+		}
+	});
+	(function () {
+		if (document.cookie) {
 			obj = document.getElementById("username");
 			obj.innerHTML = document.cookie.substring(12)
 			return
-		}else{
-			window.location.href='login.html';
+		} else {
+			window.location.href = 'login.html';
 		}
 	})()
 
@@ -183,10 +201,10 @@
 	// 	obj = document.getElementById("username");
 	// 	obj.innerHTML = window.sessionStorage.getItem("username");
 	// }
-	
-	function exit(){
+
+	function exit() {
 		clearCookie('userMessage');
-		window.location.href='login.html';
+		window.location.href = 'login.html';
 	}
 </script>
 

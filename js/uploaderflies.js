@@ -163,30 +163,30 @@ function NodeTest(seriesId, dicomViewer, imageData) {
             data = data.data
             if (data.aiCode == "000000") {
                 if (data.aiResults.length == '0') {
-                    jQuery('#tbody'+ queryNumber).html(nodeList(data.aiResults))
-                    jQuery('#node'+ queryNumber).html('<i style="font-size: 20px;font-style: normal;" title="' + data.aiResults.length + '个结节">' + data.aiResults.length + '</i>个结节')
-                    jQuery('#node'+ queryNumber).removeClass('greenGradient')
+                    jQuery('#tbody' + queryNumber).html(nodeList(data.aiResults))
+                    jQuery('#node' + queryNumber).html('<i style="font-size: 20px;font-style: normal;" title="' + data.aiResults.length + '个结节">' + data.aiResults.length + '</i>个结节')
+                    jQuery('#node' + queryNumber).removeClass('greenGradient')
                 } else {
-                    jQuery('#tbody'+ queryNumber).html(nodeList(data.aiResults))
-                    jQuery('#node'+ queryNumber).html('<i style="font-size: 20px;font-style: normal;" title="' + data.aiResults.length + '个结节">' + data.aiResults.length + '</i>个结节')
-                    bindNodeList(seriesId,data.aiResults,dicomViewer)
+                    jQuery('#tbody' + queryNumber).html(nodeList(data.aiResults))
+                    jQuery('#node' + queryNumber).html('<i style="font-size: 20px;font-style: normal;" title="' + data.aiResults.length + '个结节">' + data.aiResults.length + '</i>个结节')
                     nodeMessage[seriesId] = data.aiResults
+                    bindNodeList(seriesId, data.aiResults, dicomViewer)
                 }
             } else if (data.aiCode == '003006' || data.aiCode == '003005') {
                 console.log("请求AI分析结果-分析中")
-                jQuery('#tbody'+ queryNumber).html(nodeList(data.aiResults))
-                jQuery('#node'+ queryNumber).html('结点检测中...')
-                jQuery('#node'+ queryNumber).removeClass('greenGradient')
-                jQuery('#node'+ queryNumber).removeClass('redGradient')
+                jQuery('#tbody' + queryNumber).html(nodeList(data.aiResults))
+                jQuery('#node' + queryNumber).html('结点检测中...')
+                jQuery('#node' + queryNumber).removeClass('greenGradient')
+                jQuery('#node' + queryNumber).removeClass('redGradient')
                 setTimeout(() => {
                     NodeTest(seriesId, dicomViewer, imageData)
-                },5000)
+                }, 5000)
             } else {
                 console.log("请求AI分析结果-出现错误");
-                jQuery('#tbody'+ queryNumber).html(nodeList(data.aiResults))
-                jQuery('#node'+ queryNumber).removeClass('greenGradient')
-                jQuery('#node'+ queryNumber).addClass('redGradient')
-                jQuery('#node'+ queryNumber).html('重新检测')
+                jQuery('#tbody' + queryNumber).html(nodeList(data.aiResults))
+                jQuery('#node' + queryNumber).removeClass('greenGradient')
+                jQuery('#node' + queryNumber).addClass('redGradient')
+                jQuery('#node' + queryNumber).html('重新检测')
                 proxyRequests = function () {
                     NodeTest(seriesId, dicomViewer, imageData)
                 }
@@ -194,10 +194,10 @@ function NodeTest(seriesId, dicomViewer, imageData) {
         },
         error: function () {
             console.log("请求AI分析结果-出现连接错误");
-            jQuery('#node'+ queryNumber).removeClass('greenGradient')
-            jQuery('#node'+ queryNumber).addClass('redGradient')
-            jQuery('#node'+ queryNumber).html('重新检测')
-            jQuery('#node'+ queryNumber).click(function (e) {
+            jQuery('#node' + queryNumber).removeClass('greenGradient')
+            jQuery('#node' + queryNumber).addClass('redGradient')
+            jQuery('#node' + queryNumber).html('重新检测')
+            jQuery('#node' + queryNumber).click(function (e) {
                 e.stopPropagation();
                 NodeTest(seriesId, dicomViewer, imageData)
             })
@@ -207,161 +207,94 @@ function NodeTest(seriesId, dicomViewer, imageData) {
 
 /*canvasBtn 操作事件*/
 function bindEvent(dicomViewer, firstDcmNumber) {
-    document.getElementById('up').addEventListener('click', function (e) {
-        var currentPage = document.querySelector('input[type="range"]')
-        if (currentPage.value <= 1) {
+    jQuery('.value').html('1/' + firstDcmNumber)
+    jQuery("#up").unbind('click').removeAttr('onclick').click(function (e) {
+        var currentPage = jQuery('[type=range]').attr('value')
+        if (currentPage <= 1) {
             return
         }
-        if (currentPage.value > firstDcmNumber) {
-            currentPage.setAttribute('value', firstDcmNumber)
+        if (currentPage > firstDcmNumber) {
+            jQuery('[type=range]').attr('value', firstDcmNumber)
             return
         }
         dicomViewer.up();
         dicomViewer.clearDraw()
         dicomViewer.reset()
-        currentPage.setAttribute('value', currentPage.value--)
-        jQuery('.value')[0].innerHTML = currentPage.value + '/' + firstDcmNumber
-
-    });
-    document.getElementById('down').addEventListener('click', function (e) {
-        var currentPage = document.querySelector('input[type="range"]')
-        if (currentPage.value < 1) {
+        currentPage--
+        jQuery('[type=range]').attr('value', currentPage)
+        jQuery('.value').html(currentPage + '/' + firstDcmNumber)
+        initRangeSlider(dicomViewer,firstDcmNumber)
+        // jQuery('.rang_width').width((91.3 / firstDcmNumber * currentPage) + "%")
+    })
+    jQuery("#down").unbind('click').removeAttr('onclick').click(function (e) {
+        var currentPage = jQuery('[type=range]').attr('value')
+        if (currentPage < 1) {
             return
         }
-        if (currentPage.value >= firstDcmNumber) {
-            currentPage.setAttribute('value', firstDcmNumber)
+        if (currentPage >= firstDcmNumber) {
+            jQuery('[type=range]').attr('value', firstDcmNumber)
             return
         }
         dicomViewer.clearDraw()
         dicomViewer.down();
         dicomViewer.reset()
-        currentPage.setAttribute('value', currentPage.value++)
-
-        jQuery('.value')[0].innerHTML = currentPage.value + '/' + firstDcmNumber
-    });
-    document.getElementById('zoomin').addEventListener('click', function (e) {
+        currentPage++
+        jQuery('[type=range]').attr('value', currentPage)
+        jQuery('.value').html(currentPage + '/' + firstDcmNumber)
+        initRangeSlider(dicomViewer,firstDcmNumber)
+        // jQuery('.rang_width').width((91.3 / firstDcmNumber * currentPage) + "%")
+    })
+    jQuery("#zoomin").unbind('click').removeAttr('onclick').click(function (e) {
         dicomViewer.zoomIn();
-    });
-    document.getElementById('zoomout').addEventListener('click', function (e) {
+    })
+    jQuery("#zoomout").unbind('click').removeAttr('onclick').click(function (e) {
         dicomViewer.zoomOut();
-    });
-    document.getElementById('reset').addEventListener('click', function (e) {
+    })
+    jQuery("#reset").unbind('click').removeAttr('onclick').click(function (e) {
         dicomViewer.reset();
-    });
+    })
     initRangeSlider(dicomViewer, firstDcmNumber);
 }
 
-function reviseData(dicomViewer, firstDcmNumber) {
-    document.getElementById('up').addEventListener('click', function (e) {
-        var currentPage = document.querySelector('input[type="range"]')
-        if (currentPage.value <= 1) {
-            return
-        }
-        if (currentPage.value > firstDcmNumber) {
-            currentPage.setAttribute('value', firstDcmNumber)
-            return
-        }
-        dicomViewer.up();
-        dicomViewer.clearDraw()
-        dicomViewer.reset()
-        currentPage.setAttribute('value', currentPage.value--)
-        jQuery('.value')[0].innerHTML = currentPage.value + '/' + firstDcmNumber
-
-    });
-    document.getElementById('down').addEventListener('click', function (e) {
-        var currentPage = document.querySelector('input[type="range"]')
-        if (currentPage.value < 1) {
-            return
-        }
-        if (currentPage.value >= firstDcmNumber) {
-            currentPage.setAttribute('value', firstDcmNumber)
-            return
-        }
-        dicomViewer.clearDraw()
-        dicomViewer.down();
-        dicomViewer.reset()
-        currentPage.setAttribute('value', currentPage.value++)
-
-        jQuery('.value')[0].innerHTML = currentPage.value + '/' + firstDcmNumber
-    });
-    var currentPage = document.querySelector('input[type="range"]')
-    jQuery('.value')[0].innerHTML = currentPage.value + '/' + firstDcmNumber
-    initRangeSlider(dicomViewer, firstDcmNumber);
-}
-function bindUpData(dicomViewer,firstDcmNumber){
-    var currentPage = document.querySelector('input[type="range"]')
-    jQuery('.value')[0].innerHTML = currentPage.value + '/' + firstDcmNumber 
-    initRangeSlider(dicomViewer, firstDcmNumber);
-}
-/** rangeSlider **/
 
 function initRangeSlider(dicomViewer, dcmNumber) {
     // debugger
     var elem = document.querySelector('input[type="range"]');
     elem.setAttribute("max", dcmNumber);
-    jQuery('.value')[0].innerHTML = elem.value + '/' + dcmNumber
     // elem.removeEventListener('input');
-    var rangeValue = function () {
-        // debugger;
-        var newValue = Number(elem.value);
-        dicomViewer.forward(newValue - 1);
+    jQuery('[type=range]').unbind('input propertychange').removeAttr('oninput').bind('input propertychange',function(){
+        var newValue = Number(this.value)
+        dicomViewer.forward(newValue)
         dicomViewer.clearDraw()
         dicomViewer.reset()
-        elem.setAttribute('value', newValue)
-        jQuery('.value')[0].innerHTML = newValue + '/' + dcmNumber
-        var width = (91.3 / dcmNumber * newValue) + "%";
-        document.querySelector('.rang_width').style.width = width;
-    };
-
-    elem.oninput = rangeValue;
-
+        jQuery(this).attr('value',newValue)
+        jQuery('.value').html(newValue + '/' + dcmNumber)
+        // jQuery('.rang_width').width((91.3 / dcmNumber * newValue) + "%")
+    })
 }
+// function initRangeSlider(dicomViewer, dcmNumber) {
+//     // debugger
+//     jQuery('[type=range]').attr('max',dcmNumber)
+//     jQuery('.value').html(jQuery('[type=range]').attr('value') + '/' + dcmNumber)
+//     // elem.removeEventListener('input');
+    
+//     var rangeValue = function () {
+//         // debugger;
+//         var newValue = Number(jQuery('[type=range]').attr('value'));
+//         console.log(newValue)
+//         dicomViewer.forward(newValue);
+//         dicomViewer.clearDraw()
+//         jQuery('[type=range]').attr('value', newValue)
+//         jQuery('.value')[0].innerHTML = newValue + '/' + dcmNumber
+//         var width = (91.3 / dcmNumber * newValue) + "%";
+//         document.querySelector('.rang_width').style.width = width;
+//     };
+//     document.querySelector('input[type="range"]').oninput = rangeValue;
+// }
 
-/************************************************************************2请求AI接口结果，是否发起轮询**********************************************************************/
-function requestResultGetResult(options) {
-    var xhr = new XMLHttpRequest();
-    var url = options.url;
-
-    xhr.onreadystatechange = function () {
-        options.handleResponse(xhr, options);
-    }
-    xhr.open("GET", url + "?seriesInstanceUid=" + options.data.serialInstanceUid);
-    xhr.send(null);
-}
-
-/*请求成功时，轮询*/
-function loopRequest(options) {
-    requestResultGetResult({
-        url: options.url,
-        data: options.data,
-        handleResponse: requestAIResult_handleResponse
-    });
-    //请求成功时
-    function requestAIResult_handleResponse(xhr) {
-        if (xhr.readyState == 4 && xhr.status == 200) {
-            // debugger;
-            var res = xhr.responseText;
-            if (res) {
-                res = JSON.parse(res);
-                if (res["code"] == "000000" || res["code"] == "003103") {
-                    options.success(res.data);
-                } else if (res["code"] == "003005" || res["code"] == "003006") {
-                    options.loading();
-                    return
-                } else {
-                    options.error();
-                }
-            } else {
-                options.error();
-            }
-        } else {
-            options.error();
-        };
-    }
-}
-function nodeList(pointsSet){
+function nodeList(pointsSet) {
     var dom = ''
-    if(!pointsSet){
+    if (!pointsSet) {
         return
     }
     pointsSet.forEach(function (o, index) {
@@ -372,7 +305,7 @@ function nodeList(pointsSet){
     return dom
 }
 
-function bindNodeList(seriesId,pointsSet,dicomViewer){
+function bindNodeList(seriesId, pointsSet, dicomViewer) {
     document.querySelectorAll('.point-row').forEach(function (tr, index) {
         tr.addEventListener('click', function (e) {
             // debugger
@@ -380,6 +313,7 @@ function bindNodeList(seriesId,pointsSet,dicomViewer){
             //     jQuery('.box-loading').show()
             //     return
             // }
+            console.log(1)
             var allOption = jQuery('.currentOption')
             for (var o in allOption) {
                 allOption.eq(o).css('display', 'none')
@@ -389,7 +323,7 @@ function bindNodeList(seriesId,pointsSet,dicomViewer){
             currentOption.css('display', 'block')
 
             var targetPoint = pointsSet[jQuery(el).attr('data-option')]
-            pointRowMsg(seriesId,targetPoint, index, dicomViewer, pointsSet);
+            pointRowMsg(seriesId, targetPoint, index, dicomViewer, pointsSet);
             scrollNode(nodeIndex[seriesId][index], dicomViewer.dcmSet.length, dicomViewer)
             if (dicomViewer.currentDcmInfo.imagePosition === Number(targetPoint.imageNo)) {
                 var drawCircle = {};
@@ -410,7 +344,7 @@ function filesDicom(SeriesSets, dicomViewer) {
     seriesIDList.forEach(function (seriesID, index) {
         var group = SeriesSets[seriesID];
         fileDicom += '<ul class="nav nav-list accordion-group">';
-        fileDicom += '<li class="nav-header nav-header-content" title="' + seriesID + '">';
+        fileDicom += '<li class="nav-header nav-header-content" series="'+ seriesID +'" title="' + seriesID.slice(34) + '">';
         fileDicom += '<div class="title_hd">';
         fileDicom += '<div style="width:68px;height:68px;background:rgba(12,173,141,0.4);position:absolute;"></div>'
         fileDicom += '     <img src="' + group[0].imageData + '" alt="" style="width:68px;margin-right:5px;display:block">';
@@ -421,7 +355,7 @@ function filesDicom(SeriesSets, dicomViewer) {
         fileDicom += '    <li title="胸部CT ' + group[0].SeriesDate + '"><span>胸透CT</span><span class="leftSpacing">' + group[0].SeriesDate + '</span></li>';
         fileDicom += '    <li title="' + group[0].PersonName + ' ' + group[0].PatientSex + ' ' + group[0].PatientAge + '"><span>' + group[0].PersonName + '</span><span class="leftSpacing">' + group[0].PatientSex + '</span><span class="leftSpacing">' + group[0].PatientAge + '</span></li>';
         fileDicom += '  </ul>';
-        fileDicom += '  <div class="title_right dicomcheckResult"><span id="node'+ seriesID.slice(34) +'" class="pingAnBtn greenGradient nodeNumber"><i style="font-size: 20px;font-style: normal;" title=0个结节">0</i>个结节</span></div>';
+        fileDicom += '  <div class="title_right dicomcheckResult"><span id="node' + seriesID.slice(34) + '" class="pingAnBtn greenGradient nodeNumber"><i style="font-size: 20px;font-style: normal;" title=0个结节">0</i>个结节</span></div>';
         fileDicom += ' </li>';
         fileDicom += ' <li class="checkProgress" ><div class="checkProgressBar" style="width:0%;"></div></li>';
         fileDicom += ' <li class="boxes estRows">';
@@ -429,7 +363,7 @@ function filesDicom(SeriesSets, dicomViewer) {
         fileDicom += '     <thead>';
         fileDicom += '       <tr><th>结节编号</th><th>直径/mm</th><th>层面</th><th>可能性</th></tr>';
         fileDicom += '     </thead>';
-        fileDicom += '     <tbody id="tbody'+ seriesID.slice(34) +'">';
+        fileDicom += '     <tbody id="tbody' + seriesID.slice(34) + '">';
         /**节点信息获取  end**/
         fileDicom += ' </tbody>';
         fileDicom += '  </table>';
@@ -437,21 +371,27 @@ function filesDicom(SeriesSets, dicomViewer) {
         fileDicom += ' </ul>';
     });
     document.querySelector('.sidebar-nav').innerHTML += fileDicom;
-    
+
     document.querySelectorAll(".nav-header").forEach(function (elem) {
         elem.addEventListener('click', function (e) {
+            clickSeries = jQuery(this).attr('title')
             document.querySelector('.left_message').style.display = "none";
-            var seriesId = jQuery(this).attr('title')
-            if(fileObj[seriesId].length == 20){
+            var seriesId = jQuery(this).attr('series')
+            if (fileObj[seriesId].length == sliceNumber) {
                 jQuery('.box-loading').show()
                 return
             }
-            bindUpData(dicomViewer, fileObj[seriesId].length);
+            // jQuery('.box-loading').show()
+            scrollNode('1', fileObj[seriesId].length, dicomViewer)
+            bindEvent(dicomViewer, fileObj[seriesId].length);
             dataDicomShow(dataDicom(fileObj[seriesId][0].dataSet));
-            dicomViewer.setDcmSeriesInfo(fileObj[seriesId],[])
+            dicomViewer.setDcmSeriesInfo(fileObj[seriesId], [])
             jQuery(this).children('.title_hd').children().eq(2).children().html(fileObj[seriesId].length)
-            for(var i=0;i<jQuery('.nav-header').length;i++){
+            for (var i = 0; i < jQuery('.nav-header').length; i++) {
                 jQuery('.nav-header').eq(i).removeClass('sequenceAction')
+            }
+            for (var o in jQuery('.currentOption')) {
+                jQuery('.currentOption').eq(o).css('display', 'none')
             }
             if (!jQuery(this).hasClass('sequenceAction')) {
                 jQuery(this).addClass('sequenceAction')
@@ -460,7 +400,7 @@ function filesDicom(SeriesSets, dicomViewer) {
             }
             var el = e.currentTarget;
             var pointLi = jQuery(el).next().next()
-            for(var i=0;i<jQuery('.boxes').length;i++){
+            for (var i = 0; i < jQuery('.boxes').length; i++) {
                 jQuery('.boxes').eq(i).slideUp()
             }
             var openStatus = jQuery(pointLi).css('display')
@@ -478,20 +418,20 @@ function filesDicom(SeriesSets, dicomViewer) {
         }
     })
 
-    
+
 
 }
 
 function scrollNode(index, dcmNumber, dicomViewer) {
-    dicomViewer.forward(index)
-    dicomViewer.clearDraw()
-    dicomViewer.reset()
+    dicomViewer.forward(Number(index))
+    // console.log(dcmNumber)
+    jQuery('[type=range]').attr('value', index)
     jQuery('.value').html(index + '/' + dcmNumber)
-    jQuery('.rang_width').width((91.3 / dcmNumber * index) + "%")
-    jQuery('input[type="range"]').attr('value', index)
+    // jQuery('.rang_width').width((91.3 / dcmNumber * index) + "%")
+    initRangeSlider(dicomViewer, dcmNumber)
 }
 
-function pointRowMsg(seriesId,obj, index, dicomViewer, pointsSet) {
+function pointRowMsg(seriesId, obj, index, dicomViewer, pointsSet) {
     _objLoction = 'x:' + obj.location
     _objLoction = _objLoction.replace(/(,)/, ' y:')
     var pointMsg = ' ';
@@ -539,8 +479,8 @@ function pointRowMsg(seriesId,obj, index, dicomViewer, pointsSet) {
             allOption.eq(currentMessage).css('display', 'block')
         }
         console.log(currentMessage)
-        pointRowMsg(seriesId,pointsSet[currentMessage], currentMessage, dicomViewer, pointsSet)
-        console.log(index,nodeIndex[seriesId][index])
+        pointRowMsg(seriesId, pointsSet[currentMessage], currentMessage, dicomViewer, pointsSet)
+        console.log(index, nodeIndex[seriesId][index])
         scrollNode(nodeIndex[seriesId][currentMessage], dicomViewer.dcmSet.length, dicomViewer)
         var drawCircle = {};
         drawCircle.diameter = pointsSet[currentMessage].diameter;
@@ -558,8 +498,8 @@ function pointRowMsg(seriesId,obj, index, dicomViewer, pointsSet) {
             allOption.eq(o).css('display', 'none')
             allOption.eq(currentMessage).css('display', 'block')
         }
-        pointRowMsg(seriesId,pointsSet[currentMessage], currentMessage, dicomViewer, pointsSet)
-        console.log(index,nodeIndex[seriesId][index])
+        pointRowMsg(seriesId, pointsSet[currentMessage], currentMessage, dicomViewer, pointsSet)
+        console.log(index, nodeIndex[seriesId][index])
         scrollNode(nodeIndex[seriesId][currentMessage], dicomViewer.dcmSet.length, dicomViewer)
         var drawCircle = {};
         drawCircle.diameter = pointsSet[currentMessage].diameter;

@@ -4,6 +4,13 @@ var nodeMessage = [];
 var nodeIndex = [];
 var fileObj = {};
 var clickDraw = []
+var sliceNumber = 20;
+var clickSeries = ''
+var page1 = document.getElementById('page1')
+var page2 = document.getElementById('page2')
+var domCanvas = document.getElementById("dicomImage");
+var dicomViewer = new DICOMViewer(domCanvas);
+var dicomImage = new DICOMImage();
 function directorySelect(e) {
   var files = e.files;
   pathList = [];
@@ -22,10 +29,10 @@ function directorySelect(e) {
         }
         if (!fileObj[relativePath]) {
           fileObj[relativePath] = [val];
-          nodeIndex[relativePath] =[val]
+          nodeIndex[relativePath] = [val]
         } else {
           fileObj[relativePath].push(val)
-          nodeIndex[relativePath] =[]
+          nodeIndex[relativePath] = []
         }
         fileList.push(val);
       }
@@ -41,7 +48,7 @@ function directorySelect(e) {
 
 // function showDir(list) {
 //   var page1 = document.getElementById("page1");
-//   var page2 = document.getElementById("page2");  
+//   var page2 = document.getElementById("page2");
 //   page1.style.display = "none";
 //   page2.style.display = "block";
 //   var html = '';
@@ -54,18 +61,13 @@ function directorySelect(e) {
 
 function showImages(dcmFiles) {
   var _dcmFiles = dcmFiles.slice(0)
-  var page1 = document.getElementById('page1')
-  var page2 = document.getElementById('page2')
   page1.style.display = 'none';
   page2.style.display = 'block';
-  var domCanvas = document.getElementById("dicomImage");
-  var dicomViewer = new DICOMViewer(domCanvas);
-  var dicomImage = new DICOMImage();
   var SeriesSets = {};
   var seriesId = ''
   var pointsSet = []
-  if (dcmFiles.length > 20) {
-    dcmFiles.splice(20)
+  if (dcmFiles.length > sliceNumber) {
+    dcmFiles.splice(sliceNumber)
     dicomImage.loadDicomFiles(dcmFiles).then(function (res) {
       seriesId = Object.keys(res)[0];
       NodeTest(seriesId, dicomViewer, res)
@@ -76,12 +78,13 @@ function showImages(dcmFiles) {
       //第2次请求
       drawDicomData(_dcmFiles, dicomImage).then(res => {
         fileObj[seriesId] = res[seriesId]
-        nodeFilter(seriesId,res[seriesId])
+        nodeFilter(seriesId, res[seriesId])
         // dicomViewer.setDcmSeriesInfo(res.item, pointsSet)
         // reviseData(dicomViewer, res.item.length)
         // nodeFilter(res.item)
         if (jQuery('.box-loading').css('display') !== "none") {
-          jQuery('.box-loading').hide()
+          jQuery('[title='+ clickSeries +']').click()
+          // jQuery('.box-loading').hide()
         }
       })
     })
@@ -93,20 +96,14 @@ function showImages(dcmFiles) {
       filesDicom(res, dicomViewer)
       bindEvent(dicomViewer, res[seriesId].length);
       dicomViewer.setDcmSeriesInfo(res[seriesId], pointsSet);
-
-      // drawDicomData(_dcmFiles, dicomImage).then(res => {
-      //   dicomViewer.setDcmSeriesInfo(res[seriesId], pointsSet)
-      //   reviseData(dicomViewer, res[seriesId].length)
-      //   nodeFilter(res[seriesId])
-      //   if (jQuery('.box-loading').css('display') !== "none") {
-      //     jQuery('.box-loading').hide()
-      //   }
-      // })
     })
   }
 }
-function nodeFilter(seriesId,imgdata) {
+function nodeFilter(seriesId, imgdata) {
   console.log(nodeMessage)
+  if(nodeMessage[seriesId] == undefined){
+    return
+  }
   if (nodeMessage[seriesId].length) {
     nodeMessage[seriesId].forEach(c => {
       imgdata.map((item, index) => {

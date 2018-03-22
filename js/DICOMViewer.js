@@ -25,6 +25,11 @@ class DICOMViewer {
         this.imgList = this.initImgList();
         this.points = this.getCurrentDcmPoints();
         this.render();
+        (function loadingDown(){
+            if(jQuery('.box-loading').css('display') !== 'none'){
+                jQuery('.box-loading').hide()
+            }
+        })()
     }
     resetStates() {
         this.states.rotate = 0;
@@ -72,7 +77,6 @@ class DICOMViewer {
         this.states.preTranslate = { x:0, y:0 };
         this.states.current = index;
         this.points = this.getCurrentDcmPoints();
-        // console.log(this.points);
         return true;
     }
     // 上一张图片
