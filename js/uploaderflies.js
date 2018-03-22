@@ -52,13 +52,11 @@ var ctheader = $("ctheader"),
 
 function directorySelected(e) {
     const files = document.querySelector('#file01').files;
-    console.log(files);
 }
 // 单文件选择
 function fileSelected(e) {
     // var files = $("fileToUpload").files;
     var files = e.files;
-    console.log(files);
     let path = [];
     for (const key in files) {
         if (files.hasOwnProperty(key)) {
@@ -66,11 +64,9 @@ function fileSelected(e) {
             const { webkitRelativePath } = val;
             const relativePath = webkitRelativePath.split('\/');
             relativePath.pop();
-            console.log(relativePath)
             path = new Set(relativePath)
         }
     }
-    console.log(path)
     var shtml = "";
     shtml += "<table class='table table-hover filesFilter' >";
     shtml += "<thead>";
@@ -87,9 +83,7 @@ function fileSelected(e) {
         var type = file.type || "";
         var fileSize = 0;
         var stuff = name.match(/^(.*)(\.)(.{1,8})$/)[3];
-        console.log(stuff);
         var id = (file.lastModifiedDate + "").replace(/\W/g, "") + size + type.replace(/\W/g, "");
-        console.log(id);
 
         //对文件类型及文件大小做判断处理
         if (stuff != "dcm") {
@@ -127,7 +121,6 @@ function fileSelected(e) {
     btnShtml += "</form>";
     btnShtml += "</div>";
     var btn = btnShtml;
-    console.log(btn);
 
     var txt = shtml;
     var title1 = "检测出待上传DICOM文件";
@@ -170,7 +163,7 @@ function NodeTest(seriesId, dicomViewer, imageData) {
                     jQuery('#tbody' + queryNumber).html(nodeList(data.aiResults))
                     jQuery('#node' + queryNumber).html('<i style="font-size: 20px;font-style: normal;" title="' + data.aiResults.length + '个结节">' + data.aiResults.length + '</i>个结节')
                     nodeMessage[seriesId] = data.aiResults
-                    bindNodeList(seriesId, data.aiResults, dicomViewer)
+                    // bindNodeList(seriesId, data.aiResults, dicomViewer)
                 }
             } else if (data.aiCode == '003006' || data.aiCode == '003005') {
                 console.log("请求AI分析结果-分析中")
@@ -307,13 +300,13 @@ function nodeList(pointsSet) {
 
 function bindNodeList(seriesId, pointsSet, dicomViewer) {
     document.querySelectorAll('.point-row').forEach(function (tr, index) {
-        tr.addEventListener('click', function (e) {
+        jQuery(tr).unbind('click').removeAttr('onclick').click(function (e) {
+        // tr.addEventListener('click', function (e) {
             // debugger
             // if (dicomViewer.dcmSet.length <= 20) {
             //     jQuery('.box-loading').show()
             //     return
             // }
-            console.log(1)
             var allOption = jQuery('.currentOption')
             for (var o in allOption) {
                 allOption.eq(o).css('display', 'none')
@@ -478,9 +471,7 @@ function pointRowMsg(seriesId, obj, index, dicomViewer, pointsSet) {
             allOption.eq(o).css('display', 'none')
             allOption.eq(currentMessage).css('display', 'block')
         }
-        console.log(currentMessage)
         pointRowMsg(seriesId, pointsSet[currentMessage], currentMessage, dicomViewer, pointsSet)
-        console.log(index, nodeIndex[seriesId][index])
         scrollNode(nodeIndex[seriesId][currentMessage], dicomViewer.dcmSet.length, dicomViewer)
         var drawCircle = {};
         drawCircle.diameter = pointsSet[currentMessage].diameter;
@@ -499,7 +490,6 @@ function pointRowMsg(seriesId, obj, index, dicomViewer, pointsSet) {
             allOption.eq(currentMessage).css('display', 'block')
         }
         pointRowMsg(seriesId, pointsSet[currentMessage], currentMessage, dicomViewer, pointsSet)
-        console.log(index, nodeIndex[seriesId][index])
         scrollNode(nodeIndex[seriesId][currentMessage], dicomViewer.dcmSet.length, dicomViewer)
         var drawCircle = {};
         drawCircle.diameter = pointsSet[currentMessage].diameter;
@@ -579,10 +569,8 @@ function preProcess(uri_path, data, isNeedEncode) {
     outputData.sign = content_sign;
 
     var stringToSign = (uri_path + "," + http_verb + "," + content_sign + "," + timestamp).toString();
-    console.log(stringToSign);
     // 2   根据颁发的SK计算签名字符串signature
     var signature = CryptoJS.HmacSHA1(CryptoJS.enc.Utf8.parse(stringToSign), SK);
-    console.log(signature);
     // 3 数据构造授权信息authorization 
     var once = hashCode(timestamp.toString(16) + outputData.deviceIp);
     var authorization = once + ":" + timestamp + ":" + AK + ":" + signature;

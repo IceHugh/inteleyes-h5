@@ -38,7 +38,6 @@ function directorySelect(e) {
       }
     }
   }
-  console.log(fileObj)
   // console.log(fileList)
   //showDir(pathList);
   for (var item in fileObj) {
@@ -79,6 +78,7 @@ function showImages(dcmFiles) {
       drawDicomData(_dcmFiles, dicomImage).then(res => {
         fileObj[seriesId] = res[seriesId]
         nodeFilter(seriesId, res[seriesId])
+        bindNodeList(seriesId, nodeMessage[seriesId], dicomViewer)
         // dicomViewer.setDcmSeriesInfo(res.item, pointsSet)
         // reviseData(dicomViewer, res.item.length)
         // nodeFilter(res.item)
@@ -100,7 +100,6 @@ function showImages(dcmFiles) {
   }
 }
 function nodeFilter(seriesId, imgdata) {
-  console.log(nodeMessage)
   if(nodeMessage[seriesId] == undefined){
     return
   }
