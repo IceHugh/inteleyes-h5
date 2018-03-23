@@ -4,56 +4,53 @@ class DICOMImage {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
     }
-    processImage(pixelData,rows,columns) {
+    processImage(pixelData, rows, columns) {
         // console.log(pixelData)
         const canvas = document.createElement('canvas');
         canvas.width = rows;
         canvas.height = columns;
         const ctx = canvas.getContext('2d');
-        const canvasImageData = ctx.createImageData(rows,columns);
+        const canvasImageData = ctx.createImageData(rows, columns);
         const numPixels = pixelData.length;
         // console.log(canvasImageData.data.length,numPixels);
-        for(let i = 0; i < numPixels; i++) {
-            let rgb = Math.ceil(pixelData[i]/4096 * 255);
-            canvasImageData.data[4*i] = rgb;
-            canvasImageData.data[4*i+1] = rgb;
-            canvasImageData.data[4*i+2] = rgb;
-            canvasImageData.data[4*i+3] = 255;
+        for (let i = 0; i < numPixels; i++) {
+            let rgb = Math.ceil(pixelData[i] / 4096 * 255);
+            canvasImageData.data[4 * i] = rgb;
+            canvasImageData.data[4 * i + 1] = rgb;
+            canvasImageData.data[4 * i + 2] = rgb;
+            canvasImageData.data[4 * i + 3] = 255;
         }
-        this.lightImage(canvasImageData,60);
-        this.contrastImage(canvasImageData,180);
-        ctx.putImageData(canvasImageData,0,0);
+        this.lightImage(canvasImageData, 60);
+        this.contrastImage(canvasImageData, 180);
+        ctx.putImageData(canvasImageData, 0, 0);
         const imageData = canvas.toDataURL("image/png");
         return imageData;
     }
     lightImage(imageData, light) {
         var data = imageData.data;
-        for(let i=0;i<data.length;i+=4)
-        {
+        for (let i = 0; i < data.length; i += 4) {
             data[i] += light;
-            data[i+1] += light;
-            data[i+2] += light;
+            data[i + 1] += light;
+            data[i + 2] += light;
         }
         return imageData;
     }
     contrastImage(imageData, contrast) {
-        
-            var data = imageData.data;
-            var factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
-        
-            for(let i=0;i<data.length;i+=4)
-            {
-                data[i] = factor * (data[i] - 128) + 128;
-                data[i+1] = factor * (data[i+1] - 128) + 128;
-                data[i+2] = factor * (data[i+2] - 128) + 128;
-            }
-            return imageData;
+
+        var data = imageData.data;
+        var factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
+
+        for (let i = 0; i < data.length; i += 4) {
+            data[i] = factor * (data[i] - 128) + 128;
+            data[i + 1] = factor * (data[i + 1] - 128) + 128;
+            data[i + 2] = factor * (data[i + 2] - 128) + 128;
         }
-    getDcmDetail(arrayBuffer)
-    {
+        return imageData;
+    }
+    getDcmDetail(arrayBuffer) {
         // We need to setup a try/catch block because parseDicom will throw an exception
         // if you attempt to parse a non dicom part 10 file (or one that is corrupted)
-        try{
+        try {
             var byteArray = new Uint8Array(arrayBuffer);
             // parse byteArray into a DataSet object using the parseDicom library
             var dataSet = dicomParser.parseDicom(byteArray);
@@ -69,14 +66,14 @@ class DICOMImage {
             const SOPInstanceUID = dataSet.string('x00080018');
             const BodyPartExamined = dataSet.string('x00180015');
             let PatientAge = dataSet.string('x00101010');
-            PatientAge = PatientAge? parseInt(PatientAge.replace('Y','')) + '岁' : '';
+            PatientAge = PatientAge ? parseInt(PatientAge.replace('Y', '')) + '岁' : '';
             const PatientSex = (dataSet.string('x00100040') === 'F') ? '女' : '男';
             const PersonName = dataSet.string('x0040a123');
             let SeriesDate = dataSet.string('x00080021');
             // console.log(imagePosition);
-            
-            if(!!SeriesDate) {
-                SeriesDate = SeriesDate.slice(0,4) + '-' + SeriesDate.slice(-4,-2) + '-' + SeriesDate.slice(-2);
+
+            if (!!SeriesDate) {
+                SeriesDate = SeriesDate.slice(0, 4) + '-' + SeriesDate.slice(-4, -2) + '-' + SeriesDate.slice(-2);
             }
             // create a typed array on the pixel data (this example assumes 16 bit unsigned data)
             var imageData = new Uint16Array(dataSet.byteArray.buffer, pixelDataElement.dataOffset);
@@ -96,8 +93,7 @@ class DICOMImage {
                 dataSet
             }
         }
-        catch(err)
-        {
+        catch (err) {
             // we catch the error and display it to the user
             console.error(err);
             return null;
@@ -117,7 +113,7 @@ class DICOMImage {
                     columns,
                     dataSet
                 } = dcmDetail;
-                dcmDetail.imageData = this.processImage(imageData,rows,columns);
+                dcmDetail.imageData = this.processImage(imageData, rows, columns);
                 dcmDetail.arrayBuffer = arrayBuffer;
                 // console.log(dcmDetail)
                 resolve(dcmDetail);
@@ -126,16 +122,16 @@ class DICOMImage {
 
         })
     }
-    async loadDicomFiles(DicomFileList,ctx,width,height) {
+    async loadDicomFiles(DicomFileList, ctx, width, height) {
         let datasets = {};
         for (let file of DicomFileList) {
-            if(file.size == 0) {
+            if (file.size == 0) {
                 continue
             }
             const dcmDetail = await this.loadDicomFile(file);
             dcmDetail.file = file;
-            const {SeriesInstanceUID} = dcmDetail;
-            if(!(datasets[SeriesInstanceUID] instanceof Array)) datasets[SeriesInstanceUID] = [];
+            const { SeriesInstanceUID } = dcmDetail;
+            if (!(datasets[SeriesInstanceUID] instanceof Array)) datasets[SeriesInstanceUID] = [];
             datasets[SeriesInstanceUID].push(dcmDetail);
         }
         Object.keys(datasets).forEach(seriesID => [seriesID] = datasets[seriesID].sort((a, b) => b.imagePosition - a.imagePosition));

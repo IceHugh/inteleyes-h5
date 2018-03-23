@@ -110,6 +110,17 @@ class DICOMViewer {
             sx = e.clientX;
             sy = e.clientY;
         });
+        canvas.addEventListener('mouseleave',e => {
+            e.preventDefault()
+            if (!d) return;
+            d = false;
+            m = false;
+            this.states.preTranslate = {
+                x:  this.states.translate.x,
+                y:  this.states.translate.y
+            };
+            if (!m) clickEvent(e);
+        })
         // this.canvas.addEventListener('mousemove',e => {
         //     if (!this.pointClickCallback) return;
         //     const X = [(e.offsetX - this.states.translate.x*this.states.scale ) - width * (1 - this.states.scale)/2 - (width - this.DcmWidth)*this.states.scale/2]/this.states.scale;

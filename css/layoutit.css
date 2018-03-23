@@ -104,9 +104,10 @@
 .sidebar-nav .remove,
 .sidebar-nav .configuration { display: none; }
 
-.sidebar-nav .boxes { display:none;overflow: scroll;
-    max-height: 293px;}
-
+.sidebar-nav .boxes { display:none;overflow-y: auto;
+	max-height: 293px;
+}
+.sidebar-nav .boxes::-webkit-scrollbar {display:none}
 .demo .preview { display: none; }
 .demo .box .view { display: block; padding-top:30px;}
 

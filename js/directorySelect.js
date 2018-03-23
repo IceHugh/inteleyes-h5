@@ -58,6 +58,8 @@ function directorySelect(e) {
 //   dirDom.innerHTML = html;
 // }
 
+
+
 function showImages(dcmFiles) {
   var _dcmFiles = dcmFiles.slice(0)
   page1.style.display = 'none';
