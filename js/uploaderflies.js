@@ -216,7 +216,7 @@ function bindEvent(dicomViewer, firstDcmNumber) {
         currentPage--
         jQuery('[type=range]').attr('value', currentPage)
         jQuery('.value').html(currentPage + '/' + firstDcmNumber)
-        initRangeSlider(dicomViewer,firstDcmNumber)
+        initRangeSlider(dicomViewer, firstDcmNumber)
         // jQuery('.rang_width').width((91.3 / firstDcmNumber * currentPage) + "%")
     })
     jQuery("#down").unbind('click').removeAttr('onclick').click(function (e) {
@@ -234,7 +234,7 @@ function bindEvent(dicomViewer, firstDcmNumber) {
         currentPage++
         jQuery('[type=range]').attr('value', currentPage)
         jQuery('.value').html(currentPage + '/' + firstDcmNumber)
-        initRangeSlider(dicomViewer,firstDcmNumber)
+        initRangeSlider(dicomViewer, firstDcmNumber)
         // jQuery('.rang_width').width((91.3 / firstDcmNumber * currentPage) + "%")
     })
     jQuery("#zoomin").unbind('click').removeAttr('onclick').click(function (e) {
@@ -255,12 +255,12 @@ function initRangeSlider(dicomViewer, dcmNumber) {
     var elem = document.querySelector('input[type="range"]');
     elem.setAttribute("max", dcmNumber);
     // elem.removeEventListener('input');
-    jQuery('[type=range]').unbind('input propertychange').removeAttr('oninput').bind('input propertychange',function(){
+    jQuery('[type=range]').unbind('input propertychange').removeAttr('oninput').bind('input propertychange', function () {
         var newValue = Number(this.value)
         dicomViewer.forward(newValue)
         dicomViewer.clearDraw()
         dicomViewer.reset()
-        jQuery(this).attr('value',newValue)
+        jQuery(this).attr('value', newValue)
         jQuery('.value').html(newValue + '/' + dcmNumber)
         // jQuery('.rang_width').width((91.3 / dcmNumber * newValue) + "%")
     })
@@ -270,7 +270,7 @@ function initRangeSlider(dicomViewer, dcmNumber) {
 //     jQuery('[type=range]').attr('max',dcmNumber)
 //     jQuery('.value').html(jQuery('[type=range]').attr('value') + '/' + dcmNumber)
 //     // elem.removeEventListener('input');
-    
+
 //     var rangeValue = function () {
 //         // debugger;
 //         var newValue = Number(jQuery('[type=range]').attr('value'));
@@ -301,7 +301,7 @@ function nodeList(pointsSet) {
 function bindNodeList(seriesId, pointsSet, dicomViewer) {
     document.querySelectorAll('.point-row').forEach(function (tr, index) {
         jQuery(tr).unbind('click').removeAttr('onclick').click(function (e) {
-        // tr.addEventListener('click', function (e) {
+            // tr.addEventListener('click', function (e) {
             // debugger
             // if (dicomViewer.dcmSet.length <= 20) {
             //     jQuery('.box-loading').show()
@@ -314,7 +314,7 @@ function bindNodeList(seriesId, pointsSet, dicomViewer) {
             var el = e.currentTarget;
             var currentOption = jQuery(el).children().eq(0).children().eq(0)
             currentOption.css('display', 'block')
-
+            console.log(pointsSet)
             var targetPoint = pointsSet[jQuery(el).attr('data-option')]
             pointRowMsg(seriesId, targetPoint, index, dicomViewer, pointsSet);
             scrollNode(nodeIndex[seriesId][index], dicomViewer.dcmSet.length, dicomViewer)
@@ -337,7 +337,7 @@ function filesDicom(SeriesSets, dicomViewer) {
     seriesIDList.forEach(function (seriesID, index) {
         var group = SeriesSets[seriesID];
         fileDicom += '<ul class="nav nav-list accordion-group">';
-        fileDicom += '<li class="nav-header nav-header-content" series="'+ seriesID +'" title="' + seriesID.slice(34) + '">';
+        fileDicom += '<li class="nav-header nav-header-content" series="' + seriesID + '" title="' + seriesID.slice(34) + '">';
         fileDicom += '<div class="title_hd">';
         fileDicom += '<div style="width:68px;height:68px;background:rgba(12,173,141,0.4);position:absolute;"></div>'
         fileDicom += '     <img src="' + group[0].imageData + '" alt="" style="width:68px;margin-right:5px;display:block">';
@@ -370,16 +370,46 @@ function filesDicom(SeriesSets, dicomViewer) {
             clickSeries = jQuery(this).attr('title')
             document.querySelector('.left_message').style.display = "none";
             var seriesId = jQuery(this).attr('series')
-            if (fileObj[seriesId].length == sliceNumber) {
+            var currentLength = jQuery(this).children('.title_hd').children().eq(2).children()
+            if (currentLength.html() == sliceNumber) {
                 jQuery('.box-loading').show()
-                return
+            }
+            if (!imgdataObj[seriesId]) {
+                dicomImage.loadDicomFiles(fileObj[seriesId]).then(function (res) {
+                    console.log(res, seriesId)
+                    imgdataObj[seriesId] = imgdataObj[seriesId]
+                    imgdataObj[seriesId] = res[seriesId]
+                    currentLength.html(res[seriesId].length)
+                    dataDicomShow(dataDicom(res[seriesId][0].dataSet));
+                    nodeFilter(seriesId,res[seriesId])
+                    scrollNode('1', res[seriesId].length, dicomViewer)
+                    bindNodeList(seriesId, nodeMessage[seriesId], dicomViewer)
+                    bindEvent(dicomViewer, res[seriesId].length);
+                    dicomViewer.setDcmSeriesInfo(res[seriesId], [])
+                    if (jQuery('.box-loading').css('display') !== "none") {
+                        jQuery('.box-loading').hide()
+                    }
+                    console.log(fileObj[seriesId])
+                })
+            } else {
+                dataDicomShow(dataDicom(imgdataObj[seriesId][0].dataSet));
+                scrollNode('1', imgdataObj[seriesId].length, dicomViewer)
+                bindNodeList(seriesId, nodeMessage[seriesId], dicomViewer)
+                bindEvent(dicomViewer, imgdataObj[seriesId].length);
+                dicomViewer.setDcmSeriesInfo(imgdataObj[seriesId], [])
             }
             // jQuery('.box-loading').show()
-            scrollNode('1', fileObj[seriesId].length, dicomViewer)
-            bindEvent(dicomViewer, fileObj[seriesId].length);
-            dataDicomShow(dataDicom(fileObj[seriesId][0].dataSet));
-            dicomViewer.setDcmSeriesInfo(fileObj[seriesId], [])
-            jQuery(this).children('.title_hd').children().eq(2).children().html(fileObj[seriesId].length)
+            //初始化数据
+
+            // scrollNode('1', fileObj[seriesId].length, dicomViewer)
+            // //绑定相应事件
+            // bindEvent(dicomViewer, fileObj[seriesId].length);
+            // //显示层面信息
+            // dataDicomShow(dataDicom(fileObj[seriesId][0].dataSet));
+
+            // dicomViewer.setDcmSeriesInfo(fileObj[seriesId], [])
+
+
             for (var i = 0; i < jQuery('.nav-header').length; i++) {
                 jQuery('.nav-header').eq(i).removeClass('sequenceAction')
             }
@@ -410,10 +440,9 @@ function filesDicom(SeriesSets, dicomViewer) {
             proxyRequests()
         }
     })
-
-
-
 }
+
+
 
 function scrollNode(index, dcmNumber, dicomViewer) {
     dicomViewer.forward(Number(index))

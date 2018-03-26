@@ -181,8 +181,11 @@
 
 
 <script>
-	
+
 	jQuery("body").keydown(function (e) {
+		if (jQuery('#page1').css('display') == 'none') {
+			return
+		}
 		if (event.keyCode == "13") {//keyCode=13是回车键
 			e.stopPropagation()
 			jQuery('#file01').click();

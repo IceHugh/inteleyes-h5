@@ -3,6 +3,7 @@ var fileList = [];
 var nodeMessage = [];
 var nodeIndex = [];
 var fileObj = {};
+var imgdataObj = {}
 var clickDraw = []
 var sliceNumber = 20;
 var clickSeries = ''
@@ -67,28 +68,30 @@ function showImages(dcmFiles) {
   var SeriesSets = {};
   var seriesId = ''
   var pointsSet = []
-  if (dcmFiles.length > sliceNumber) {
-    dcmFiles.splice(sliceNumber)
-    dicomImage.loadDicomFiles(dcmFiles).then(function (res) {
+  if (_dcmFiles.length > sliceNumber) {
+    _dcmFiles.splice(sliceNumber)
+    dicomImage.loadDicomFiles(_dcmFiles).then(function (res) {
       seriesId = Object.keys(res)[0];
       NodeTest(seriesId, dicomViewer, res)
       dataDicomShow(dataDicom(res[seriesId][0].dataSet));
       filesDicom(res, dicomViewer)
       bindEvent(dicomViewer, res[seriesId].length);
       dicomViewer.setDcmSeriesInfo(res[seriesId], pointsSet);
+
       //第2次请求
-      drawDicomData(_dcmFiles, dicomImage).then(res => {
-        fileObj[seriesId] = res[seriesId]
-        nodeFilter(seriesId, res[seriesId])
-        bindNodeList(seriesId, nodeMessage[seriesId], dicomViewer)
-        // dicomViewer.setDcmSeriesInfo(res.item, pointsSet)
-        // reviseData(dicomViewer, res.item.length)
-        // nodeFilter(res.item)
-        if (jQuery('.box-loading').css('display') !== "none") {
-          jQuery('[title='+ clickSeries +']').click()
-          // jQuery('.box-loading').hide()
-        }
-      })
+      // drawDicomData(_dcmFiles, dicomImage).then(res => {
+      //   fileObj[seriesId] = res[seriesId]
+      //   nodeFilter(seriesId, res[seriesId])
+      //   bindNodeList(seriesId, nodeMessage[seriesId], dicomViewer)
+      //   // dicomViewer.setDcmSeriesInfo(res.item, pointsSet)
+      //   // reviseData(dicomViewer, res.item.length)
+      //   // nodeFilter(res.item)
+      //   if (jQuery('.box-loading').css('display') !== "none") {
+      //     jQuery('[title='+ clickSeries +']').click()
+      //     // jQuery('.box-loading').hide()
+      //   }
+      // })
+      
     })
   } else {
     dicomImage.loadDicomFiles(dcmFiles).then(function (res) {

@@ -145,6 +145,9 @@
 		white-space: nowrap;
 		overflow: hidden;
 	}
+	.nodeNumber:active{
+		background-image: linear-gradient(-90deg, #ff5e5b 0%, #d03407 100%);
+	}
 	.clear{clear:both;}
 	.left_message .left_message_top span{
 		display: inline-block;
