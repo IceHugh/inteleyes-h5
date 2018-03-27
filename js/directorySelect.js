@@ -109,7 +109,7 @@ function nodeFilter(imgdata, imageNo) {
     return
   }
   return imgdata.findIndex( x => {
-    return x.imageNo == imageNo
+    return Math.abs(x.imageNo - 0) == Math.abs(imageNo - 0 )
   })
   // if (nodeMessage[seriesId].length) {
   //   nodeMessage[seriesId].forEach(c => {
