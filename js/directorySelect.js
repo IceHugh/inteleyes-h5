@@ -104,19 +104,22 @@ function showImages(dcmFiles) {
     })
   }
 }
-function nodeFilter(seriesId, imgdata) {
-  if(nodeMessage[seriesId] == undefined){
+function nodeFilter(imgdata, imageNo) {
+  if(imgdata == undefined){
     return
   }
-  if (nodeMessage[seriesId].length) {
-    nodeMessage[seriesId].forEach(c => {
-      imgdata.map((item, index) => {
-        if (item.imageNo == c.imageNo) {
-          nodeIndex[seriesId].push(index)
-        }
-      })
-    })
-  };
+  return imgdata.findIndex( x => {
+    return x.imageNo == imageNo
+  })
+  // if (nodeMessage[seriesId].length) {
+  //   nodeMessage[seriesId].forEach(c => {
+  //     imgdata.map((item, index) => {
+  //       if (item.imageNo == c.imageNo) {
+  //         return index
+  //       }
+  //     })
+  //   })
+  // };
 }
 async function drawDicomData(dcmFiles, dicomImage) {
   var analyticData = [];
