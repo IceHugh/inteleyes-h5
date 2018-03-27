@@ -331,6 +331,7 @@ function bindNodeList(seriesId, pointsSet, dicomViewer) {
 }
 /*creat_group_list*/
 function filesDicom(SeriesSets, dicomViewer,imageLength) {
+    console.log(SeriesSets)
     var seriesIDList = Object.keys(SeriesSets);
     var fileDicom = '';
     seriesIDList.forEach(function (seriesID, index) {
@@ -343,7 +344,7 @@ function filesDicom(SeriesSets, dicomViewer,imageLength) {
         fileDicom += '               <span><em currentLength="'+ group.length +'">' + imageLength + '</em>张</span>';
         fileDicom += '  </div>';
         fileDicom += ' <ul class="titleMessage">';
-        fileDicom += '    <li title="SX_00'+ index +'"><span>SX_00'+ index +'</span></li>';
+        fileDicom += '    <li title="'+ group[0].dataSet.string('x00100020') +'"><span>'+ group[0].dataSet.string('x00100020') +'</span></li>';
         fileDicom += '    <li title="胸部CT ' + group[0].SeriesDate + '"><span>胸透CT</span><span class="leftSpacing">' + group[0].SeriesDate + '</span></li>';
         fileDicom += '    <li title="' + group[0].PersonName + ' ' + group[0].PatientSex + ' ' + group[0].PatientAge + '"><span>' + group[0].PersonName + '</span><span class="leftSpacing">' + group[0].PatientSex + '</span><span class="leftSpacing">' + group[0].PatientAge + '</span></li>';
         fileDicom += '  </ul>';
@@ -657,6 +658,7 @@ function preProcess(uri_path, data, isNeedEncode) {
 
 
 function dataDicomShow(data) {
+    console.log(data.patientId)
     var direction = parseImageOrientation(data.imageOrientation)
     for (o in data) {
         if (data[o] === undefined) {
