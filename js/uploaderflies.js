@@ -146,7 +146,8 @@ function fileSelected(e) {
 
 
 
-function NodeTest(seriesId, dicomViewer, imageData) {
+
+function NodeTest(seriesId) {
     var queryNumber = seriesId.slice(34)
     jQuery.ajax({
         url: 'http://127.0.0.1:10219/api/ai/requestAIResult',
@@ -172,7 +173,7 @@ function NodeTest(seriesId, dicomViewer, imageData) {
                 jQuery('#node' + queryNumber).removeClass('greenGradient')
                 jQuery('#node' + queryNumber).removeClass('redGradient')
                 setTimeout(() => {
-                    NodeTest(seriesId, dicomViewer, imageData)
+                    NodeTest(seriesId)
                 }, 5000)
             } else {
                 console.log("请求AI分析结果-出现错误");
@@ -180,9 +181,7 @@ function NodeTest(seriesId, dicomViewer, imageData) {
                 jQuery('#node' + queryNumber).removeClass('greenGradient')
                 jQuery('#node' + queryNumber).addClass('redGradient')
                 jQuery('#node' + queryNumber).html('重新检测')
-                proxyRequests = function () {
-                    NodeTest(seriesId, dicomViewer, imageData)
-                }
+                
             }
         },
         error: function () {
@@ -192,7 +191,7 @@ function NodeTest(seriesId, dicomViewer, imageData) {
             jQuery('#node' + queryNumber).html('重新检测')
             jQuery('#node' + queryNumber).click(function (e) {
                 e.stopPropagation();
-                NodeTest(seriesId, dicomViewer, imageData)
+                NodeTest(seriesId)
             })
         }
     })
@@ -348,7 +347,7 @@ function filesDicom(SeriesSets, dicomViewer) {
         fileDicom += '    <li title="胸部CT ' + group[0].SeriesDate + '"><span>胸透CT</span><span class="leftSpacing">' + group[0].SeriesDate + '</span></li>';
         fileDicom += '    <li title="' + group[0].PersonName + ' ' + group[0].PatientSex + ' ' + group[0].PatientAge + '"><span>' + group[0].PersonName + '</span><span class="leftSpacing">' + group[0].PatientSex + '</span><span class="leftSpacing">' + group[0].PatientAge + '</span></li>';
         fileDicom += '  </ul>';
-        fileDicom += '  <div class="title_right dicomcheckResult"><span id="node' + seriesID.slice(34) + '" class="pingAnBtn greenGradient nodeNumber"><i style="font-size: 20px;font-style: normal;" title=0个结节">0</i>个结节</span></div>';
+        fileDicom += '  <div class="title_right dicomcheckResult"><span id="node' + seriesID.slice(34) + '" series="' + seriesID + '" class="pingAnBtn greenGradient nodeNumber"><i style="font-size: 20px;font-style: normal;" title=0个结节">0</i>个结节</span></div>';
         fileDicom += ' </li>';
         fileDicom += ' <li class="checkProgress" ><div class="checkProgressBar" style="width:0%;"></div></li>';
         fileDicom += ' <li class="boxes estRows">';
@@ -436,8 +435,9 @@ function filesDicom(SeriesSets, dicomViewer) {
     });
     jQuery(".nodeNumber").click(function (e) {
         e.stopPropagation()
+        var seriesId = jQuery(this).attr('series')
         if (jQuery(".nodeNumber").html() == '重新检测') {
-            proxyRequests()
+            NodeTest(seriesId)
         }
     })
 }

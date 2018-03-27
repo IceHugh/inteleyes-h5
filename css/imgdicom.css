@@ -145,7 +145,7 @@
 		white-space: nowrap;
 		overflow: hidden;
 	}
-	.nodeNumber:active{
+	.redClick{
 		background-image: linear-gradient(-90deg, #ff5e5b 0%, #d03407 100%);
 	}
 	.clear{clear:both;}

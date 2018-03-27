@@ -72,7 +72,7 @@ function showImages(dcmFiles) {
     _dcmFiles.splice(sliceNumber)
     dicomImage.loadDicomFiles(_dcmFiles).then(function (res) {
       seriesId = Object.keys(res)[0];
-      NodeTest(seriesId, dicomViewer, res)
+      NodeTest(seriesId)
       dataDicomShow(dataDicom(res[seriesId][0].dataSet));
       filesDicom(res, dicomViewer)
       bindEvent(dicomViewer, res[seriesId].length);
@@ -96,7 +96,7 @@ function showImages(dcmFiles) {
   } else {
     dicomImage.loadDicomFiles(dcmFiles).then(function (res) {
       seriesId = Object.keys(res)[0];
-      NodeTest(seriesId, dicomViewer, res)
+      NodeTest(seriesId)
       dataDicomShow(dataDicom(res[seriesId][0].dataSet));
       filesDicom(res, dicomViewer)
       bindEvent(dicomViewer, res[seriesId].length);
