@@ -330,7 +330,7 @@ function bindNodeList(seriesId, pointsSet, dicomViewer) {
     });
 }
 /*creat_group_list*/
-function filesDicom(SeriesSets, dicomViewer) {
+function filesDicom(SeriesSets, dicomViewer,imageLength) {
     var seriesIDList = Object.keys(SeriesSets);
     var fileDicom = '';
     seriesIDList.forEach(function (seriesID, index) {
@@ -340,10 +340,10 @@ function filesDicom(SeriesSets, dicomViewer) {
         fileDicom += '<div class="title_hd">';
         fileDicom += '<div style="width:68px;height:68px;background:rgba(12,173,141,0.4);position:absolute;"></div>'
         fileDicom += '     <img src="' + group[0].imageData + '" alt="" style="width:68px;margin-right:5px;display:block">';
-        fileDicom += '               <span><em>' + group.length + '</em>张</span>';
+        fileDicom += '               <span><em currentLength="'+ group.length +'">' + imageLength + '</em>张</span>';
         fileDicom += '  </div>';
         fileDicom += ' <ul class="titleMessage">';
-        fileDicom += '    <li title="SX_001"><span>SX_001</span></li>';
+        fileDicom += '    <li title="SX_00'+ index +'"><span>SX_00'+ index +'</span></li>';
         fileDicom += '    <li title="胸部CT ' + group[0].SeriesDate + '"><span>胸透CT</span><span class="leftSpacing">' + group[0].SeriesDate + '</span></li>';
         fileDicom += '    <li title="' + group[0].PersonName + ' ' + group[0].PatientSex + ' ' + group[0].PatientAge + '"><span>' + group[0].PersonName + '</span><span class="leftSpacing">' + group[0].PatientSex + '</span><span class="leftSpacing">' + group[0].PatientAge + '</span></li>';
         fileDicom += '  </ul>';
@@ -369,8 +369,8 @@ function filesDicom(SeriesSets, dicomViewer) {
             clickSeries = jQuery(this).attr('title')
             document.querySelector('.left_message').style.display = "none";
             var seriesId = jQuery(this).attr('series')
-            var currentLength = jQuery(this).children('.title_hd').children().eq(2).children()
-            if (currentLength.html() == sliceNumber) {
+            var currentLength = jQuery(this).children('.title_hd').children().eq(2).children().attr('currentlength')
+            if (currentLength == sliceNumber) {
                 jQuery('.box-loading').show()
             }
             if (!imgdataObj[seriesId]) {
@@ -378,7 +378,7 @@ function filesDicom(SeriesSets, dicomViewer) {
                     console.log(res, seriesId)
                     imgdataObj[seriesId] = imgdataObj[seriesId]
                     imgdataObj[seriesId] = res[seriesId]
-                    currentLength.html(res[seriesId].length)
+                    // currentLength.html(res[seriesId].length)
                     dataDicomShow(dataDicom(res[seriesId][0].dataSet));
                     nodeFilter(seriesId,res[seriesId])
                     scrollNode('1', res[seriesId].length, dicomViewer)

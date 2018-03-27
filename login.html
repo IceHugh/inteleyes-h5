@@ -77,7 +77,7 @@
 </body>
 <script src="js/jquery-2.0.3.min.js" type="text/javascript"></script>
 <script src="js/myCookie.js"></script>
-<script src="js/md5.js" type="text/javascript"></script>
+<!-- <script src="js/md5.js" type="text/javascript"></script> -->
 <!-- <script src="js/CookieHelper.js" type="text/javascript"></script> -->
 <script type="text/javascript">
 
@@ -132,7 +132,9 @@
                         //   if(data.username=="zhujunming"|| data.password=="123456"){
                         //       debugger;
                         window.sessionStorage.setItem("username", txtName);
-                		setCookie('userMessage', userData,'7');
+                        setCookie('userMessage', userData,'7');
+                		setCookie('token', 'fdsfdsfjdsklafjdsklfjdskjfkldshfkjdshfjkdshkjlbfdslbvljdlsbvhjsbvhjldsbvjksdbjkvbdskv;anjklbjvkldsbvkldsbakl','7');
+                        
                         window.location.href = "index.html";//跳转到主页
                         // //  cookie存储
                         // if(CookieHelper.Get("username")&&CookieHelper.Get("password")){
