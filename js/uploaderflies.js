@@ -164,6 +164,7 @@ function NodeTest(seriesId) {
                     jQuery('#tbody' + queryNumber).html(nodeList(data.aiResults))
                     jQuery('#node' + queryNumber).html('<i style="font-size: 20px;font-style: normal;" title="' + data.aiResults.length + '个结节">' + data.aiResults.length + '</i>个结节')
                     nodeMessage[seriesId] = data.aiResults
+                    nodeFilter(seriesId,imgdataObj[seriesId])
                     // bindNodeList(seriesId, data.aiResults, dicomViewer)
                 }
             } else if (data.aiCode == '003006' || data.aiCode == '003005') {
