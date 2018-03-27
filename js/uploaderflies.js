@@ -292,7 +292,7 @@ function nodeList(pointsSet) {
     }
     pointsSet.forEach(function (o, index) {
         console.log(o);
-        dom += '<tr data-option="' + index + '"" class="point-row" data-imageNo="' + o.imageNo +'">'
+        dom += '<tr data-option="' + index + '"" class="point-row" data-imageNo="' + o.imagePosition +'">'
         dom += '<td style="position:relative"><i class="currentOption" style="display:none"></i>' + (index + 1) + '</td><td>' + Number(o.diameter).toFixed(1) + '</td><td>' + Number(o.imageNo).toFixed(1) + '</td><td>' + Number(o.probability).toFixed(1) + '</td><td>'
         dom += '</tr>'
     })
@@ -313,13 +313,13 @@ function bindNodeList(seriesId, pointsSet, dicomViewer) {
                 allOption.eq(o).css('display', 'none')
             }
             var el = e.currentTarget;
-            console.log(el.dataset);
+            //console.log(el.dataset);
             var currentOption = jQuery(el).children().eq(0).children().eq(0)
             currentOption.css('display', 'block')
-            console.log(pointsSet)
+            //console.log(pointsSet)
             var targetPoint = pointsSet[jQuery(el).attr('data-option')]
             pointRowMsg(seriesId, targetPoint, index, dicomViewer, pointsSet);
-            console.log(nodeFilter(imgdataObj[seriesId], el.dataset.imageno))
+            //console.log(nodeFilter(imgdataObj[seriesId], el.dataset.imageno))
             scrollNode(nodeFilter(imgdataObj[seriesId], el.dataset.imageno), dicomViewer.dcmSet.length, dicomViewer)
             if (dicomViewer.currentDcmInfo.imagePosition === Number(targetPoint.imageNo)) {
                 var drawCircle = {};
@@ -335,7 +335,7 @@ function bindNodeList(seriesId, pointsSet, dicomViewer) {
 }
 /*creat_group_list*/
 function filesDicom(SeriesSets, dicomViewer,imageLength) {
-    console.log(SeriesSets)
+    //console.log(SeriesSets)
     var seriesIDList = Object.keys(SeriesSets);
     var fileDicom = '';
     seriesIDList.forEach(function (seriesID, index) {
