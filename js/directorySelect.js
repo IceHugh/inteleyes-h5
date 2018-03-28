@@ -98,7 +98,7 @@ function showImages(dcmFiles) {
       seriesId = Object.keys(res)[0];
       NodeTest(seriesId)
       dataDicomShow(dataDicom(res[seriesId][0].dataSet));
-      filesDicom(res, dicomViewer)
+      filesDicom(res, dicomViewer,dcmFiles.length)
       bindEvent(dicomViewer, res[seriesId].length);
       dicomViewer.setDcmSeriesInfo(res[seriesId], pointsSet);
     })

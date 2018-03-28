@@ -164,7 +164,8 @@ function NodeTest(seriesId) {
                     jQuery('#tbody' + queryNumber).html(nodeList(data.aiResults))
                     jQuery('#node' + queryNumber).html('<i style="font-size: 20px;font-style: normal;" title="' + data.aiResults.length + '个结节">' + data.aiResults.length + '</i>个结节')
                     nodeMessage[seriesId] = data.aiResults
-                    //nodeFilter(seriesId,imgdataObj[seriesId])
+                    // nodeFilter(seriesId,imgdataObj[seriesId])
+                    // nodeFilter()
                     // bindNodeList(seriesId, data.aiResults, dicomViewer)
                 }
             } else if (data.aiCode == '003006' || data.aiCode == '003005') {
@@ -214,7 +215,9 @@ function bindEvent(dicomViewer, firstDcmNumber) {
         dicomViewer.clearDraw()
         dicomViewer.reset()
         currentPage--
-        jQuery('[type=range]').attr('value', currentPage)
+        jQuery('[type=range]').remove()
+        var dom = jQuery('<input type="range" min="1" max="'+ firstDcmNumber +'" step="1" value="'+ currentPage +'" >')
+        jQuery('.rang_width').before(dom)
         jQuery('.value').html(currentPage + '/' + firstDcmNumber)
         initRangeSlider(dicomViewer, firstDcmNumber)
         // jQuery('.rang_width').width((91.3 / firstDcmNumber * currentPage) + "%")
@@ -232,7 +235,10 @@ function bindEvent(dicomViewer, firstDcmNumber) {
         dicomViewer.down();
         dicomViewer.reset()
         currentPage++
-        jQuery('[type=range]').attr('value', currentPage)
+        jQuery('[type=range]').remove()
+        var dom = jQuery('<input type="range" min="1" max="'+ firstDcmNumber +'" step="1" value="'+ currentPage +'" >')
+        jQuery('.rang_width').before(dom)
+        // jQuery('[type=range]').attr('value', currentPage)
         jQuery('.value').html(currentPage + '/' + firstDcmNumber)
         initRangeSlider(dicomViewer, firstDcmNumber)
         // jQuery('.rang_width').width((91.3 / firstDcmNumber * currentPage) + "%")
@@ -255,6 +261,7 @@ function initRangeSlider(dicomViewer, dcmNumber) {
     var elem = document.querySelector('input[type="range"]');
     elem.setAttribute("max", dcmNumber);
     // elem.removeEventListener('input');
+    // if(jQuery('[type=range]').attr(oninput))
     jQuery('[type=range]').unbind('input propertychange').removeAttr('oninput').bind('input propertychange', function () {
         var newValue = Number(this.value)
         dicomViewer.forward(newValue)
@@ -313,7 +320,7 @@ function bindNodeList(seriesId, pointsSet, dicomViewer) {
                 allOption.eq(o).css('display', 'none')
             }
             var el = e.currentTarget;
-            //console.log(el.dataset);
+            console.log(el);
             var currentOption = jQuery(el).children().eq(0).children().eq(0)
             currentOption.css('display', 'block')
             //console.log(pointsSet)
@@ -505,8 +512,9 @@ function pointRowMsg(seriesId, obj, index, dicomViewer, pointsSet) {
             allOption.eq(o).css('display', 'none')
             allOption.eq(currentMessage).css('display', 'block')
         }
+        var currentImageno = jQuery('#tbody430109407146633213496148200410 tr').eq(currentMessage).attr('data-imageno')
         pointRowMsg(seriesId, pointsSet[currentMessage], currentMessage, dicomViewer, pointsSet)
-        scrollNode(nodeIndex[seriesId][currentMessage], dicomViewer.dcmSet.length, dicomViewer)
+        scrollNode(nodeFilter(imgdataObj[seriesId], currentImageno), dicomViewer.dcmSet.length, dicomViewer)
         var drawCircle = {};
         drawCircle.diameter = pointsSet[currentMessage].diameter;
         drawCircle.x = pointsSet[currentMessage].location.slice(0, pointsSet[currentMessage].location.indexOf(','))
@@ -523,8 +531,9 @@ function pointRowMsg(seriesId, obj, index, dicomViewer, pointsSet) {
             allOption.eq(o).css('display', 'none')
             allOption.eq(currentMessage).css('display', 'block')
         }
+        var currentImageno = jQuery('#tbody430109407146633213496148200410 tr').eq(currentMessage).attr('data-imageno')
         pointRowMsg(seriesId, pointsSet[currentMessage], currentMessage, dicomViewer, pointsSet)
-        scrollNode(nodeIndex[seriesId][currentMessage], dicomViewer.dcmSet.length, dicomViewer)
+        scrollNode(nodeFilter(imgdataObj[seriesId], currentImageno), dicomViewer.dcmSet.length, dicomViewer)
         var drawCircle = {};
         drawCircle.diameter = pointsSet[currentMessage].diameter;
         drawCircle.x = pointsSet[currentMessage].location.slice(0, pointsSet[currentMessage].location.indexOf(','))

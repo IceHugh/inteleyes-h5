@@ -224,7 +224,8 @@ class DICOMViewer {
     }
     drawSinglepoint({x,y,diameter}) {
         const {ctx,width,height,DcmWidth,DcmHeight} = this;
-        const radius = diameter/2;
+        const radius = (diameter/2)+5;
+        ctx.lineWidth = 3
         // ,w = 120,h = 40,
         // const px = a*(x + b),py = y - h/2;
         ctx.save();
