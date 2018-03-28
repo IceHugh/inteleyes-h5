@@ -182,7 +182,7 @@ function NodeTest(seriesId) {
             } else if (data.aiCode == '003006' || data.aiCode == '003005') {
                 console.log("请求AI分析结果-分析中")
                 jQuery('#tbody' + queryNumber).html(nodeList(data.aiResults))
-                jQuery('#node' + queryNumber).html('结点检测中...')
+                jQuery('#node' + queryNumber).html('结节检测中...')
                 jQuery('#node' + queryNumber).removeClass('greenGradient')
                 jQuery('#node' + queryNumber).removeClass('redGradient')
                 setTimeout(() => {
@@ -477,7 +477,9 @@ function filesDicom(SeriesSets, dicomViewer, imageLength) {
 function scrollNode(index, dcmNumber, dicomViewer) {
     dicomViewer.forward(Number(index))
     // console.log(dcmNumber)
-    jQuery('[type=range]').attr('value', index)
+    jQuery('[type=range]').remove()
+    var dom = jQuery('<input type="range" min="1" max="' + dcmNumber + '" step="1" value="' + index + '" >')
+    jQuery('.rang_width').before(dom)
     jQuery('.value').html(index + '/' + dcmNumber)
     // jQuery('.rang_width').width((91.3 / dcmNumber * index) + "%")
     initRangeSlider(dicomViewer, dcmNumber)
@@ -488,7 +490,7 @@ function pointRowMsg(seriesId, obj, index, dicomViewer, pointsSet) {
     _objLoction = _objLoction.replace(/(,)/, ' y:')
     var pointMsg = ' ';
     pointMsg += ' <div class="left_message_top" data-current="' + index + '">';
-    pointMsg += '        <span><img src="img/nodepoint.png" alt="" style="width:23px;position:relative;right:22px;"><em class="boldFont">' + pointsSet.length + '</em>个节点</span>';
+    pointMsg += '        <span><img src="img/nodepoint.png" alt="" style="width:23px;position:relative;right:27px;top:-2px;"><em class="boldFont">' + pointsSet.length + '</em>个节点</span>';
     pointMsg += '        <span class="nodepoint" id="pointImg"><img src="img/checkpointhide.png" alt="" style="width:30px;position:relative;top:-2px;" class="imgChange"></span>';
     pointMsg += '</div>';
     pointMsg += '<div class="nodelPointMessage">';
@@ -530,7 +532,7 @@ function pointRowMsg(seriesId, obj, index, dicomViewer, pointsSet) {
             allOption.eq(o).css('display', 'none')
             allOption.eq(currentMessage).css('display', 'block')
         }
-        var currentImageno = jQuery('#tbody430109407146633213496148200410 tr').eq(currentMessage).attr('data-imageno')
+        var currentImageno = jQuery('#tbody'+ seriesId.slice(34) +' tr').eq(currentMessage).attr('data-imageno')
         pointRowMsg(seriesId, pointsSet[currentMessage], currentMessage, dicomViewer, pointsSet)
         scrollNode(nodeFilter(imgdataObj[seriesId], currentImageno), dicomViewer.dcmSet.length, dicomViewer)
         var drawCircle = {};
@@ -549,7 +551,7 @@ function pointRowMsg(seriesId, obj, index, dicomViewer, pointsSet) {
             allOption.eq(o).css('display', 'none')
             allOption.eq(currentMessage).css('display', 'block')
         }
-        var currentImageno = jQuery('#tbody430109407146633213496148200410 tr').eq(currentMessage).attr('data-imageno')
+        var currentImageno = jQuery('#tbody'+ seriesId.slice(34) +' tr').eq(currentMessage).attr('data-imageno')
         pointRowMsg(seriesId, pointsSet[currentMessage], currentMessage, dicomViewer, pointsSet)
         scrollNode(nodeFilter(imgdataObj[seriesId], currentImageno), dicomViewer.dcmSet.length, dicomViewer)
         var drawCircle = {};
