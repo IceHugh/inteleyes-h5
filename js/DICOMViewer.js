@@ -191,9 +191,7 @@ class DICOMViewer {
     drawPoint(point) {
         const {ctx,width,height,states,DcmWidth,DcmHeight} = this;
         const {loopNumber,currentPointLocationID} = states;
-        console.log(states)
         const { diameter,x,y,location:locationID } = point;
-        console.log(point)
         const highLight = currentPointLocationID === locationID;
         const radius = diameter/2;
         const a = (x - DcmWidth/2) > 0 ? 1 : -1;
@@ -223,8 +221,9 @@ class DICOMViewer {
         ctx.restore();
     }
     drawSinglepoint({x,y,diameter}) {
-        x = Number(x) + 344
-        y = Number(y) + 144
+        x = Number(x) + 200
+        y = Number(y)
+        console.log(x,y)
         const {ctx,width,height,DcmWidth,DcmHeight} = this;
         const radius = (diameter/2)+5;
         ctx.lineWidth = 3

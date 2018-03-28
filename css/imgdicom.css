@@ -171,10 +171,11 @@
 	}
 	.boldFont{
 		font-size: 22px;
-    	position: relative;
-    	left: 41px;
-    	top: -2px;
-    	float: left;
+		position: relative;
+		left: 31px;
+		top: -2px;
+		float: left;
+		width: 40px;
 	}
 	.left_message .left_message_top span:nth-child(1){width:110px;}
 	.left_message .left_message_top span:nth-child(2){width:40px; margin-left: 15px;cursor: pointer;}
