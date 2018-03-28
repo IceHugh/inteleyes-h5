@@ -144,7 +144,18 @@ function fileSelected(e) {
     }
 }
 
-
+function againNodeTest(seriesId) {
+    jQuery.ajax({
+        url: 'http://127.0.0.1:10219/api/ai/request',
+        data: {
+            serialUID: seriesId,
+            type: 0
+        },
+        success: function (data) {
+            console.log(data)
+        }
+    })
+}
 
 
 function NodeTest(seriesId) {
@@ -177,13 +188,20 @@ function NodeTest(seriesId) {
                 setTimeout(() => {
                     NodeTest(seriesId)
                 }, 5000)
+            } else if (data.aiCode == '003103') {
+                jQuery('#tbody' + queryNumber).html(nodeList(data.aiResults))
+                jQuery('#node' + queryNumber).html('<i style="font-size: 20px;font-style: normal;" title="0个结节">0</i>个结节')
+                jQuery('#node' + queryNumber).removeClass('greenGradient')
             } else {
                 console.log("请求AI分析结果-出现错误");
                 jQuery('#tbody' + queryNumber).html(nodeList(data.aiResults))
                 jQuery('#node' + queryNumber).removeClass('greenGradient')
                 jQuery('#node' + queryNumber).addClass('redGradient')
                 jQuery('#node' + queryNumber).html('重新检测')
-                
+                jQuery('#node' + queryNumber).click(function (e) {
+                    e.stopPropagation();
+                    againNodeTest(seriesId)
+                })
             }
         },
         error: function () {
@@ -216,7 +234,7 @@ function bindEvent(dicomViewer, firstDcmNumber) {
         dicomViewer.reset()
         currentPage--
         jQuery('[type=range]').remove()
-        var dom = jQuery('<input type="range" min="1" max="'+ firstDcmNumber +'" step="1" value="'+ currentPage +'" >')
+        var dom = jQuery('<input type="range" min="1" max="' + firstDcmNumber + '" step="1" value="' + currentPage + '" >')
         jQuery('.rang_width').before(dom)
         jQuery('.value').html(currentPage + '/' + firstDcmNumber)
         initRangeSlider(dicomViewer, firstDcmNumber)
@@ -236,7 +254,7 @@ function bindEvent(dicomViewer, firstDcmNumber) {
         dicomViewer.reset()
         currentPage++
         jQuery('[type=range]').remove()
-        var dom = jQuery('<input type="range" min="1" max="'+ firstDcmNumber +'" step="1" value="'+ currentPage +'" >')
+        var dom = jQuery('<input type="range" min="1" max="' + firstDcmNumber + '" step="1" value="' + currentPage + '" >')
         jQuery('.rang_width').before(dom)
         // jQuery('[type=range]').attr('value', currentPage)
         jQuery('.value').html(currentPage + '/' + firstDcmNumber)
@@ -299,7 +317,7 @@ function nodeList(pointsSet) {
     }
     pointsSet.forEach(function (o, index) {
         console.log(o);
-        dom += '<tr data-option="' + index + '"" class="point-row" data-imageNo="' + o.imageNo +'">'
+        dom += '<tr data-option="' + index + '"" class="point-row" data-imageNo="' + o.imageNo + '">'
         dom += '<td style="position:relative"><i class="currentOption" style="display:none"></i>' + (index + 1) + '</td><td>' + Number(o.diameter).toFixed(1) + '</td><td>' + Number(o.imageNo).toFixed(1) + '</td><td>' + Number(o.probability).toFixed(1) + '</td><td>'
         dom += '</tr>'
     })
@@ -341,7 +359,7 @@ function bindNodeList(seriesId, pointsSet, dicomViewer) {
     });
 }
 /*creat_group_list*/
-function filesDicom(SeriesSets, dicomViewer,imageLength) {
+function filesDicom(SeriesSets, dicomViewer, imageLength) {
     //console.log(SeriesSets)
     var seriesIDList = Object.keys(SeriesSets);
     var fileDicom = '';
@@ -352,10 +370,10 @@ function filesDicom(SeriesSets, dicomViewer,imageLength) {
         fileDicom += '<div class="title_hd">';
         fileDicom += '<div style="width:68px;height:68px;background:rgba(12,173,141,0.4);position:absolute;"></div>'
         fileDicom += '     <img src="' + group[0].imageData + '" alt="" style="width:68px;margin-right:5px;display:block">';
-        fileDicom += '               <span><em currentLength="'+ group.length +'">' + imageLength + '</em>张</span>';
+        fileDicom += '               <span><em currentLength="' + group.length + '">' + imageLength + '</em>张</span>';
         fileDicom += '  </div>';
         fileDicom += ' <ul class="titleMessage">';
-        fileDicom += '    <li title="'+ group[0].dataSet.string('x00100020') +'"><span>'+ group[0].dataSet.string('x00100020') +'</span></li>';
+        fileDicom += '    <li title="' + group[0].dataSet.string('x00100020') + '"><span>' + group[0].dataSet.string('x00100020') + '</span></li>';
         fileDicom += '    <li title="胸部CT ' + group[0].SeriesDate + '"><span>胸透CT</span><span class="leftSpacing">' + group[0].SeriesDate + '</span></li>';
         fileDicom += '    <li title="' + group[0].PersonName + ' ' + group[0].PatientSex + ' ' + group[0].PatientAge + '"><span>' + group[0].PersonName + '</span><span class="leftSpacing">' + group[0].PatientSex + '</span><span class="leftSpacing">' + group[0].PatientAge + '</span></li>';
         fileDicom += '  </ul>';
