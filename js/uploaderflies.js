@@ -145,6 +145,7 @@ function fileSelected(e) {
 }
 
 function againNodeTest(seriesId) {
+    var queryNumber = seriesId.slice(34)
     jQuery.ajax({
         url: 'http://127.0.0.1:10219/api/ai/request',
         data: {
@@ -152,7 +153,12 @@ function againNodeTest(seriesId) {
             type: 0
         },
         success: function (data) {
-            console.log(data)
+            if (data.code === '000000') {
+                jQuery('#tbody' + queryNumber).html(nodeList(seriesId,data.aiResults))
+                jQuery('#node' + queryNumber).html('结节检测中...')
+                jQuery('#node' + queryNumber).removeClass('greenGradient')
+                jQuery('#node' + queryNumber).removeClass('redGradient')
+            }
         }
     })
 }
@@ -164,24 +170,26 @@ function NodeTest(seriesId) {
         url: 'http://127.0.0.1:10219/api/ai/requestAIResult',
         data: { seriesInstanceUid: seriesId },
         success: function (data) {
+            data = "{\"code\":\"000000\",\"msg\":\"成功\",\"data\":{\"serialUID\":\"1.3.6.1.4.1.14519.5.2.1.6279.6001.179049373636438705059720603192\",\"aiCode\":\"000000\",\"aiMsg\":\"成功\",\"aiResults\":[{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-127.500000\",\"diameter\":\"4.20763\",\"location\":\"373,212\",\"probability\":\"0.730356783993\",\"density\":\"-718\"},{\"imageNo\":\"-45.000000\",\"diameter\":\"4.13958\",\"location\":\"136,212\",\"probability\":\"0.487765877366\",\"density\":\"-819\"},{\"imageNo\":\"-100.000000\",\"diameter\":\"4.24603\",\"location\":\"145,298\",\"probability\":\"0.344431780266\",\"density\":\"221\"},{\"imageNo\":\"-132.500000\",\"diameter\":\"4.22337\",\"location\":\"148,193\",\"probability\":\"0.239516510613\",\"density\":\"-702\"},{\"imageNo\":\"-45.000000\",\"diameter\":\"4.0882\",\"location\":\"141,212\",\"probability\":\"0.182245305557\",\"density\":\"3071\"},{\"imageNo\":\"-220.000000\",\"diameter\":\"5.7459\",\"location\":\"136,312\",\"probability\":\"0.162664960509\",\"density\":\"-32\"},{\"imageNo\":\"-125.000000\",\"diameter\":\"4.25833\",\"location\":\"370,215\",\"probability\":\"0.157850331847\",\"density\":\"-893\"},{\"imageNo\":\"-47.500000\",\"diameter\":\"4.17644\",\"location\":\"136,215\",\"probability\":\"0.153738911235\",\"density\":\"611\"},{\"imageNo\":\"-180.000000\",\"diameter\":\"5.7545\",\"location\":\"180,216\",\"probability\":\"0.13318653528\",\"density\":\"59\"}]}}"
             data = JSON.parse(data)
             data = data.data
             if (data.aiCode == "000000") {
                 if (data.aiResults.length == '0') {
-                    jQuery('#tbody' + queryNumber).html(nodeList(data.aiResults))
+                    jQuery('#tbody' + queryNumber).html(nodeList(seriesId,data.aiResults))
                     jQuery('#node' + queryNumber).html('<i style="font-size: 20px;font-style: normal;" title="' + data.aiResults.length + '个结节">' + data.aiResults.length + '</i>个结节')
                     jQuery('#node' + queryNumber).removeClass('greenGradient')
                 } else {
-                    jQuery('#tbody' + queryNumber).html(nodeList(data.aiResults))
+                    jQuery('#tbody' + queryNumber).html(nodeList(seriesId,data.aiResults))
                     jQuery('#node' + queryNumber).html('<i style="font-size: 20px;font-style: normal;" title="' + data.aiResults.length + '个结节">' + data.aiResults.length + '</i>个结节')
                     nodeMessage[seriesId] = data.aiResults
+                    jQuery('#node' + queryNumber).addClass('greenGradient')
                     // nodeFilter(seriesId,imgdataObj[seriesId])
                     // nodeFilter()
                     // bindNodeList(seriesId, data.aiResults, dicomViewer)
                 }
             } else if (data.aiCode == '003006' || data.aiCode == '003005') {
                 console.log("请求AI分析结果-分析中")
-                jQuery('#tbody' + queryNumber).html(nodeList(data.aiResults))
+                // jQuery('#tbody' + queryNumber).html(nodeList(seriesId,data.aiResults))
                 jQuery('#node' + queryNumber).html('结节检测中...')
                 jQuery('#node' + queryNumber).removeClass('greenGradient')
                 jQuery('#node' + queryNumber).removeClass('redGradient')
@@ -189,12 +197,12 @@ function NodeTest(seriesId) {
                     NodeTest(seriesId)
                 }, 5000)
             } else if (data.aiCode == '003103') {
-                jQuery('#tbody' + queryNumber).html(nodeList(data.aiResults))
+                // jQuery('#tbody' + queryNumber).html(nodeList(seriesId,data.aiResults))
                 jQuery('#node' + queryNumber).html('<i style="font-size: 20px;font-style: normal;" title="0个结节">0</i>个结节')
                 jQuery('#node' + queryNumber).removeClass('greenGradient')
             } else {
                 console.log("请求AI分析结果-出现错误");
-                jQuery('#tbody' + queryNumber).html(nodeList(data.aiResults))
+                // jQuery('#tbody' + queryNumber).html(nodeList(seriesId,data.aiResults))
                 jQuery('#node' + queryNumber).removeClass('greenGradient')
                 jQuery('#node' + queryNumber).addClass('redGradient')
                 jQuery('#node' + queryNumber).html('重新检测')
@@ -310,22 +318,21 @@ function initRangeSlider(dicomViewer, dcmNumber) {
 //     document.querySelector('input[type="range"]').oninput = rangeValue;
 // }
 
-function nodeList(pointsSet) {
+function nodeList(seriesId,pointsSet) {
     var dom = ''
     if (!pointsSet) {
         return
     }
     pointsSet.forEach(function (o, index) {
-        console.log(o,index);
-        dom += '<tr data-option="' + index + '"" class="point-row" data-imageNo="' + o.imageNo + '">'
-        dom += '<td style="position:relative"><i class="currentOption" style="display:none"></i>' + (index + 1) + '</td><td>' + Number(o.diameter).toFixed(1) + '</td><td>' + Number(o.imageNo).toFixed(1) + '</td><td>' + Number(o.probability).toFixed(1) + '</td><td>'
+        dom += '<tr data-option="' + index + '"" class="point-row" node-point="point'+ seriesId.slice(34) +'" data-imageNo="' + o.imageNo + '">'
+        dom += '<td style="position:relative"><i class="currentOption" current-point="point'+ seriesId.slice(34) +'" style="display:none"></i>' + (index + 1) + '</td><td>' + Number(o.diameter).toFixed(1) + '</td><td>' + Number(o.imageNo).toFixed(1) + '</td><td>' + Number(o.probability).toFixed(1) + '</td><td>'
         dom += '</tr>'
     })
     return dom
 }
 
 function bindNodeList(seriesId, pointsSet, dicomViewer) {
-    document.querySelectorAll('.point-row').forEach(function (tr, index) {
+    document.querySelectorAll('[node-point=point'+ seriesId.slice(34) +']').forEach(function (tr, index) {
         jQuery(tr).unbind('click').removeAttr('onclick').click(function (e) {
             // tr.addEventListener('click', function (e) {
             // debugger
@@ -338,7 +345,6 @@ function bindNodeList(seriesId, pointsSet, dicomViewer) {
                 allOption.eq(o).css('display', 'none')
             }
             var el = e.currentTarget;
-            console.log(el);
             var currentOption = jQuery(el).children().eq(0).children().eq(0)
             currentOption.css('display', 'block')
             //console.log(pointsSet)
@@ -372,12 +378,12 @@ function filesDicom(SeriesSets, dicomViewer, imageLength, pathName) {
         fileDicom += '     <img src="' + group[0].imageData + '" alt="" style="width:68px;margin-right:5px;display:block">';
         fileDicom += '               <span><em currentLength="' + group.length + '">' + imageLength + '</em>张</span>';
         fileDicom += '  </div>';
-        fileDicom += ' <ul class="titleMessage">';
+        fileDicom += ' <ul class="titleMessage" style="width:142px">';
         fileDicom += '    <li title="' + group[0].dataSet.string('x00100020') + '"><span>' + group[0].dataSet.string('x00100020') + '</span></li>';
         fileDicom += '    <li title="胸部CT ' + group[0].SeriesDate + '"><span>胸透CT</span><span class="leftSpacing">' + group[0].SeriesDate + '</span></li>';
         fileDicom += '    <li title="' + group[0].PersonName + ' ' + group[0].PatientSex + ' ' + group[0].PatientAge + '"><span>' + group[0].PersonName + '</span><span class="leftSpacing">' + group[0].PatientSex + '</span><span class="leftSpacing">' + group[0].PatientAge + '</span></li>';
         fileDicom += '  </ul>';
-        fileDicom += '  <div class="title_right dicomcheckResult"><span id="node' + seriesID.slice(34) + '" series="' + seriesID + '" class="pingAnBtn greenGradient nodeNumber"><i style="font-size: 20px;font-style: normal;" title=0个结节">0</i>个结节</span></div>';
+        fileDicom += '  <div class="title_right dicomcheckResult"><span id="node' + seriesID.slice(34) + '" series="' + seriesID + '" class="pingAnBtn nodeNumber"><i style="font-size: 20px;font-style: normal;" title=0个结节">0</i>个结节</span></div>';
         fileDicom += ' </li>';
         fileDicom += ' <li class="checkProgress" ><div class="checkProgressBar" style="width:0%;"></div></li>';
         fileDicom += ' <li class="boxes estRows">';
@@ -406,7 +412,6 @@ function filesDicom(SeriesSets, dicomViewer, imageLength, pathName) {
             }
             if (!imgdataObj[seriesId]) {
                 dicomImage.loadDicomFiles(fileObj[pathName]).then(function (res) {
-                    console.log(res, seriesId)
                     imgdataObj[seriesId] = imgdataObj[seriesId]
                     imgdataObj[seriesId] = res[seriesId]
                     // currentLength.html(res[seriesId].length)
@@ -419,7 +424,6 @@ function filesDicom(SeriesSets, dicomViewer, imageLength, pathName) {
                     if (jQuery('.box-loading').css('display') !== "none") {
                         jQuery('.box-loading').hide()
                     }
-                    console.log(fileObj[pathName])
                 })
             } else {
                 dataDicomShow(dataDicom(imgdataObj[seriesId][0].dataSet));
@@ -487,12 +491,11 @@ function scrollNode(index, dcmNumber, dicomViewer) {
 }
 
 function pointRowMsg(seriesId, obj, index, dicomViewer, pointsSet) {
-    console.log(obj)
     _objLoction = 'x:' + obj.location
     _objLoction = _objLoction.replace(/(,)/, ' y:')
     var pointMsg = ' ';
     pointMsg += ' <div class="left_message_top" data-current="' + index + '">';
-    pointMsg += '        <span><img src="img/nodepoint.png" alt="" style="width:23px;position:relative;right:27px;top:-2px;"><em class="boldFont">' + pointsSet.length + '</em>个节点</span>';
+    pointMsg += '        <span><img src="img/nodepoint.png" alt="" style="width:23px;position:relative;right:34px;top:-2px;"><em class="boldFont">' + pointsSet.length + '</em>个节点</span>';
     pointMsg += '        <span class="nodepoint" id="pointImg"><img src="img/checkpointhide.png" alt="" style="width:30px;position:relative;top:-2px;" class="imgChange"></span>';
     pointMsg += '</div>';
     pointMsg += '<div class="nodelPointMessage">';
@@ -524,7 +527,8 @@ function pointRowMsg(seriesId, obj, index, dicomViewer, pointsSet) {
     })
     var currentMessage = jQuery('.left_message_top').attr('data-current')
     var currentIndex = currentMessage
-    var allOption = jQuery('.currentOption')
+    console.log(currentIndex)
+    var allOption = jQuery('[current-point=point'+ seriesId.slice(34) +']')
     jQuery('#upNode').click(function () {
         if (currentMessage <= 0) {
             return
@@ -535,7 +539,6 @@ function pointRowMsg(seriesId, obj, index, dicomViewer, pointsSet) {
             allOption.eq(currentMessage).css('display', 'block')
         }
         var currentImageno = jQuery('#tbody'+ seriesId.slice(34) +' tr').eq(currentMessage).attr('data-imageno')
-        console.log(pointsSet[currentMessage],pointsSet)
         pointRowMsg(seriesId, pointsSet[currentMessage], currentMessage, dicomViewer, pointsSet)
         scrollNode(nodeFilter(imgdataObj[seriesId], currentImageno), dicomViewer.dcmSet.length, dicomViewer)
         var drawCircle = {};
@@ -694,7 +697,6 @@ function preProcess(uri_path, data, isNeedEncode) {
 
 
 function dataDicomShow(data) {
-    console.log(data.patientId)
     var direction = parseImageOrientation(data.imageOrientation)
     for (o in data) {
         if (data[o] === undefined) {

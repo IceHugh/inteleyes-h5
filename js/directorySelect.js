@@ -39,7 +39,6 @@ function directorySelect(e) {
       }
     }
   }
-  console.log(pathList)
   //showDir(pathList);
   for (var item in fileObj) {
     showImages(fileObj[item], item)
@@ -62,7 +61,6 @@ function directorySelect(e) {
 
 
 function showImages(dcmFiles, pathName) {
-  console.log(dcmFiles)
   var _dcmFiles = dcmFiles.slice(0)
   page1.style.display = 'none';
   page2.style.display = 'block';

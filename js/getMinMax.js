@@ -18,7 +18,7 @@ function getMinMax(storedPixelData) {
 
 function generateLinearVOILUT(windowWidth, windowCenter) {
     return function (modalityLutValue) {
-        const val = parseInt(((modalityLutValue - (windowCenter - 0)) / (windowWidth - 0) + .5) * 255.0)
+        const val = parseInt(((modalityLutValue - (windowCenter - 0)) / (windowWidth - 0 + 4) + .5) * 255.0)
         return val;
         // console.log()
     }
@@ -60,9 +60,10 @@ function parseCanvas(dataSet, pixelData,canvasImageDataData) {
     // console.log(pixelData)
     while (storedPixelIndex < numPixels) {
         pixelValue = lut[pixelData[storedPixelIndex++]];
-        // canvasImageData[canvasImageDataIndex++] = pixelValue;
-        // canvasImageData[canvasImageDataIndex++] = pixelValue;
-        // canvasImageData[canvasImageDataIndex++] = pixelValue;
+        // canvasImageDataData.data[canvasImageDataIndex - 3] = pixelValue;
+        // canvasImageDataData.data[canvasImageDataIndex - 2] = pixelValue;
+        // canvasImageDataData.data[canvasImageDataIndex - 1] = pixelValue;
+        // canvasImageDataData.data[canvasImageDataIndex] = 255 - pixelValue;
         canvasImageDataData.data[canvasImageDataIndex] = pixelValue
         canvasImageDataIndex += 4
         // canvasImageData[canvasImageDataIndex++] = 255;
