@@ -171,6 +171,7 @@
 <script type="text/javascript" src="js/prng4.js" charset="utf-8"></script>
 <script type="text/javascript" src="js/rng.js" charset="utf-8"></script>
 <script type="text/javascript" src="js/rsa.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/getMinMax.js" charset="utf-8"></script>
 <script type="text/javascript" src="js/dataDicom.js" charset='utf-8'></script>
 <script src="js/imageOrientationParse.js"></script>
 <script type="text/javascript" src="js/myCookie.js" charset="utf-8"></script>
@@ -189,10 +190,10 @@
 		if (event.keyCode == "13") {//keyCode=13是回车键
 			e.stopPropagation()
 			jQuery('#file01').click();
-			jQuery('#file01').attr("disabled","disabled")
-			setTimeout(function(){
-				jQuery('#file01').attr("disabled","true")
-			},3000)
+			// jQuery('#file01').attr("disabled","disabled")
+			// setTimeout(function(){
+			// 	jQuery('#file01').attr("disabled","true")
+			// },3000)
 		}
 	});
 	(function () {

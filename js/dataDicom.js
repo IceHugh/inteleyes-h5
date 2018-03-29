@@ -36,11 +36,14 @@ function dataDicom(byteArray) {
     const tubeCurrent = dataSet.string('x00181151');
     // 射线管的电流 单位ma
 
-    const ww = dataSet.string('x00281051');
+    const ww = dataSet.string('x00281051').split('\\')[0];
     // 窗宽
 
-    const wc = dataSet.string('x00281050');
+    const wc = dataSet.string('x00281050').split('\\')[0];
     // 窗位
+    const slope = dataSet.string('x00281053');
+
+    const intercept = dataSet.string('x00281052')
 
     const seriesNumber = dataSet.string('x00200011');
     // 序列号
@@ -93,7 +96,11 @@ function dataDicom(byteArray) {
 
         seriesTime,
 
-        imageOrientation
+        imageOrientation,
+
+        slope,
+
+        intercept
 
     }
 

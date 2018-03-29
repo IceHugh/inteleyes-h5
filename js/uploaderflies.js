@@ -316,7 +316,7 @@ function nodeList(pointsSet) {
         return
     }
     pointsSet.forEach(function (o, index) {
-        console.log(o);
+        console.log(o,index);
         dom += '<tr data-option="' + index + '"" class="point-row" data-imageNo="' + o.imageNo + '">'
         dom += '<td style="position:relative"><i class="currentOption" style="display:none"></i>' + (index + 1) + '</td><td>' + Number(o.diameter).toFixed(1) + '</td><td>' + Number(o.imageNo).toFixed(1) + '</td><td>' + Number(o.probability).toFixed(1) + '</td><td>'
         dom += '</tr>'

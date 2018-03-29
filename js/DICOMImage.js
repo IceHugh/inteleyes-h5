@@ -4,25 +4,32 @@ class DICOMImage {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
     }
-    processImage(pixelData, rows, columns) {
+    processImage(pixelData, rows, columns, dataSet) {
         // console.log(pixelData)
         const canvas = document.createElement('canvas');
         canvas.width = rows;
         canvas.height = columns;
         const ctx = canvas.getContext('2d');
-        const canvasImageData = ctx.createImageData(rows, columns);
+        // const canvasImageData = ctx.createImageData(rows, columns);
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, 0, rows, columns);
+        let canvasImageData = ctx.getImageData(0, 0, rows, columns);
         const numPixels = pixelData.length;
+        console.log(canvasImageData)
+        var parseCanvasimageData = parseCanvas(dataSet,pixelData,canvasImageData)
+        
         // console.log(canvasImageData.data.length,numPixels);
-        for (let i = 0; i < numPixels; i++) {
-            let rgb = Math.ceil(pixelData[i] / 4096 * 255);
-            canvasImageData.data[4 * i] = rgb;
-            canvasImageData.data[4 * i + 1] = rgb;
-            canvasImageData.data[4 * i + 2] = rgb;
-            canvasImageData.data[4 * i + 3] = 255;
-        }
-        this.lightImage(canvasImageData, 60);
+        // for (let i = 0; i < numPixels; i++) {
+        //     let rgb = pixelData[i]
+        //     canvasImageData.data[4 * i] = rgb;
+        //     canvasImageData.data[4 * i + 1] = rgb;
+        //     canvasImageData.data[4 * i + 2] = rgb;
+        //     canvasImageData.data[4 * i + 3] = 255;
+        // }
+        console.log(parseCanvasimageData)
+        // this.lightImage(canvasImageData, 75);
         this.contrastImage(canvasImageData, 180);
-        ctx.putImageData(canvasImageData, 0, 0);
+        ctx.putImageData(parseCanvasimageData, 0, 0);
         const imageData = canvas.toDataURL("image/png");
         return imageData;
     }
@@ -37,14 +44,14 @@ class DICOMImage {
     }
     contrastImage(imageData, contrast) {
 
-        var data = imageData.data;
-        var factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
+        // var data = imageData.data;
+        // var factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
 
-        for (let i = 0; i < data.length; i += 4) {
-            data[i] = factor * (data[i] - 128) + 128;
-            data[i + 1] = factor * (data[i + 1] - 128) + 128;
-            data[i + 2] = factor * (data[i + 2] - 128) + 128;
-        }
+        // for (let i = 0; i < data.length; i += 4) {
+        //     data[i] = factor * (data[i] - 128) + 128;
+        //     data[i + 1] = factor * (data[i + 1] - 128) + 128;
+        //     data[i + 2] = factor * (data[i + 2] - 128) + 128;
+        // }
         return imageData;
     }
     getDcmDetail(arrayBuffer) {
@@ -77,6 +84,7 @@ class DICOMImage {
             }
             // create a typed array on the pixel data (this example assumes 16 bit unsigned data)
             var imageData = new Uint16Array(dataSet.byteArray.buffer, pixelDataElement.dataOffset);
+            // console.log(canvasimageData)
             return {
                 imageData,
                 imagePosition,
@@ -113,7 +121,7 @@ class DICOMImage {
                     columns,
                     dataSet
                 } = dcmDetail;
-                dcmDetail.imageData = this.processImage(imageData, rows, columns);
+                dcmDetail.imageData = this.processImage(imageData, rows, columns, dataSet);
                 dcmDetail.arrayBuffer = arrayBuffer;
                 resolve(dcmDetail);
             }
