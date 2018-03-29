@@ -221,9 +221,8 @@ class DICOMViewer {
         ctx.restore();
     }
     drawSinglepoint({x,y,diameter}) {
-        x = Number(x) + 200
-        y = Number(y)
-        console.log(x,y)
+        x = Number(x)*1.5625 + 200
+        y = Number(y)*1.5625
         const {ctx,width,height,DcmWidth,DcmHeight} = this;
         const radius = (diameter/2)+5;
         ctx.lineWidth = 3

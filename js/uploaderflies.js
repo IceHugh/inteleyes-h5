@@ -486,6 +486,7 @@ function scrollNode(index, dcmNumber, dicomViewer) {
 }
 
 function pointRowMsg(seriesId, obj, index, dicomViewer, pointsSet) {
+    console.log(obj)
     _objLoction = 'x:' + obj.location
     _objLoction = _objLoction.replace(/(,)/, ' y:')
     var pointMsg = ' ';
@@ -533,6 +534,7 @@ function pointRowMsg(seriesId, obj, index, dicomViewer, pointsSet) {
             allOption.eq(currentMessage).css('display', 'block')
         }
         var currentImageno = jQuery('#tbody'+ seriesId.slice(34) +' tr').eq(currentMessage).attr('data-imageno')
+        console.log(pointsSet[currentMessage],pointsSet)
         pointRowMsg(seriesId, pointsSet[currentMessage], currentMessage, dicomViewer, pointsSet)
         scrollNode(nodeFilter(imgdataObj[seriesId], currentImageno), dicomViewer.dcmSet.length, dicomViewer)
         var drawCircle = {};

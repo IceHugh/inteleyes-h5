@@ -115,7 +115,6 @@ class DICOMImage {
                 } = dcmDetail;
                 dcmDetail.imageData = this.processImage(imageData, rows, columns);
                 dcmDetail.arrayBuffer = arrayBuffer;
-                // console.log(dcmDetail)
                 resolve(dcmDetail);
             }
             reader.readAsArrayBuffer(DicomFile);
@@ -124,6 +123,7 @@ class DICOMImage {
     }
     async loadDicomFiles(DicomFileList, ctx, width, height) {
         let datasets = {};
+        // console.log(DicomFileList)
         for (let file of DicomFileList) {
             if (file.size == 0) {
                 continue
