@@ -55,9 +55,9 @@ function parseCanvas(dataSet, pixelData,canvasImageDataData) {
     let canvasImageDataIndex = 3;
     let pixelValue;
     let lut = generateCanvasData(dataSet, pixelData)
-    console.log(lut)
+    // console.log(lut)
     // return pixelData
-    console.log(pixelData)
+    // console.log(pixelData)
     while (storedPixelIndex < numPixels) {
         pixelValue = lut[pixelData[storedPixelIndex++]];
         // canvasImageData[canvasImageDataIndex++] = pixelValue;

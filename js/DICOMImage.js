@@ -15,7 +15,7 @@ class DICOMImage {
         ctx.fillRect(0, 0, rows, columns);
         let canvasImageData = ctx.getImageData(0, 0, rows, columns);
         const numPixels = pixelData.length;
-        console.log(canvasImageData)
+        // console.log(canvasImageData)
         var parseCanvasimageData = parseCanvas(dataSet,pixelData,canvasImageData)
         
         // console.log(canvasImageData.data.length,numPixels);
@@ -26,7 +26,7 @@ class DICOMImage {
         //     canvasImageData.data[4 * i + 2] = rgb;
         //     canvasImageData.data[4 * i + 3] = 255;
         // }
-        console.log(parseCanvasimageData)
+        // console.log(parseCanvasimageData)
         // this.lightImage(canvasImageData, 75);
         this.contrastImage(canvasImageData, 180);
         ctx.putImageData(parseCanvasimageData, 0, 0);

@@ -359,14 +359,14 @@ function bindNodeList(seriesId, pointsSet, dicomViewer) {
     });
 }
 /*creat_group_list*/
-function filesDicom(SeriesSets, dicomViewer, imageLength) {
+function filesDicom(SeriesSets, dicomViewer, imageLength, pathName) {
     //console.log(SeriesSets)
     var seriesIDList = Object.keys(SeriesSets);
     var fileDicom = '';
     seriesIDList.forEach(function (seriesID, index) {
         var group = SeriesSets[seriesID];
         fileDicom += '<ul class="nav nav-list accordion-group">';
-        fileDicom += '<li class="nav-header nav-header-content" series="' + seriesID + '" title="' + seriesID.slice(34) + '">';
+        fileDicom += '<li class="nav-header nav-header-content" pathName="' +pathName+ '" series="' + seriesID + '" title="' + seriesID.slice(34) + '">';
         fileDicom += '<div class="title_hd">';
         fileDicom += '<div style="width:68px;height:68px;background:rgba(12,173,141,0.4);position:absolute;"></div>'
         fileDicom += '     <img src="' + group[0].imageData + '" alt="" style="width:68px;margin-right:5px;display:block">';
@@ -399,12 +399,13 @@ function filesDicom(SeriesSets, dicomViewer, imageLength) {
             clickSeries = jQuery(this).attr('title')
             document.querySelector('.left_message').style.display = "none";
             var seriesId = jQuery(this).attr('series')
+            var pathName = jQuery(this).attr('pathName')
             var currentLength = jQuery(this).children('.title_hd').children().eq(2).children().attr('currentlength')
             if (currentLength == sliceNumber) {
                 jQuery('.box-loading').show()
             }
             if (!imgdataObj[seriesId]) {
-                dicomImage.loadDicomFiles(fileObj[seriesId]).then(function (res) {
+                dicomImage.loadDicomFiles(fileObj[pathName]).then(function (res) {
                     console.log(res, seriesId)
                     imgdataObj[seriesId] = imgdataObj[seriesId]
                     imgdataObj[seriesId] = res[seriesId]
@@ -418,7 +419,7 @@ function filesDicom(SeriesSets, dicomViewer, imageLength) {
                     if (jQuery('.box-loading').css('display') !== "none") {
                         jQuery('.box-loading').hide()
                     }
-                    console.log(fileObj[seriesId])
+                    console.log(fileObj[pathName])
                 })
             } else {
                 dataDicomShow(dataDicom(imgdataObj[seriesId][0].dataSet));

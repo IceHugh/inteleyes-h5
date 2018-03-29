@@ -39,10 +39,10 @@ function directorySelect(e) {
       }
     }
   }
-  // console.log(fileList)
+  console.log(pathList)
   //showDir(pathList);
   for (var item in fileObj) {
-    showImages(fileObj[item])
+    showImages(fileObj[item], item)
   }
 }
 
@@ -61,7 +61,8 @@ function directorySelect(e) {
 
 
 
-function showImages(dcmFiles) {
+function showImages(dcmFiles, pathName) {
+  console.log(dcmFiles)
   var _dcmFiles = dcmFiles.slice(0)
   page1.style.display = 'none';
   page2.style.display = 'block';
@@ -74,7 +75,7 @@ function showImages(dcmFiles) {
       seriesId = Object.keys(res)[0];
       NodeTest(seriesId)
       dataDicomShow(dataDicom(res[seriesId][0].dataSet));
-      filesDicom(res, dicomViewer,dcmFiles.length)
+      filesDicom(res, dicomViewer, dcmFiles.length, pathName)
       bindEvent(dicomViewer, res[seriesId].length);
       dicomViewer.setDcmSeriesInfo(res[seriesId], pointsSet);
 
@@ -91,25 +92,25 @@ function showImages(dcmFiles) {
       //     // jQuery('.box-loading').hide()
       //   }
       // })
-      
+
     })
   } else {
     dicomImage.loadDicomFiles(dcmFiles).then(function (res) {
       seriesId = Object.keys(res)[0];
       NodeTest(seriesId)
       dataDicomShow(dataDicom(res[seriesId][0].dataSet));
-      filesDicom(res, dicomViewer,dcmFiles.length)
+      filesDicom(res, dicomViewer, dcmFiles.length)
       bindEvent(dicomViewer, res[seriesId].length);
       dicomViewer.setDcmSeriesInfo(res[seriesId], pointsSet);
     })
   }
 }
 function nodeFilter(imgdata, imageNo) {
-  if(imgdata == undefined){
+  if (imgdata == undefined) {
     return
   }
-  return imgdata.findIndex( x => {
-    return Math.abs(x.imageNo - 0) == Math.abs(imageNo - 0 )
+  return imgdata.findIndex(x => {
+    return Math.abs(x.imageNo - 0) == Math.abs(imageNo - 0)
   })
   // if (nodeMessage[seriesId].length) {
   //   nodeMessage[seriesId].forEach(c => {
