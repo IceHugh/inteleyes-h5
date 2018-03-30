@@ -12,7 +12,6 @@ body,.page{
       padding: 0;
 }
 .w {
-  width: 990px;
   margin: 0px auto;
 }
 .mc{
@@ -64,6 +63,7 @@ header{
   width: 300px;
   height: 60px;
   float: left;
+  margin-left: 50px;
 }
 #logo span{padding-left: 10px;}
 
@@ -71,14 +71,15 @@ header{
 /*contain*/
 .login-wrap {
   position: relative;
-  height: 475px;
+  min-height: 800px;
   margin: 10px 0px 20px;
   z-index: 5;
 }
 
 .login-wrap .login-form {
   float: right;
-  top: 90px;
+  top: 140px;
+  left: -240px;
 }
 .login-form {
   position: relative;
