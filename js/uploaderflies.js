@@ -170,6 +170,7 @@ function NodeTest(seriesId) {
         url: 'http://127.0.0.1:10219/api/ai/requestAIResult',
         data: { seriesInstanceUid: seriesId },
         success: function (data) {
+            data = "{\"code\":\"000000\",\"msg\":\"成功\",\"data\":{\"serialUID\":\"1.3.6.1.4.1.14519.5.2.1.6279.6001.179049373636438705059720603192\",\"aiCode\":\"000000\",\"aiMsg\":\"成功\",\"aiResults\":[{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-127.500000\",\"diameter\":\"4.20763\",\"location\":\"373,212\",\"probability\":\"0.730356783993\",\"density\":\"-718\"},{\"imageNo\":\"-45.000000\",\"diameter\":\"4.13958\",\"location\":\"136,212\",\"probability\":\"0.487765877366\",\"density\":\"-819\"},{\"imageNo\":\"-100.000000\",\"diameter\":\"4.24603\",\"location\":\"145,298\",\"probability\":\"0.344431780266\",\"density\":\"221\"},{\"imageNo\":\"-132.500000\",\"diameter\":\"4.22337\",\"location\":\"148,193\",\"probability\":\"0.239516510613\",\"density\":\"-702\"},{\"imageNo\":\"-45.000000\",\"diameter\":\"4.0882\",\"location\":\"141,212\",\"probability\":\"0.182245305557\",\"density\":\"3071\"},{\"imageNo\":\"-220.000000\",\"diameter\":\"5.7459\",\"location\":\"136,312\",\"probability\":\"0.162664960509\",\"density\":\"-32\"},{\"imageNo\":\"-125.000000\",\"diameter\":\"4.25833\",\"location\":\"370,215\",\"probability\":\"0.157850331847\",\"density\":\"-893\"},{\"imageNo\":\"-47.500000\",\"diameter\":\"4.17644\",\"location\":\"136,215\",\"probability\":\"0.153738911235\",\"density\":\"611\"},{\"imageNo\":\"-180.000000\",\"diameter\":\"5.7545\",\"location\":\"180,216\",\"probability\":\"0.13318653528\",\"density\":\"59\"}]}}"
             data = JSON.parse(data)
             data = data.data
             if (data.aiCode == "000000") {
@@ -329,7 +330,6 @@ function nodeList(seriesId, pointsSet) {
     })
     jQuery('.boxes').each(function () {
         jQuery(this).on('mousewheel', function (event) {
-            console.log(this.scrollTop)
             if (this.scrollTop == 0) {
                 this.scrollTop++;
                 event.preventDefault();
@@ -555,11 +555,17 @@ function pointRowMsg(seriesId, obj, index, dicomViewer, pointsSet) {
         var currentImageno = jQuery('#tbody' + seriesId.slice(34) + ' tr').eq(currentMessage).attr('data-imageno')
         var currentBoxes = jQuery('[boxes=' + seriesId.slice(34) + ']')[0]
         var scrollValue = jQuery('[boxes=' + seriesId.slice(34) + ']').scrollTop()
-        for (let i = 9; i < nodeMessage[seriesId].length; i += 10) {
-            if (currentMessage == i) {
-                currentBoxes.scrollTo(0, scrollValue - (10 * 26))
-
-            }
+        // for (let i = 9; i < nodeMessage[seriesId].length; i += 10) {
+        //     if (currentMessage == i) {
+        //         currentBoxes.scrollTo(0, scrollValue - (nodeMessage[seriesId].length-currentMessage) * 260)
+        //     }
+        // }
+        if (currentMessage >= 10) {
+            currentBoxes.scrollTo(0, scrollValue - 26)
+        }
+        if (currentMessage < 10) {
+            currentBoxes.scrollTo(0, 0)
+            
         }
         pointRowMsg(seriesId, pointsSet[currentMessage], currentMessage, dicomViewer, pointsSet)
         scrollNode(nodeFilter(imgdataObj[seriesId], currentImageno), dicomViewer.dcmSet.length, dicomViewer)
@@ -581,14 +587,19 @@ function pointRowMsg(seriesId, obj, index, dicomViewer, pointsSet) {
         }
         var currentImageno = jQuery('#tbody' + seriesId.slice(34) + ' tr').eq(currentMessage).attr('data-imageno')
         var currentBoxes = jQuery('[boxes=' + seriesId.slice(34) + ']')[0]
+        var scrollValue = jQuery('[boxes=' + seriesId.slice(34) + ']').scrollTop()
         // if ( currentMessage == 9 || currentMessage == 19 || currentMessage == 29 || currentMessage == 39 || currentMessage == 49 || currentMessage == 59 || currentMessage == 69 || currentMessage == 79 || currentMessage == 89 || currentMessage == 99) {
         //     currentBoxes.scrollTo(0,(currentMessage+1)*26)
         // }
-        for (let i = 10; i < nodeMessage[seriesId].length; i += 10) {
-            if (currentMessage == i) {
-                currentBoxes.scrollTo(0, (currentMessage + 1) * 26)
-            }
+        if (currentMessage >= 10) {
+            currentBoxes.scrollTo(0, scrollValue + 26)
         }
+
+        // for (let i = 10; i < nodeMessage[seriesId].length; i += 10) {
+        //     if (currentMessage == i) {
+        //         currentBoxes.scrollTo(0, (currentMessage + 1) * 26)
+        //     }
+        // }
         pointRowMsg(seriesId, pointsSet[currentMessage], currentMessage, dicomViewer, pointsSet)
         scrollNode(nodeFilter(imgdataObj[seriesId], currentImageno), dicomViewer.dcmSet.length, dicomViewer)
         var drawCircle = {};
