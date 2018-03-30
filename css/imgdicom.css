@@ -31,7 +31,7 @@
 	.sidebar-nav{
 		width: 350px;
     	overflow-y: auto;
-    	height: 774px;
+    	min-height: 774px;
 	}
 	.sidebar-nav::-webkit-scrollbar {display:none}
 	.sidebar-nav div.content-title + ul{
