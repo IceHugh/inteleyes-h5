@@ -90,10 +90,14 @@ class DICOMViewer {
     // 放大
     zoomIn() {
         this.states.scale *= 1.10;
+        this.states.translate = { x:0, y:0};
+        
     }
     // 缩小
     zoomOut() {
         this.states.scale *= 0.9;
+        this.states.translate = { x:0, y:0};
+        
     }
     // 重置
     reset() {

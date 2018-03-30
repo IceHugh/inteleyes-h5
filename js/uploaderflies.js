@@ -69,8 +69,8 @@ function fileSelected(e) {
     }
     var shtml = "";
     shtml += "<table class='table table-hover filesFilter' >";
-    shtml += "<thead>";
-    shtml += "<tr><th>名称</th><th>类型</th> <th>大小</th><th>时间</th></tr>";
+    shtml += "<thead class='thead-title'>";
+    shtml += "<tr class='th-title'><th>名称</th><th>类型</th> <th>大小</th><th>时间</th></tr>";
     shtml += "</thead>";
     shtml += "<tbody>";
     //判断文件大小及文件类型 
@@ -154,7 +154,7 @@ function againNodeTest(seriesId) {
         },
         success: function (data) {
             if (data.code === '000000') {
-                jQuery('#tbody' + queryNumber).html(nodeList(seriesId,data.aiResults))
+                jQuery('#tbody' + queryNumber).html(nodeList(seriesId, data.aiResults))
                 jQuery('#node' + queryNumber).html('结节检测中...')
                 jQuery('#node' + queryNumber).removeClass('greenGradient')
                 jQuery('#node' + queryNumber).removeClass('redGradient')
@@ -170,16 +170,16 @@ function NodeTest(seriesId) {
         url: 'http://127.0.0.1:10219/api/ai/requestAIResult',
         data: { seriesInstanceUid: seriesId },
         success: function (data) {
-            // data = "{\"code\":\"000000\",\"msg\":\"成功\",\"data\":{\"serialUID\":\"1.3.6.1.4.1.14519.5.2.1.6279.6001.179049373636438705059720603192\",\"aiCode\":\"000000\",\"aiMsg\":\"成功\",\"aiResults\":[{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-127.500000\",\"diameter\":\"4.20763\",\"location\":\"373,212\",\"probability\":\"0.730356783993\",\"density\":\"-718\"},{\"imageNo\":\"-45.000000\",\"diameter\":\"4.13958\",\"location\":\"136,212\",\"probability\":\"0.487765877366\",\"density\":\"-819\"},{\"imageNo\":\"-100.000000\",\"diameter\":\"4.24603\",\"location\":\"145,298\",\"probability\":\"0.344431780266\",\"density\":\"221\"},{\"imageNo\":\"-132.500000\",\"diameter\":\"4.22337\",\"location\":\"148,193\",\"probability\":\"0.239516510613\",\"density\":\"-702\"},{\"imageNo\":\"-45.000000\",\"diameter\":\"4.0882\",\"location\":\"141,212\",\"probability\":\"0.182245305557\",\"density\":\"3071\"},{\"imageNo\":\"-220.000000\",\"diameter\":\"5.7459\",\"location\":\"136,312\",\"probability\":\"0.162664960509\",\"density\":\"-32\"},{\"imageNo\":\"-125.000000\",\"diameter\":\"4.25833\",\"location\":\"370,215\",\"probability\":\"0.157850331847\",\"density\":\"-893\"},{\"imageNo\":\"-47.500000\",\"diameter\":\"4.17644\",\"location\":\"136,215\",\"probability\":\"0.153738911235\",\"density\":\"611\"},{\"imageNo\":\"-180.000000\",\"diameter\":\"5.7545\",\"location\":\"180,216\",\"probability\":\"0.13318653528\",\"density\":\"59\"}]}}"
+            data = "{\"code\":\"000000\",\"msg\":\"成功\",\"data\":{\"serialUID\":\"1.3.6.1.4.1.14519.5.2.1.6279.6001.179049373636438705059720603192\",\"aiCode\":\"000000\",\"aiMsg\":\"成功\",\"aiResults\":[{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-115.000000\",\"diameter\":\"23.1397\",\"location\":\"317,367\",\"probability\":\"0.999981401433\",\"density\":\"69\"},{\"imageNo\":\"-127.500000\",\"diameter\":\"4.20763\",\"location\":\"373,212\",\"probability\":\"0.730356783993\",\"density\":\"-718\"},{\"imageNo\":\"-45.000000\",\"diameter\":\"4.13958\",\"location\":\"136,212\",\"probability\":\"0.487765877366\",\"density\":\"-819\"},{\"imageNo\":\"-100.000000\",\"diameter\":\"4.24603\",\"location\":\"145,298\",\"probability\":\"0.344431780266\",\"density\":\"221\"},{\"imageNo\":\"-132.500000\",\"diameter\":\"4.22337\",\"location\":\"148,193\",\"probability\":\"0.239516510613\",\"density\":\"-702\"},{\"imageNo\":\"-45.000000\",\"diameter\":\"4.0882\",\"location\":\"141,212\",\"probability\":\"0.182245305557\",\"density\":\"3071\"},{\"imageNo\":\"-220.000000\",\"diameter\":\"5.7459\",\"location\":\"136,312\",\"probability\":\"0.162664960509\",\"density\":\"-32\"},{\"imageNo\":\"-125.000000\",\"diameter\":\"4.25833\",\"location\":\"370,215\",\"probability\":\"0.157850331847\",\"density\":\"-893\"},{\"imageNo\":\"-47.500000\",\"diameter\":\"4.17644\",\"location\":\"136,215\",\"probability\":\"0.153738911235\",\"density\":\"611\"},{\"imageNo\":\"-180.000000\",\"diameter\":\"5.7545\",\"location\":\"180,216\",\"probability\":\"0.13318653528\",\"density\":\"59\"}]}}"
             data = JSON.parse(data)
             data = data.data
             if (data.aiCode == "000000") {
                 if (data.aiResults.length == '0') {
-                    jQuery('#tbody' + queryNumber).html(nodeList(seriesId,data.aiResults))
+                    jQuery('#tbody' + queryNumber).html(nodeList(seriesId, data.aiResults))
                     jQuery('#node' + queryNumber).html('<i style="font-size: 20px;font-style: normal;" title="' + data.aiResults.length + '个结节">' + data.aiResults.length + '</i>个结节')
                     jQuery('#node' + queryNumber).removeClass('greenGradient')
                 } else {
-                    jQuery('#tbody' + queryNumber).html(nodeList(seriesId,data.aiResults))
+                    jQuery('#tbody' + queryNumber).html(nodeList(seriesId, data.aiResults))
                     jQuery('#node' + queryNumber).html('<i style="font-size: 20px;font-style: normal;" title="' + data.aiResults.length + '个结节">' + data.aiResults.length + '</i>个结节')
                     nodeMessage[seriesId] = data.aiResults
                     jQuery('#node' + queryNumber).addClass('greenGradient')
@@ -318,21 +318,34 @@ function initRangeSlider(dicomViewer, dcmNumber) {
 //     document.querySelector('input[type="range"]').oninput = rangeValue;
 // }
 
-function nodeList(seriesId,pointsSet) {
+function nodeList(seriesId, pointsSet) {
     var dom = ''
     if (!pointsSet) {
         return
     }
     pointsSet.forEach(function (o, index) {
-        dom += '<tr data-option="' + index + '"" class="point-row" node-point="point'+ seriesId.slice(34) +'" data-imageNo="' + o.imageNo + '">'
-        dom += '<td style="position:relative"><i class="currentOption" current-point="point'+ seriesId.slice(34) +'" style="display:none"></i>' + (index + 1) + '</td><td>' + Number(o.diameter).toFixed(1) + '</td><td>' + Number(o.imageNo).toFixed(1) + '</td><td>' + Number(o.probability).toFixed(1) + '</td><td>'
+        dom += '<tr data-option="' + index + '"" class="point-row" node-point="point' + seriesId.slice(34) + '" data-imageNo="' + o.imageNo + '">'
+        dom += '<td style="position:relative"><i class="currentOption" current-point="point' + seriesId.slice(34) + '" style="display:none"></i>' + (index + 1) + '</td><td>' + Number(o.diameter).toFixed(1) + '</td><td>' + Number(o.imageNo).toFixed(1) + '</td><td>' + Number(o.probability).toFixed(1) + '</td><td>'
         dom += '</tr>'
+    })
+    jQuery('.boxes').each(function () {
+        jQuery(this).on('mousewheel', function (event) {
+            console.log(this.scrollTop)
+            if (this.scrollTop == 0) {
+                this.scrollTop++;
+                event.preventDefault();
+            }
+            if(this.scrollTop == (pointsSet.length-10)*26) {
+                this.scrollTop--;
+                event.preventDefault();
+            }
+        })
     })
     return dom
 }
 
 function bindNodeList(seriesId, pointsSet, dicomViewer) {
-    document.querySelectorAll('[node-point=point'+ seriesId.slice(34) +']').forEach(function (tr, index) {
+    document.querySelectorAll('[node-point=point' + seriesId.slice(34) + ']').forEach(function (tr, index) {
         jQuery(tr).unbind('click').removeAttr('onclick').click(function (e) {
             // tr.addEventListener('click', function (e) {
             // debugger
@@ -372,13 +385,13 @@ function filesDicom(SeriesSets, dicomViewer, imageLength, pathName) {
     seriesIDList.forEach(function (seriesID, index) {
         var group = SeriesSets[seriesID];
         fileDicom += '<ul class="nav nav-list accordion-group">';
-        fileDicom += '<li class="nav-header nav-header-content" pathName="' +pathName+ '" series="' + seriesID + '" title="' + seriesID.slice(34) + '">';
+        fileDicom += '<li class="nav-header nav-header-content" pathName="' + pathName + '" series="' + seriesID + '" title="' + seriesID.slice(34) + '">';
         fileDicom += '<div class="title_hd">';
         fileDicom += '<div style="width:68px;height:68px;background:rgba(12,173,141,0.4);position:absolute;"></div>'
         fileDicom += '     <img src="' + group[0].imageData + '" alt="" style="width:68px;margin-right:5px;display:block">';
         fileDicom += '               <span><em currentLength="' + group.length + '">' + imageLength + '</em>张</span>';
         fileDicom += '  </div>';
-        fileDicom += ' <ul class="titleMessage" style="width:142px">';
+        fileDicom += ' <ul class="titleMessage" style="width:145px">';
         fileDicom += '    <li title="' + group[0].dataSet.string('x00100020') + '"><span>' + group[0].dataSet.string('x00100020') + '</span></li>';
         fileDicom += '    <li title="胸部CT ' + group[0].SeriesDate + '"><span>胸透CT</span><span class="leftSpacing">' + group[0].SeriesDate + '</span></li>';
         fileDicom += '    <li title="' + group[0].PersonName + ' ' + group[0].PatientSex + ' ' + group[0].PatientAge + '"><span>' + group[0].PersonName + '</span><span class="leftSpacing">' + group[0].PatientSex + '</span><span class="leftSpacing">' + group[0].PatientAge + '</span></li>';
@@ -386,7 +399,7 @@ function filesDicom(SeriesSets, dicomViewer, imageLength, pathName) {
         fileDicom += '  <div class="title_right dicomcheckResult"><span id="node' + seriesID.slice(34) + '" series="' + seriesID + '" class="pingAnBtn nodeNumber"><i style="font-size: 20px;font-style: normal;" title=0个结节">0</i>个结节</span></div>';
         fileDicom += ' </li>';
         fileDicom += ' <li class="checkProgress" ><div class="checkProgressBar" style="width:0%;"></div></li>';
-        fileDicom += ' <li class="boxes estRows">';
+        fileDicom += ' <li class="boxes estRows" boxes="' + seriesID.slice(34) + '">';
         fileDicom += '   <table class="table tableHover" border="0">';
         fileDicom += '     <thead>';
         fileDicom += '       <tr><th>结节编号</th><th>直径/mm</th><th>层面</th><th>可能性</th></tr>';
@@ -410,6 +423,9 @@ function filesDicom(SeriesSets, dicomViewer, imageLength, pathName) {
             if (currentLength == sliceNumber) {
                 jQuery('.box-loading').show()
             }
+
+
+
             if (!imgdataObj[seriesId]) {
                 dicomImage.loadDicomFiles(fileObj[pathName]).then(function (res) {
                     imgdataObj[seriesId] = imgdataObj[seriesId]
@@ -527,8 +543,7 @@ function pointRowMsg(seriesId, obj, index, dicomViewer, pointsSet) {
     })
     var currentMessage = jQuery('.left_message_top').attr('data-current')
     var currentIndex = currentMessage
-    console.log(currentIndex)
-    var allOption = jQuery('[current-point=point'+ seriesId.slice(34) +']')
+    var allOption = jQuery('[current-point=point' + seriesId.slice(34) + ']')
     jQuery('#upNode').click(function () {
         if (currentMessage <= 0) {
             return
@@ -538,7 +553,15 @@ function pointRowMsg(seriesId, obj, index, dicomViewer, pointsSet) {
             allOption.eq(o).css('display', 'none')
             allOption.eq(currentMessage).css('display', 'block')
         }
-        var currentImageno = jQuery('#tbody'+ seriesId.slice(34) +' tr').eq(currentMessage).attr('data-imageno')
+        var currentImageno = jQuery('#tbody' + seriesId.slice(34) + ' tr').eq(currentMessage).attr('data-imageno')
+        var currentBoxes = jQuery('[boxes=' + seriesId.slice(34) + ']')[0]
+        var scrollValue = jQuery('[boxes=' + seriesId.slice(34) + ']').scrollTop()
+        for (let i = 9; i < nodeMessage[seriesId].length; i += 10) {
+            if (currentMessage == i) {
+                currentBoxes.scrollTo(0, scrollValue - (10 * 26))
+
+            }
+        }
         pointRowMsg(seriesId, pointsSet[currentMessage], currentMessage, dicomViewer, pointsSet)
         scrollNode(nodeFilter(imgdataObj[seriesId], currentImageno), dicomViewer.dcmSet.length, dicomViewer)
         var drawCircle = {};
@@ -557,7 +580,16 @@ function pointRowMsg(seriesId, obj, index, dicomViewer, pointsSet) {
             allOption.eq(o).css('display', 'none')
             allOption.eq(currentMessage).css('display', 'block')
         }
-        var currentImageno = jQuery('#tbody'+ seriesId.slice(34) +' tr').eq(currentMessage).attr('data-imageno')
+        var currentImageno = jQuery('#tbody' + seriesId.slice(34) + ' tr').eq(currentMessage).attr('data-imageno')
+        var currentBoxes = jQuery('[boxes=' + seriesId.slice(34) + ']')[0]
+        // if ( currentMessage == 9 || currentMessage == 19 || currentMessage == 29 || currentMessage == 39 || currentMessage == 49 || currentMessage == 59 || currentMessage == 69 || currentMessage == 79 || currentMessage == 89 || currentMessage == 99) {
+        //     currentBoxes.scrollTo(0,(currentMessage+1)*26)
+        // }
+        for (let i = 10; i < nodeMessage[seriesId].length; i += 10) {
+            if (currentMessage == i) {
+                currentBoxes.scrollTo(0, (currentMessage + 1) * 26)
+            }
+        }
         pointRowMsg(seriesId, pointsSet[currentMessage], currentMessage, dicomViewer, pointsSet)
         scrollNode(nodeFilter(imgdataObj[seriesId], currentImageno), dicomViewer.dcmSet.length, dicomViewer)
         var drawCircle = {};

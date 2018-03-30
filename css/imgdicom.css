@@ -30,6 +30,12 @@
 .nodePageActive{background: #999;}
 	.sidebar-nav{
 		width: 350px;
+    	overflow-y: auto;
+    	height: 774px;
+	}
+	.sidebar-nav::-webkit-scrollbar {display:none}
+	.sidebar-nav div.content-title + ul{
+		margin-top:45px;
 	}
 	.table{
 		color:#fff;
@@ -58,9 +64,14 @@
 		 border-bottom:0; 
 	}
 	.content-title{
-		height: 50px;
-    	line-height: 50px;
-    	color: #fff;
+		height: 45px;
+		line-height: 50px;
+		color: #fff;
+		position: fixed;
+		z-index: 1000;
+		width: 350px;
+		background: #0f242a;
+		text-align: center;
 	}
 	.currentOption{
 		display: inline-block;
